@@ -1,9 +1,8 @@
-package com.examplefirst.Database;
+package com.planner.Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DB_Methods {
     static database databaseobj = new database();

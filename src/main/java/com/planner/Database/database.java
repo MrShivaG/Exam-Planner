@@ -1,4 +1,4 @@
-package com.examplefirst.Database;
+package com.planner.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
