@@ -9,20 +9,17 @@ import java.util.ArrayList;
 import com.planner.Database.database;
 public class Students {
     ArrayList<String> students = new ArrayList<>();
-    void fatchstudent(String Sub_Code) throws SQLException {
+    void fatchstudent(int index) throws SQLException {
         Connection con;
-        try {
-            database db = new database();
-            con = db.connection();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        PreparedStatement ps = con.prepareStatement("SELECT ? FROM class_room");
-        ps.setString(1, Sub_Code);
+
+        database db = new database();
+        con = db.connection();
+
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM students");
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
-            students.add(rs.getString(Sub_Code));
+            students.add(rs.getString(index));
         }
 
     }
