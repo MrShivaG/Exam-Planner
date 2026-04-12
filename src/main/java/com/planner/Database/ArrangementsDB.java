@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ArrangementsDB {
 
-    private static final String URL = "jdbc:mysql://192.168.1.169:3306/arrangements";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/arrangements";
     private static final String USERNAME = "remote";
     private static final String PASSWORD = "root";
 
