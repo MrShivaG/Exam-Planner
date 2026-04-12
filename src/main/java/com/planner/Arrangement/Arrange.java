@@ -11,11 +11,15 @@ public class Arrange {
     public void arrange(String Date) throws SQLException {
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
+        System.out.println("ArrangeDB: "+arrangementsDB.connectDB());
 
         ArrayList<Students> students = fatchstudents.fatchStudent();
         int length = fatchstudents.getlength();
 
         ClassRooms classrooms = new ClassRooms();
+
+        classrooms.addClassroom(new int[]{104,204});
+
         ArrayList<Integer> classes = new ArrayList<>();
         classes = classrooms.getClassrooms();
         int classesLength = classrooms.getLength();
@@ -27,41 +31,61 @@ public class Arrange {
 
 
 
+
+
         while(true){
 
+            Date = Date+classes.get(currentClassIndex);
             int[] RC = db.fetchRowColumn(classes.get(currentClassIndex));
             int capacity = RC[0]*RC[1];
             int filledseats=0;
-            String query ="Insert ? values(?";
+            String query ="Insert into "+Date+" values(?";
             for(int i=1;i<RC[0];i++){
                 query = query+" ,?";
             }
             query = query+");";
-            createTable(conn,RC[1],"12_1_105");
+
+            createTable(conn,RC[0],Date);
             int index=0;
             for(int i=0;i<RC[1];i++){
                 PreparedStatement ps = conn.prepareStatement(query);
-                for(int j=0;j<RC[0];j++){
+                System.out.println(query);
+                if(RC[0]%2==0){
+                    index=(index+3)%2;
+                }
+                for(int j=1;j<=RC[0];j++){
+                    System.out.println(index);
                     try {
+                        if(RC[1]%2==0){
+                            index=(index+3)%2;
+                        }
                         ps.setString(j,students.get(index).getStudents().get(0));
                         students.get(index).getStudents().remove(0);
 
+
+                        if (students.get(index).getStudents().isEmpty()){
+                            students.remove(index);
+                            index = (index+3)%2;
+                        }
                     }catch (IndexOutOfBoundsException e){
                         ps.setString(j,"Null");
                     }
-                    if (students.get(index).getStudents().isEmpty()){
-                        students.remove(index);
-                    }
-                    if(index==0){
-                        index++;
-                    }
-                    else{
-                        index--;
-                    }
+                    index = (index+3)%2;
+//                    if(index==0){
+//                        index++;
+//                    }
+//                    else{
+//                        index--;
+//                    }
 
 
                 }
+                System.out.println(ps.toString());
                 ps.executeUpdate();
+            }
+            if (students.isEmpty()){
+                System.out.println("No students Left");
+                break;
             }
             if(classesLength==currentClassIndex){
                 break;
@@ -73,15 +97,17 @@ public class Arrange {
     }
     void createTable(Connection conn,int Column,String Date) throws SQLException {
 
-        PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS ? (Row1 VARCHAR(100))");
-        ps.setString(1, Date);
+        PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+" (Row1 VARCHAR(100))");
+        //ps.setString(1, Date);
         ps.executeUpdate();
+        System.out.println("Table created");
         for(int i=2;i<Column+1;i++){
-            PreparedStatement ps1 = conn.prepareStatement("ALTER TABLE ? add COLUMN ? Varchar(100)");
-            ps1.setString(1, Date);
             String st="Row"+i;
-            ps1.setString(2, st);
+            PreparedStatement ps1 = conn.prepareStatement("ALTER TABLE "+Date+" add COLUMN "+st+" Varchar(100)");
+            //ps1.setString(1, Date);
+            //ps1.setString(2, st);
             ps1.executeUpdate();
+            System.out.println("Columns created");
         }
     }
 
