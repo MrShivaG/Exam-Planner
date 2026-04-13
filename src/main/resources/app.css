@@ -1,0 +1,99 @@
+.root {
+    -fx-background-color:#F5F7FB;
+    -fx-font-family: "Segoe UI";
+}
+
+/* Dashboard title */
+.dashboard-title {
+    -fx-text-fill: #343434;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+}
+
+.hyyuser{
+     -fx-text-fill: #343434;
+     -fx-font-size: 18px;
+     -fx-font-weight: bold;
+     -fx-font-style: italic;
+}
+/* Shared Glass Style */
+.glass {
+    -fx-background-color: #ffffff;
+    -fx-border-color: rgba(0,0,0,0.08);
+}
+
+/* Sidebar Buttons */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 16px;
+    -fx-pref-width: 200;
+    -fx-padding: 10;
+    -fx-alignment: CENTER-LEFT;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-font-family: "Segoe UI";
+
+}
+
+.sidebar-btn:hover {
+    -fx-text-fill: #2563EB;
+    -fx-background-color: #E8F0FE;
+    -fx-cursor: hand;
+    -fx-border-radius: 20;
+     -fx-background-radius: 20;
+}
+
+.sidebar-active {
+    -fx-background-color: #E8F0FE;
+    -fx-text-fill: #2563EB;
+    -fx-background-radius: 20;
+}
+
+/* Card */
+.card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(0,0,0,0.1);
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0.2, 0, 2);
+}
+/* Text */
+.title {
+    -fx-text-fill: black;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+        -fx-font-style: italic;
+}
+
+.subtitle {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 12px;
+     -fx-font-weight: bold;
+         -fx-font-style: italic;
+}
+
+/* Button */
+.button-primary {
+    -fx-background-color: #2563ef;
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+     -fx-font-size: 16px;
+      -fx-font-weight: bold;
+       -fx-font-style: italic;
+}
+
+.button-primary:hover {
+    -fx-background-color: #1d4ed8;
+    -fx-cursor: hand;
+}
+
+/*  Card Hover Glow Effect */
+.card:hover {
+    -fx-background-color: #f0f6ff;
+    -fx-border-color: #2563ef;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 239, 0.5), 20, 0.3, 0, 2);
+}
+
+
