@@ -35,17 +35,16 @@ public class Arrange {
 
         while(true){
 
-            Date = Date+classes.get(currentClassIndex);
+            String Table_name = Date+"_"+classes.get(currentClassIndex);
             int[] RC = db.fetchRowColumn(classes.get(currentClassIndex));
-            int capacity = RC[0]*RC[1];
-            int filledseats=0;
-            String query ="Insert into "+Date+" values(?";
+
+            String query ="Insert into "+Table_name+" values(?";
             for(int i=1;i<RC[0];i++){
                 query = query+" ,?";
             }
             query = query+");";
 
-            createTable(conn,RC[0],Date);
+            createTable(conn,RC[0],Table_name);
             int index=0;
             for(int i=0;i<RC[1];i++){
                 PreparedStatement ps = conn.prepareStatement(query);
@@ -87,7 +86,7 @@ public class Arrange {
                 System.out.println("No students Left");
                 break;
             }
-            if(classesLength==currentClassIndex){
+            if(classesLength==currentClassIndex+1){
                 break;
             }
             currentClassIndex++;
