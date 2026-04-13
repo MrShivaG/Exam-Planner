@@ -73,6 +73,20 @@ public class DB_Methods {
         return rooms;
     }
 
+    public int[] fetchRowColumn(int room_no) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("select * from class_room where room_no = ?");
+        ps.setInt(1, room_no);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            int row = rs.getInt("class_row");
+            int column = rs.getInt("class_column");
+            return new int[]{row, column};
+        }
+        return new int[]{-1, -1};
+    }
+
+
+
     public static int totalroom() throws SQLException {
         PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) AS total_rooms FROM class_room");
         ResultSet rs = ps.executeQuery();
