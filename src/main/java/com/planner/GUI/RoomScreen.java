@@ -1,15 +1,12 @@
 package com.planner.GUI;
 
 import com.planner.Database.DB_Methods;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
@@ -17,7 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class room extends Application {
+public class RoomScreen{
     static int totalrooms;
     static int totalstudentcapacity;
     static DB_Methods dbMethods;
@@ -30,22 +27,10 @@ public class room extends Application {
         }
     }
 
-    public room() throws SQLException {
+    public RoomScreen() throws SQLException {
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        BorderPane borderPane = new BorderPane();
-        Scene scene = new Scene(borderPane,1350,700);
-        BorderPane profilepane = room(stage);
-        borderPane.setCenter(profilepane);
-        stage.setScene(scene);
-        stage.setX(0);
-        stage.setY(0);
-        stage.show();
-    }
-
-    public static BorderPane room(Stage stage) throws SQLException {
+    public static BorderPane room(HomePage app) throws SQLException {
         BorderPane borderPane = new BorderPane();
         ScrollPane scrollpane = new ScrollPane();
         scrollpane.setFitToWidth(true);
