@@ -85,11 +85,19 @@ public class UpdateRoom extends Application {
         editbutton.setOnAction(e -> {
             editpane.setBottom(bottombox);
             bottombox.setVisible(true);
+            HomePage homepageobj = new HomePage();
+            try {
+                RoomScreen.room(homepageobj);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
 
             try {
                 int row = Integer.parseInt(rowtext.getText());
                 int column = Integer.parseInt(columntext.getText());
                 dbMethods.updatedata(roomno, row, column);
+
+
                 notificationlable.setText("Room updated Successfully!");
             } catch (NumberFormatException ex) {
                 notificationlable.setText("Error: Please enter valid numbers.");
