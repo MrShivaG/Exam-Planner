@@ -71,7 +71,7 @@ public class RoomScreen extends Application {
 
         VBox titleBox = new VBox(4);
         Label title = new Label("Room & Capacity Management");
-        Line underline = new Line(5,70,350,70);
+
         title.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
                         "-fx-font-size: 22px;" +
@@ -79,7 +79,7 @@ public class RoomScreen extends Application {
         );
 
 
-        titleBox.getChildren().addAll(title,underline);
+        titleBox.getChildren().addAll(title);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
