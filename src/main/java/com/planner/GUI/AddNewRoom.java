@@ -17,12 +17,15 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
-public class AddNewRoom {
-    DB_Methods dbMethods ;
+public class AddNewRoom extends Application {
+    static DB_Methods dbMethods ;
+    @Override
+    public void start(Stage stage) throws Exception {
+        stage = newroom();
+        stage.show();
 
-
-
-public static BorderPane newroom(HomePage app){
+    }
+    public static Stage newroom(){
         BorderPane roompane = new BorderPane();
         VBox headerbox = new VBox();
         headerbox.setPadding(new Insets(20));
@@ -74,26 +77,24 @@ public static BorderPane newroom(HomePage app){
                 "-fx-font-weight: bold;" +
                 " -fx-font-size: 20px;");
 
-    addbutton.setOnAction(e -> {
-        roompane.setBottom(bottombox);
-        bottombox.setVisible(true);
+        addbutton.setOnAction(e->{
+            roompane.setBottom(bottombox);
+            bottombox.setVisible(true);
 
-        try {
-            int roomno = Integer.parseInt(roomnotext.getText());
-            int rowno = Integer.parseInt(rowtext.getText());
-            int columnno = Integer.parseInt(columntext.getText());
+            try {
+                int roomno = Integer.parseInt(roomnotext.getText());
+                int rowno = Integer.parseInt(rowtext.getText());
+                int columnno = Integer.parseInt(columntext.getText());
+                dbMethods = new DB_Methods();
+                dbMethods.insertData(roomno, rowno, columnno, true);
+                notificationlable.setText("Room Added Successfully!");
+            } catch (NumberFormatException ev) {
+                notificationlable.setText("Error: Please enter valid numbers.");
+            } catch (SQLException ev) {
+                notificationlable.setText("Error: Room already exists .");
+            }
+        });
 
-            DB_Methods dbMethods = new DB_Methods();
-            dbMethods.insertData(roomno, rowno, columnno, true);
-
-            notificationlable.setText("Room Added Successfully!");
-
-        } catch (NumberFormatException ev) {
-            notificationlable.setText("Error: Please enter valid numbers.");
-        } catch (SQLException ev) {
-            notificationlable.setText("Error: Room already exists.");
-        }
-    });
 
         contentPane.add(roomnolable,0,0,1,1);
         contentPane.add(rowlable,0,1,1,1);
@@ -109,6 +110,6 @@ public static BorderPane newroom(HomePage app){
         Stage stage = new Stage();
         Scene scene = new Scene(roompane,400,500);
         stage.setScene(scene);
-        return roompane;
+        return stage;
     }
 }
