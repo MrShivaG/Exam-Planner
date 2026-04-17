@@ -164,3 +164,38 @@ subtitle.setStyle(
 .scroll-bar .thumb:hover {
     -fx-background-color: #9ca3af;
 }
+
+/* Selected Rooms Panel */
+.list-view {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 16;
+    -fx-padding: 8;
+}
+
+/* Each row */
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+    -fx-text-fill: #374151;
+    -fx-font-weight: bold;
+}
+
+/* Hover effect */
+.list-cell:hover {
+    -fx-background-color: #F3F6FB;
+    -fx-background-radius: 10;
+}
+
+/* Selected item */
+.list-cell:filled:selected {
+    -fx-background-color: #E8F0FE;
+    -fx-text-fill: #2563EB;
+    -fx-background-radius: 10;
+}
+
+/* Remove ugly focus border */
+.list-view:focused {
+    -fx-background-insets: 0;
+}
