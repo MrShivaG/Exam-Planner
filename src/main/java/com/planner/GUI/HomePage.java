@@ -224,10 +224,16 @@ public class HomePage extends Application {
         Button arrangements = createSidebarButton("Arrangements", getArrangementIcon(), false,
                 () -> switchScreen(createTopBar("Arrangements"), Screens.dataScreen(this)));
 
-        Button addRoomBtn = createSidebarButton("Add Room", getRoomIcon(), false,
-                () -> switchScreen(createTopBar("Add Room"), AddNewRoom.newroom(this)));
+        Button showRoomBtn = createSidebarButton("Show Room", getRoomIcon(), false,
+                () -> {
+                    try {
+                        switchScreen(createTopBar("Show Room"), RoomScreen.room(this));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
-        menu.getChildren().addAll(dashboard, arrangements, addRoomBtn);
+        menu.getChildren().addAll(dashboard, arrangements, showRoomBtn);
 
 
         Region spacer = new Region();
@@ -238,14 +244,17 @@ public class HomePage extends Application {
         bottom.setAlignment(Pos.BOTTOM_CENTER);
         bottom.setPadding(new Insets(0, 0, 30, 0));
 
+        Button about = createSidebarButton("About", getLogoutIcon(), false,
+                () -> switchScreen(createTopBar("About"), new Pane()));
+        about.setAlignment(Pos.CENTER);
+
         Button logout = createSidebarButton("Logout", getLogoutIcon(), false,
                 () -> switchScreen(createTopBar("Logout"), new Pane()));
-
         logout.setAlignment(Pos.CENTER);
 
-        bottom.getChildren().addAll(logout);
+        bottom.getChildren().addAll(about, logout);
 
-        sidebar.getChildren().addAll(logoBox, menu,spacer,  bottom);
+        sidebar.getChildren().addAll(logoBox, menu,spacer, bottom);
 
         return sidebar;
     }
