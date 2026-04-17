@@ -8,6 +8,11 @@ import com.planner.Database.DB_Methods;
 public class Arrange {
     FatchStudents fatchstudents =new FatchStudents();
 
+    private int[] roomsArray;
+    public void setRooms(int[] roomsArray) {
+        this.roomsArray = roomsArray;
+    }
+
     public void arrange(String Date) throws SQLException {
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
@@ -19,6 +24,11 @@ public class Arrange {
         ClassRooms classrooms = new ClassRooms();
 
         classrooms.addClassroom(new int[]{104,204});
+        if (roomsArray.length == 0) {
+            System.out.println("No rooms selected!");
+            return;
+        }
+//        classrooms.addClassroom(roomsArray);
 
         ArrayList<Integer> classes = new ArrayList<>();
         classes = classrooms.getClassrooms();
