@@ -5,17 +5,17 @@ import java.util.ArrayList;
 
 import com.planner.Database.ArrangementsDB;
 import com.planner.Database.DB_Methods;
+import com.planner.Database.database;
 public class Arrange {
     FatchStudents fatchstudents =new FatchStudents();
 
-    private int[] roomsArray;
-    public void setRooms(int[] roomsArray) {
-        this.roomsArray = roomsArray;
-    }
-
-    public void arrange(String Date) throws SQLException {
+    public void arrange(int[] classroomsArray ,String Date) throws SQLException {
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
+
+        database Database = new database();
+        Connection conn1 = Database.connection();
+
         System.out.println("ArrangeDB: "+arrangementsDB.connectDB());
 
         ArrayList<Students> students = fatchstudents.fatchStudent();
@@ -23,12 +23,7 @@ public class Arrange {
 
         ClassRooms classrooms = new ClassRooms();
 
-        classrooms.addClassroom(new int[]{104,204});
-        if (roomsArray.length == 0) {
-            System.out.println("No rooms selected!");
-            return;
-        }
-//        classrooms.addClassroom(roomsArray);
+        classrooms.addClassroom(classroomsArray);
 
         ArrayList<Integer> classes = new ArrayList<>();
         classes = classrooms.getClassrooms();
@@ -36,11 +31,6 @@ public class Arrange {
 
         DB_Methods db = new DB_Methods();
         int currentClassIndex = 0;
-        int currentStudentIndex = 0;
-        int curreentStudentSetIndex = 0;
-
-
-
 
 
         while(true){
@@ -55,43 +45,39 @@ public class Arrange {
             query = query+");";
 
             createTable(conn,RC[0],Table_name);
+
+
             int index=0;
             for(int i=0;i<RC[1];i++){
                 PreparedStatement ps = conn.prepareStatement(query);
                 System.out.println(query);
                 if(RC[0]%2==0){
-                    index=(index+3)%2;
+                    index=(index+3)%2; //change the index if rows are even
                 }
                 for(int j=1;j<=RC[0];j++){
                     System.out.println(index);
                     try {
-                        if(RC[1]%2==0){
-                            index=(index+3)%2;
-                        }
                         ps.setString(j,students.get(index).getStudents().get(0));
                         students.get(index).getStudents().remove(0);
 
 
+
                         if (students.get(index).getStudents().isEmpty()){
                             students.remove(index);
-                            index = (index+3)%2;
+                            if (index==0){
+                                index++;
+                            }
                         }
                     }catch (IndexOutOfBoundsException e){
                         ps.setString(j,"Null");
                     }
                     index = (index+3)%2;
-//                    if(index==0){
-//                        index++;
-//                    }
-//                    else{
-//                        index--;
-//                    }
-
 
                 }
                 System.out.println(ps.toString());
                 ps.executeUpdate();
             }
+
             if (students.isEmpty()){
                 System.out.println("No students Left");
                 break;
@@ -107,6 +93,8 @@ public class Arrange {
     void createTable(Connection conn,int Column,String Date) throws SQLException {
 
         PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+" (Row1 VARCHAR(100))");
+        PreparedStatement ps0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+"_Range"+" (Branch VARCHAR(50), st Varchar(50), sp varchar(50))");
+        ps0.executeUpdate();
         //ps.setString(1, Date);
         ps.executeUpdate();
         System.out.println("Table created");

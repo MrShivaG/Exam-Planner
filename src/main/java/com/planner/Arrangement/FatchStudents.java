@@ -12,22 +12,22 @@ public class FatchStudents {
 
     public ArrayList<Students> fatchStudent() throws SQLException {
         int Sub_Count;
-        try {
-            conn = database.connection();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM students Where 1=0");
-            ResultSet rs = ps.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
-            Sub_Count = rsmd.getColumnCount();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        conn = database.connection();
+        ArrayList<String> result = new ArrayList<>();
+        PreparedStatement ps4 =conn.prepareStatement("SELECT DISTINCT Sub_code from rawdata");
+        ResultSet rs2 = ps4.executeQuery();
+        while (rs2.next()) {
+            result.add(rs2.getString("Sub_code"));
         }
-        for (int i = 0; i < Sub_Count; i++) {
+
+        for (String Sub_Code : result) {
+
 //            students[i] = new Students();
 //            students[i].fatchstudent(i+1);
             Students student = new Students();
+            student.setSub_Code(Sub_Code);
+            student.fatchstudent(Sub_Code);
             students.add(student);
-            students.get(i).fatchstudent(i+1);
-
         }
         return students;
     }
