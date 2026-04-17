@@ -3,6 +3,7 @@ package com.planner.GUI;
 import com.planner.Arrangement.Arrange;
 import com.planner.Arrangement.FatchStudents;
 import com.planner.Database.DB_Methods;
+import com.planner.ExcelM.ExcelWork;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.*;
@@ -10,16 +11,23 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Screens {
-
+    public static int totalStudents = 0;
+    public static Label totalStudentsLabel = new Label("0");
+    public static List<String> subjects = new ArrayList<>();
     private static File selectedFile = null;
+
     //  ARRANGEMENT SCREEN
     public static BorderPane arrangementContent(HomePage app) {
 
@@ -42,7 +50,7 @@ public class Screens {
 //                () -> app.switchCenter(dataScreen(app))
 //        );
 
-       // layout.setLeft(app.switchCenter(dataScreen(app)));
+        // layout.setLeft(app.switchCenter(dataScreen(app)));
 
         return layout;
     }
@@ -137,6 +145,13 @@ public class Screens {
 //            }
 
             //  PROCEED
+            ExcelWork excelWork = new ExcelWork();
+
+            ArrayList<String> result = excelWork.fatchExcel(selectedFile.getAbsolutePath());
+            Screens.totalStudents = Integer.parseInt(result.get(0));
+            Screens.totalStudentsLabel.setText(String.valueOf(Screens.totalStudents));
+            Screens.subjects = result.subList(1, result.size());
+
             app.switchCenter(roomTableScreen(app));
         });
         next.getStyleClass().add("primary-btn");
@@ -145,12 +160,12 @@ public class Screens {
         grid.add(vBox, 1, 0);
         grid.add(vBox1, 2, 0);
         grid.add(vBox2, 3, 0);
-        grid.add(next, 3,1);
+        grid.add(next, 3, 1);
         grid.setMaxWidth(1000);
 
         layout.setLeft(grid);
         layout.setMaxWidth(800);
-        layout.setPadding(new Insets(0,0,0,100));
+        layout.setPadding(new Insets(0, 0, 0, 100));
         return layout;
     }
 
@@ -180,6 +195,7 @@ public class Screens {
 
         alert.showAndWait();
     }
+
     public static Node dashboardContent(HomePage app) {
 
         VBox root = new VBox(20);
@@ -246,66 +262,108 @@ public class Screens {
 
     public static VBox roomTableScreen(HomePage app) {
 
-        Label totalstudent = new Label("Total Student");
-        Label label1 = new Label("label1");
-        Label label2 = new Label("label2");
-        Label totalstudent1 = new Label("Total Student");
-        Label label3 = new Label("label1");
-        Label label4 = new Label("label2");
-
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.TOP_CENTER);
-        grid.add(totalstudent, 0, 0);
-        grid.add(totalstudent1, 1, 0);
-        grid.add(label1, 0, 1);
-        grid.add(label2, 1, 1);
-        grid.add(label3, 0, 2);
-        grid.add(label4, 1, 2);
-        grid.setHgap(50);
-        grid.setVgap(20);
-
-
-
-//       HBox hBox = new HBox(100);
-//
-//
-//        hBox.getChildren().addAll(totalstudent, label1, label2);
-
-
         ObservableList<Room> selectedRooms = FXCollections.observableArrayList();
+
+        Label selectedRoomsLabel = new Label("0");
+        Label selectedCapacityLabel = new Label("0");
+        Label statusLabel = new Label();
+        statusLabel.setText("Select rooms to check capacity");
+        statusLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 6;");
+
         ListView<Room> selectedList = new ListView<>(selectedRooms);
+        selectedList.getStyleClass().add("list-view");
         selectedList.setPrefWidth(250);
 
-        selectedList.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Room room, boolean empty) {
-                super.updateItem(room, empty);
-                if (empty || room == null) {
-                    setText(null);
-                } else {
-                    setText((getIndex() + 1) + ". Room " + room.getRoomNo());
+        selectedList.setCellFactory(lv -> {
+
+            ListCell<Room> cell = new ListCell<>() {
+
+                @Override
+                protected void updateItem(Room room, boolean empty) {
+                    super.updateItem(room, empty);
+
+                    if (empty || room == null) {
+                        setGraphic(null);
+                    } else {
+
+                        Label index = new Label((getIndex() + 1) + ".");
+                        index.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: bold;");
+
+                        Label name = new Label("Room " + room.getRoomNo());
+                        name.setStyle("-fx-font-weight: bold;");
+
+                        Label cap = new Label("Cap: " + room.getCapacity());
+                        cap.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11;");
+
+                        VBox textBox = new VBox(name, cap);
+                        textBox.setSpacing(3);
+
+                        HBox row = new HBox(10, index, textBox);
+                        row.setAlignment(Pos.CENTER_LEFT);
+
+                        setGraphic(row);
+                    }
                 }
-            }
+            };
+
+            //  DRAG START
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+
+                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(String.valueOf(cell.getIndex()));
+
+                    db.setContent(cc);
+
+                    event.consume();
+                }
+            });
+
+            //  DRAG OVER
+            cell.setOnDragOver(event -> {
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
+            });
+
+            //  DROP
+            cell.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+
+                if (db.hasString()) {
+
+                    int draggedIndex = Integer.parseInt(db.getString());
+                    Room draggedItem = selectedList.getItems().remove(draggedIndex);
+
+                    int dropIndex;
+
+                    if (cell.isEmpty()) {
+                        dropIndex = selectedList.getItems().size();
+                    } else {
+                        dropIndex = cell.getIndex();
+                    }
+
+                    selectedList.getItems().add(dropIndex, draggedItem);
+
+                    event.setDropCompleted(true);
+                    selectedList.getSelectionModel().select(dropIndex);
+                } else {
+                    event.setDropCompleted(false);
+                }
+
+                event.consume();
+            });
+
+            cell.setOnDragEntered(e -> cell.setStyle("-fx-background-color: #E8F0FE;"));
+            cell.setOnDragExited(e -> cell.setStyle(""));
+
+            return cell;
         });
 
-        Button upBtn = new Button("↑");
-        Button downBtn = new Button("↓");
-
-        upBtn.setOnAction(e -> {
-            int index = selectedList.getSelectionModel().getSelectedIndex();
-            if (index > 0) {
-                Collections.swap(selectedRooms, index, index - 1);
-                selectedList.getSelectionModel().select(index - 1);
-            }
-        });
-
-        downBtn.setOnAction(e -> {
-            int index = selectedList.getSelectionModel().getSelectedIndex();
-            if (index < selectedRooms.size() - 1) {
-                Collections.swap(selectedRooms, index, index + 1);
-                selectedList.getSelectionModel().select(index + 1);
-            }
-        });
 
         Button removeBtn = new Button("Remove");
 
@@ -385,16 +443,37 @@ public class Screens {
         VBox rightPanel = new VBox(10,
                 new Label("Selected Rooms (Priority)"),
                 selectedList,
-                new HBox(10, upBtn, downBtn),
+                new HBox(10),
                 removeBtn,
                 generateBtn
         );
 
         rightPanel.setPadding(new Insets(20));
         rightPanel.setPrefWidth(280);
+        rightPanel.getStyleClass().add("card");
+        rightPanel.setSpacing(10);
 
 
+        FlowPane subjectPane = new FlowPane();
+        subjectPane.setHgap(10);
+        subjectPane.setVgap(10);
+        subjectPane.setPadding(new Insets(10));
         TableView<Room> table = new TableView<>();
+        for (String sub : Screens.subjects) {
+
+            Label chip = new Label(sub);
+
+            chip.setStyle(
+                    "-fx-background-color: #EEF4FF;" +
+                            "-fx-text-fill: #2563EB;" +
+                            "-fx-padding: 6 12;" +
+                            "-fx-background-radius: 15;" +
+                            "-fx-font-weight: bold;"
+            );
+
+            subjectPane.getChildren().add(chip);
+        }
+
 
         // Columns
         TableColumn<Room, Integer> roomCol = new TableColumn<>("Room No");
@@ -439,8 +518,25 @@ public class Screens {
                     } else {
                         selectedRooms.remove(room);
                     }
+                    selectedRoomsLabel.setText(String.valueOf(selectedRooms.size()));
+
+                    int selectedCapacity = selectedRooms.stream()
+                            .mapToInt(Room::getCapacity)
+                            .sum();
+
+                    if (selectedCapacity >= Screens.totalStudents) {
+                        statusLabel.setText(" Enough Capacity");
+                        statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                    } else {
+                        statusLabel.setText(" Not Enough Capacity");
+                        statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                    }
+
+                    selectedCapacityLabel.setText(String.valueOf(selectedCapacity));
                 });
+
             }
+
 
             @Override
             protected void updateItem(Boolean item, boolean empty) {
@@ -486,6 +582,24 @@ public class Screens {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        int totalRooms = table.getItems().size();
+
+        int totalCapacity = table.getItems().stream()
+                .mapToInt(Room::getCapacity)
+                .sum();
+
+        HBox infoBar = new HBox(20);
+        infoBar.setPadding(new Insets(10));
+
+        VBox card1 = createInfoCard("Total Students", Screens.totalStudentsLabel);
+        VBox card2 = createInfoCard("Total Rooms", new Label(String.valueOf(totalRooms)));
+        VBox card3 = createInfoCard("Total Capacity", new Label(String.valueOf(totalCapacity)));
+        VBox card4 = createInfoCard("Selected Rooms", selectedRoomsLabel);
+        VBox card5 = createInfoCard("Selected Capacity", selectedCapacityLabel);
+        VBox card6 = createInfoCard("Status", statusLabel);
+
+
+        infoBar.getChildren().addAll(card2, card3, card1, card4, card5, card6);
 
         table.setRowFactory(tv -> new TableRow<>() {
             @Override
@@ -509,16 +623,32 @@ public class Screens {
             }
         });
 
-        HBox layout = new HBox(20, table,rightPanel);
+        HBox layout = new HBox(20, table, rightPanel);
         layout.setPadding(new Insets(20));
 
-        VBox vBox = new VBox(30);
-        vBox.getChildren().addAll(grid, layout);
+        VBox vBox = new VBox(20);
+        vBox.getChildren().addAll(infoBar, subjectPane, layout);
+        vBox.setPadding(new Insets(20));
 
         return vBox;
     }
+
+    private static VBox createInfoCard(String title, Label valueLabel) {
+
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(15));
+        card.setPrefWidth(180);
+
+        card.getStyleClass().add("card");
+
+        Label t = new Label(title);
+        t.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12;");
+
+        valueLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+
+        card.getChildren().addAll(t, valueLabel);
+
+        return card;
+    }
 }
-
-
-
 
