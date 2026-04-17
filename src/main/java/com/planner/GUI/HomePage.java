@@ -52,15 +52,9 @@ public class HomePage extends Application {
     private void showWelcomeMessage(StackPane rootPane) {
 
         Label msg = new Label("Welcome back, Admin");
-        msg.setStyle(
-                "-fx-background-color: transparent; " +
-                        "-fx-text-fill: gray; " +
-                        "-fx-padding: 30 60; " +
-                        "-fx-background-radius: 20;"
-        );
 
         msg.setOpacity(0);
-        msg.getStyleClass().add("dashboard-title");
+        msg.setStyle("-fx-font-size: 22; -fx-font-weight: bold;");
 
         rootPane.getChildren().add(msg);
         StackPane.setAlignment(msg, Pos.TOP_CENTER);
@@ -81,7 +75,7 @@ public class HomePage extends Application {
         in.play();
     }
 
-    private BorderPane createDashboardScreen() {
+        private BorderPane createDashboardScreen() {
 
         BorderPane rootLayout = new BorderPane();
 
@@ -227,41 +221,35 @@ public class HomePage extends Application {
         Button dashboard = createSidebarButton("Dashboard", getDashboardIcon(), true,
                 () -> switchScreen(createTopBar("Dashboard"), Screens.dashboardContent(this)));
 
-        Button students = createSidebarButton("Arrangements", getArrangementIcon(), false,
-                () -> switchScreen(createTopBar("Arrangements"), new Pane()));
+        Button arrangements = createSidebarButton("Arrangements", getArrangementIcon(), false,
+                () -> switchScreen(createTopBar("Arrangements"), Screens.dataScreen(this)));
 
+        Button addRoomBtn = createSidebarButton("Add Room", getRoomIcon(), false,
+                () -> switchScreen(createTopBar("Add Room"), AddNewRoom.newroom(this)));
 
-        Button data = createSidebarButton("Data Import", getArrangementIcon(), false,
-                () -> switchScreen(createTopBar("Data Import"), new Pane()));
+        menu.getChildren().addAll(dashboard, arrangements, addRoomBtn);
 
-        menu.getChildren().addAll(dashboard, students, data);
-
-        //  PRIMARY BUTTON
-        Button newExam = new Button("+ New Exam");
-        newExam.getStyleClass().add("primary-btn");
-        newExam.setPrefWidth(180);
-
-        //  BOTTOM SECTION
-        VBox bottom = new VBox(10);
-
-        Button settings = new Button("Settings");
-        Button support = new Button("Support");
-
-        settings.getStyleClass().add("sidebar-secondary");
-        support.getStyleClass().add("sidebar-secondary");
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        Button logout = new Button("Logout");
-        logout.getStyleClass().add("sidebar-secondary");
+        //  BOTTOM SECTION
+        VBox bottom = new VBox(10);
+        bottom.setAlignment(Pos.BOTTOM_CENTER);
+        bottom.setPadding(new Insets(0, 0, 30, 0));
 
-        bottom.getChildren().addAll(newExam, settings, support, spacer, logout);
+        Button logout = createSidebarButton("Logout", getLogoutIcon(), false,
+                () -> switchScreen(createTopBar("Logout"), new Pane()));
 
-        sidebar.getChildren().addAll(logoBox, menu, bottom);
+        logout.setAlignment(Pos.CENTER);
+
+        bottom.getChildren().addAll(logout);
+
+        sidebar.getChildren().addAll(logoBox, menu,spacer,  bottom);
 
         return sidebar;
     }
+
     private Button createSidebarButton(String text, SVGPath icon, boolean active, Runnable action) {
 
         Button btn = new Button(text);
