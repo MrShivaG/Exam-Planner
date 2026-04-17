@@ -107,10 +107,11 @@ public class RoomScreen extends Application {
 
         addRoomBtn.setOnAction(e -> {
             AddNewRoom newroom = new AddNewRoom();
-            Stage stage = newroom.newroom();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(addRoomBtn.getScene().getWindow());
-            stage.showAndWait();
+            app.switchCenter(AddNewRoom.newroom(app));
+//            Stage stage = newroom.newroom(this);
+//            stage.initModality(Modality.APPLICATION_MODAL);
+//            stage.initOwner(addRoomBtn.getScene().getWindow());
+//            stage.showAndWait();
         });
         header.getChildren().addAll(titleBox, spacer, addRoomBtn);
 
