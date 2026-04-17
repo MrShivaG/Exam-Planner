@@ -33,7 +33,7 @@ public class DB_Methods {
             int[] arr = rooms.get(i);
             System.out.println("Room: " + arr[0] + ", Rows: " + arr[1] + ", Columns: " + arr[2]);
         }
-        con.close();
+
     }
 
 
@@ -54,10 +54,14 @@ public class DB_Methods {
         con.close();
     }
 
-    public void updatedata(int room_no) throws SQLException {
-        PreparedStatement ps = con.prepareStatement("delete from class_room where room_no = ?");
+    public void updatedata(int room_no,int rows,int columns) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("UPDATE class_room SET class_row = ?, class_column = ?, capacity = ? WHERE room_no = ?");
 
-
+        ps.setInt(1,rows);
+        ps.setInt(2,columns);
+        ps.setInt(3,rows*columns);
+        ps.setInt(4,room_no);
+        ps.executeUpdate();
     }
 
     public static List<int[]> fetchRowColumn() throws SQLException {

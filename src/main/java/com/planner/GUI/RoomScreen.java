@@ -1,20 +1,23 @@
 package com.planner.GUI;
 
 import com.planner.Database.DB_Methods;
+import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Line;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.util.List;
 
 
-public class RoomScreen{
+public class RoomScreen extends Application {
     static int totalrooms;
     static int totalstudentcapacity;
     static DB_Methods dbMethods;
@@ -28,6 +31,15 @@ public class RoomScreen{
     }
 
     public RoomScreen() throws SQLException {
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        Scene mainscene = new Scene(room(null), 1200, 700);
+        stage.setScene(mainscene);
+        stage.setX(0);
+        stage.setY(0);
+        stage.show();
     }
 
     public static BorderPane room(HomePage app) throws SQLException {
@@ -49,8 +61,8 @@ public class RoomScreen{
 
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setStyle("-fx-background-color: #0ac489;");
-        header.setPadding(new Insets(20));
+
+        header.setPadding(new Insets(10));
 
         Region sepe = new Region();
         sepe.setPrefHeight(1);
@@ -82,6 +94,7 @@ public class RoomScreen{
                         "-fx-padding: 10 18 10 18;" +
                         "-fx-cursor: hand;"
         );
+
         addRoomBtn.setOnMouseEntered(e -> addRoomBtn.setStyle(
                 "-fx-background-color: #2563eb;" +
                         "-fx-text-fill: white;" +
@@ -92,7 +105,13 @@ public class RoomScreen{
                         "-fx-cursor: hand;"
         ));
 
-
+        addRoomBtn.setOnAction(e -> {
+            AddNewRoom newroom = new AddNewRoom();
+            Stage stage = newroom.newroom();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(addRoomBtn.getScene().getWindow());
+            stage.showAndWait();
+        });
         header.getChildren().addAll(titleBox, spacer, addRoomBtn);
 
 
@@ -109,7 +128,10 @@ public class RoomScreen{
         row.getChildren().addAll(techCard,capacityCard);
 
 
-        HBox roomcardrow = new HBox(16);
+        FlowPane roomcardrow = new FlowPane();
+        roomcardrow.setHgap(20);
+        roomcardrow.setVgap(20);
+        roomcardrow.setAlignment(Pos.CENTER);
 
         List<int[]> rooms = dbMethods.fetchRowColumn();
         for (int i = 0; i < rooms.size(); i++) {
@@ -281,6 +303,18 @@ public class RoomScreen{
                         "-fx-padding: 5 10 5 10;" +
                         "-fx-cursor: hand;"
         );
+        editBtn.setOnAction(e->{
+            try {
+                UpdateRoom update = new UpdateRoom();
+                Stage stage = update.editroom(roomNo);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(editBtn.getScene().getWindow());
+                stage.showAndWait();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
 
         Button dashBtn = new Button("—");
         dashBtn.setStyle(
