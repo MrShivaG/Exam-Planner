@@ -12,7 +12,6 @@ import com.planner.Database.database;
 public class ExcelWork {
 
     public ArrayList<String> fatchExcel(String excelFilePath) {
-        int total=0;
         ArrayList<String> result = new ArrayList<>();
         try (
                 FileInputStream inputStream = new FileInputStream(excelFilePath);
