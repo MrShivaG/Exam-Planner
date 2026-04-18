@@ -245,7 +245,7 @@ public class HomePage extends Application {
         bottom.setPadding(new Insets(0, 0, 30, 0));
 
         Button about = createSidebarButton("About", getLogoutIcon(), false,
-                () -> switchScreen(createTopBar("About"), new Pane()));
+                () -> switchScreen(createTopBar("About"), Screens.about(this)));
         about.setAlignment(Pos.CENTER);
 
         Button logout = createSidebarButton("Logout", getLogoutIcon(), false,
