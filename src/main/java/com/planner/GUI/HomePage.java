@@ -22,7 +22,7 @@ public class HomePage extends Application {
     private Button activeButton = null;
 
     @Override
-    public void start(Stage stage) throws SQLException {
+    public void start(Stage stage) {
 
         root = new BorderPane();
 
@@ -52,15 +52,9 @@ public class HomePage extends Application {
     private void showWelcomeMessage(StackPane rootPane) {
 
         Label msg = new Label("Welcome back, Admin");
-        msg.setStyle(
-                "-fx-background-color: transparent; " +
-                        "-fx-text-fill: gray; " +
-                        "-fx-padding: 30 60; " +
-                        "-fx-background-radius: 20;"
-        );
 
         msg.setOpacity(0);
-        msg.getStyleClass().add("dashboard-title");
+        msg.setStyle("-fx-font-size: 22; -fx-font-weight: bold;");
 
         rootPane.getChildren().add(msg);
         StackPane.setAlignment(msg, Pos.TOP_CENTER);
@@ -81,7 +75,7 @@ public class HomePage extends Application {
         in.play();
     }
 
-    private BorderPane createDashboardScreen() throws SQLException {
+    private BorderPane createDashboardScreen() {
 
         BorderPane rootLayout = new BorderPane();
 
@@ -106,15 +100,15 @@ public class HomePage extends Application {
 
         topBar.getStyleClass().add("top-bar");
 
-        //  LEFT TITLE (FIXED STYLE)
+// LEFT TITLE (FIXED STYLE)
         Label title = new Label(titleText);
         title.getStyleClass().add("title");
 
-        //  SPACER (CRITICAL)
+// SPACER (CRITICAL)
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        //  SEARCH FIELD (FIXED LOOK)
+// SEARCH FIELD (FIXED LOOK)
         TextField search = new TextField();
         search.setPromptText("Search...");
         search.setPrefWidth(220);
@@ -134,11 +128,11 @@ public class HomePage extends Application {
                         "-fx-text-fill: #111827;"
         );
 
-        //  AVATAR (FIX SIZE)
+// AVATAR (FIX SIZE)
         Circle avatar = new Circle(14);
         avatar.setFill(Color.LIGHTGRAY);
 
-        //  RIGHT SECTION (IMPORTANT SPACING)
+// RIGHT SECTION (IMPORTANT SPACING)
         HBox right = new HBox(12, search, bell, user, avatar);
         right.setAlignment(Pos.CENTER_RIGHT);
 
@@ -211,7 +205,7 @@ public class HomePage extends Application {
         sidebar.setPrefWidth(230);
         sidebar.getStyleClass().add("sidebar");
 
-        // LOGO SECTION
+// LOGO SECTION
         VBox logoBox = new VBox(5);
         Label title = new Label("E - SAP");
         title.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
@@ -221,49 +215,50 @@ public class HomePage extends Application {
 
         logoBox.getChildren().addAll(title, subtitle);
 
-        // MENU
+// MENU
         VBox menu = new VBox(10);
 
         Button dashboard = createSidebarButton("Dashboard", getDashboardIcon(), true,
+                () -> switchScreen(createTopBar("Dashboard"), Screens.dashboardContent(this)));
+
+        Button arrangements = createSidebarButton("Arrangements", getArrangementIcon(), false,
+                () -> switchScreen(createTopBar("Arrangements"), Screens.dataScreen(this)));
+
+        Button showRoomBtn = createSidebarButton("Show Room", getRoomIcon(), false,
                 () -> {
-                    switchScreen(createTopBar("Dashboard"), Screens.dashboardContent(this));
+                    try {
+                        switchScreen(createTopBar("Show Room"), RoomScreen.room(this));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
 
-        Button students = createSidebarButton("Arrangements", getArrangementIcon(), false,
-                () -> switchScreen(createTopBar("Arrangements"), new Pane()));
+        menu.getChildren().addAll(dashboard, arrangements, showRoomBtn);
 
-
-        Button data = createSidebarButton("Data Import", getArrangementIcon(), false,
-                () -> switchScreen(createTopBar("Data Import"), new Pane()));
-
-        menu.getChildren().addAll(dashboard, students, data);
-
-        //  PRIMARY BUTTON
-        Button newExam = new Button("+ New Exam");
-        newExam.getStyleClass().add("primary-btn");
-        newExam.setPrefWidth(180);
-
-        //  BOTTOM SECTION
-        VBox bottom = new VBox(10);
-
-        Button settings = new Button("Settings");
-        Button support = new Button("Support");
-
-        settings.getStyleClass().add("sidebar-secondary");
-        support.getStyleClass().add("sidebar-secondary");
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        Button logout = new Button("Logout");
-        logout.getStyleClass().add("sidebar-secondary");
+// BOTTOM SECTION
+        VBox bottom = new VBox(10);
+        bottom.setAlignment(Pos.BOTTOM_CENTER);
+        bottom.setPadding(new Insets(0, 0, 30, 0));
 
-        bottom.getChildren().addAll(newExam, settings, support, spacer, logout);
+        Button about = createSidebarButton("About", getLogoutIcon(), false,
+                () -> switchScreen(createTopBar("About"), Screens.about(this)));
+        about.setAlignment(Pos.CENTER);
 
-        sidebar.getChildren().addAll(logoBox, menu, bottom);
+        Button logout = createSidebarButton("Logout", getLogoutIcon(), false,
+                () -> switchScreen(createTopBar("Logout"), new Pane()));
+        logout.setAlignment(Pos.CENTER);
+
+        bottom.getChildren().addAll(about, logout);
+
+        sidebar.getChildren().addAll(logoBox, menu,spacer, bottom);
 
         return sidebar;
     }
+
     private Button createSidebarButton(String text, SVGPath icon, boolean active, Runnable action) {
 
         Button btn = new Button(text);
@@ -292,13 +287,13 @@ public class HomePage extends Application {
         if (activeButton != null) {
             activeButton.getStyleClass().remove("sidebar-active");
 
-            // reset icon color
+// reset icon color
             ((SVGPath) activeButton.getGraphic()).setStyle("-fx-fill: #6B7280;");
         }
 
         btn.getStyleClass().add("sidebar-active");
 
-        // set active icon color
+// set active icon color
         ((SVGPath) btn.getGraphic()).setStyle("-fx-fill: #2563EB;");
 
         activeButton = btn;
@@ -311,16 +306,16 @@ public class HomePage extends Application {
         HBox card = new HBox(10);
         card.setAlignment(Pos.CENTER_LEFT);
 
-//        ImageView image = new ImageView(
-//                new Image(getClass().getResourceAsStream("com/planner/GUI/" + imagePath))
-//        );
+// ImageView image = new ImageView(
+// new Image(getClass().getResourceAsStream("com/planner/GUI/" + imagePath))
+// );
 //
-//        image.setFitWidth(50);
-//        image.setFitHeight(50);
+// image.setFitWidth(50);
+// image.setFitHeight(50);
 
-        //  Make circular image
-//        Circle clip = new Circle(25, 25, 25);
-//        image.setClip(clip);
+// Make circular image
+// Circle clip = new Circle(25, 25, 25);
+// image.setClip(clip);
 
         VBox devdetail = new VBox(3);
 
@@ -337,12 +332,12 @@ public class HomePage extends Application {
         return card;
     }
 
-    //  CARD
+// CARD
 
 
-    //  ROOM SCREEN
+// ROOM SCREEN
 
-    //  FADE SWITCH
+// FADE SWITCH
 
     public void switchScreen(Node topBar, Node content) {
         rightSide.setTop(topBar);
