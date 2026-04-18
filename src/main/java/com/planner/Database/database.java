@@ -6,7 +6,8 @@ import java.sql.SQLException;
 
 public class database {
 
-    private static final String URL = "jdbc:mysql://10.172.119.20:3306/examplanner";
+    private static final String URL = "jdbc:mysql://10.225.181.20:3306/examplanner";
+    //10.225.181.20
     private static final String USERNAME = "remote";
     private static final String PASSWORD = "root";
 
@@ -23,16 +24,19 @@ public class database {
 
 
     public static String connectDB(){
-        try {
-            Connection con = connection();
-            return "Database connected successfully.";
-        } catch (SQLException e) {
-            return "Connection failed: " + e.getMessage();
-        }
+        Connection con = connection();
+        return "Database connected successfully.";
     }
-    public static Connection connection() throws SQLException {
-        Connection con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        return con;
+    public static Connection connection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            return con;
+        } catch (ClassNotFoundException e) {
+            return null;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
 }
