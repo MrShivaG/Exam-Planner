@@ -22,6 +22,79 @@
     -fx-background-color: #f5f9ff;
     -fx-effect: dropshadow(gaussian, rgba(37, 99, 239, 0.25), 25, 0.3, 0, 4);
 }
+.cardrow{
+-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 15, 0.2, 0, 4);
+}
+.cardrow:hover{
+    -fx-background-color: #f5f9ff;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 239, 0.25), 25, 0.3, 6, 4);
+}
+
+
+.status-dot-online {
+    -fx-fill: #13fa02;
+
+        /* Border styling for better definition */
+        -fx-stroke: #0ca301;
+        -fx-stroke-type: inside;
+        -fx-stroke-width: 1;
+
+        /* Strong Glow Effect */
+        -fx-effect: dropshadow(gaussian, #13fa02, 12, 0.5, 0, 0);
+}
+
+
+.status-dot-offline {
+   -fx-fill: #EF4444;
+       -fx-stroke: #B91C1C;
+       -fx-stroke-type: inside;
+       -fx-stroke-width: 1;
+
+       /* Soft Red Glow */
+       -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.6), 8, 0.4, 0, 0);
+}
+
+.roomcard:hover{
+     -fx-background-color: #f5f9ff;
+     -fx-effect: dropshadow(gaussian, rgba(37, 99, 239, 0.25), 25, 0.3, 0, 4);
+}
+
+.editbutton {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1a56db;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-border-color: #e0e0ec;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-padding: 5 10 5 10;
+    -fx-cursor: hand;
+}
+
+.editbutton:hover {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+}
+
+.deletebutton {
+    -fx-background-color: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: #7a7a9a;
+    -fx-font-size: 22px;
+    -fx-border-color: #e0e0ec;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+    -fx-padding: 0 5 0 5;
+    -fx-cursor: hand;
+}
+
+.deletebutton:hover {
+    -fx-background-color: #f70202;
+    -fx-text-fill: white;
+}
+
+
+
 
 title.setStyle(
     "-fx-font-size: 16px;" +
