@@ -11,28 +11,16 @@ import java.util.List;
 
 public class DB_Methods {
     static database databaseobj = new database();
-    static Connection con;
+    public static Connection con;
 
     static {
-        try {
-            con = databaseobj.connection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        con = databaseobj.connection();
     }
 
     public DB_Methods() throws SQLException {
     }
 
     public static void main(String[] args) throws SQLException {
-        System.out.println(databaseobj.connectDB());
-        System.out.println(totalroom());
-        System.out.println(totalcapacity());
-        List<int[]> rooms = fetchRowColumn();
-        for (int i = 0; i < rooms.size(); i++) {
-            int[] arr = rooms.get(i);
-            System.out.println("Room: " + arr[0] + ", Rows: " + arr[1] + ", Columns: " + arr[2]);
-        }
 
     }
 
@@ -91,18 +79,22 @@ public class DB_Methods {
 
 
 
-    public static int totalroom() throws SQLException {
-        PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) AS total_rooms FROM class_room");
-        ResultSet rs = ps.executeQuery();
+    public int totalroom() {
+        if (this.con == null) return 0;
 
-        if (rs.next()) {
-            int total = rs.getInt("total_rooms");
-            return total;
+        int count = 0;
+        try {
+            PreparedStatement pst = con.prepareStatement("SELECT COUNT(*) FROM class_room");
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+            return 0;
         }
-
-        rs.close();
-        ps.close();
-       return -1;
+        return count; // 0 ki jagah variable return karein
     }
 
     public static int totalcapacity() throws SQLException {
@@ -115,6 +107,22 @@ public class DB_Methods {
         rs.close();
         ps.close();
         return -1;
+    }
+    public List<String[]> fetch_Arr_data() throws SQLException {
+        PreparedStatement ps = con.prepareStatement("select * from arrangementDB");
+        ResultSet rs = ps.executeQuery();
+        List<String[]> arrangement = new ArrayList<>();
+        while (rs.next()) {
+            String arr_table_name = rs.getString("arr_table_name");
+            String arr_name = rs.getString("arr_name");
+            String  arr_date = rs.getString("arr_date");
+            String  capacity = rs.getString("capacity");
+            String  arr_session = rs.getString("arr_session");
+            String  arr_status = rs.getString("arr_status");
+            String  students = rs.getString("students");
+            arrangement.add(new String[]{arr_table_name,arr_name, arr_date, capacity, arr_session,arr_status,students});
+        }
+        return arrangement;
     }
 
 }
