@@ -2,7 +2,10 @@ package com.planner.GUI;
 
 import javafx.application.Application;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class Notification extends Application {
     public static Alert message(String mess){
@@ -13,6 +16,18 @@ public class Notification extends Application {
 
         alert.showAndWait();
         return alert;
+    }
+    public static boolean confirm(String mess) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Action");
+        alert.setHeaderText("Delete Confirmation");
+        alert.setContentText(mess);
+
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     @Override
