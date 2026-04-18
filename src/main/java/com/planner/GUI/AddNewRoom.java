@@ -29,32 +29,58 @@ public class AddNewRoom extends Application {
         BorderPane roompane = new BorderPane();
         VBox headerbox = new VBox();
         headerbox.setPadding(new Insets(20));
+        headerbox.setStyle("-fx-background-color: white;");
         Label headerlabel = new Label("Add New Room");
-        headerlabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+        headerlabel.setStyle(
+                "-fx-font-size: 20px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
         Separator sep = new Separator();
-        sep.setStyle("-fx-background-color: black; -fx-pref-height: 3px;");
+        sep.setStyle("-fx-background-color: BLACK;");
 
         headerbox.getChildren().addAll(headerlabel,sep);
 
         GridPane contentPane = new GridPane();
+        contentPane.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-border-color: #E5E7EB;" +
+                        "-fx-border-radius: 6;" +
+                        "-fx-background-radius: 6;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-padding: 6 10 6 10;" +
+                        "-fx-font-size: 13px;"
+        );
         contentPane.setVgap(20);
         contentPane.setHgap(20);
         contentPane.setAlignment(Pos.CENTER);
 
         Label roomnolable = new Label("Room No.");
-        roomnolable.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        roomnolable.setStyle(
+                "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
         TextField roomnotext = new TextField();
         roomnotext.setPrefSize(200, 30);
         roomnotext.setPromptText("Enter Room no...");
 
         Label rowlable = new Label("Rows");
-        rowlable.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        rowlable.setStyle(
+                "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
         TextField rowtext = new TextField();
         rowtext.setPrefSize(200, 30);
         rowtext.setPromptText("Enter row no...");
 
         Label columnlable = new Label("Columns");
-        columnlable.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        columnlable.setStyle(
+                "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
         TextField columntext = new TextField();
         columntext.setPrefSize(200, 30);
         columntext.setPromptText("Enter column no...");
@@ -70,13 +96,15 @@ public class AddNewRoom extends Application {
 
 
         Button addbutton = new Button("Add");
-        addbutton.setStyle("-fx-background-radius: 10; " +
-                "-fx-border-radius: 10;" +
-                " -fx-border-color: black;" +
-                " -fx-text-fill: black; " +
-                "-fx-font-weight: bold;" +
-                " -fx-font-size: 20px;");
-
+        addbutton.setStyle(
+                "-fx-background-color: #185FA5;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-padding: 8 24 8 24;" +
+                        "-fx-cursor: hand;"
+        );
         addbutton.setOnAction(e->{
             roompane.setBottom(bottombox);
             bottombox.setVisible(true);
