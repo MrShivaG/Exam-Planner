@@ -75,7 +75,7 @@ public class HomePage extends Application {
         in.play();
     }
 
-        private BorderPane createDashboardScreen() {
+    private BorderPane createDashboardScreen() {
 
         BorderPane rootLayout = new BorderPane();
 
