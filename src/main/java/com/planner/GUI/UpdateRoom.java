@@ -33,7 +33,11 @@ public class UpdateRoom extends Application {
         VBox headerbox = new VBox();
         headerbox.setPadding(new Insets(20));
         Label headerlabel = new Label("Update Room "+roomno);
-        headerlabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
+        headerlabel.setStyle(
+                "-fx-font-size: 20px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
         Separator sep = new Separator();
         sep.setStyle("-fx-background-color: black; -fx-pref-height: 3px;");
 
@@ -41,6 +45,15 @@ public class UpdateRoom extends Application {
 
 
         GridPane contentPane = new GridPane();
+        contentPane.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-border-color: #E5E7EB;" +
+                        "-fx-border-radius: 6;" +
+                        "-fx-background-radius: 6;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-padding: 6 10 6 10;" +
+                        "-fx-font-size: 13px;"
+        );
         contentPane.setVgap(20);
         contentPane.setHgap(20);
         contentPane.setAlignment(Pos.CENTER);
@@ -51,14 +64,22 @@ public class UpdateRoom extends Application {
 
 
         Label rowlable = new Label("Rows");
-        rowlable.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        rowlable.setStyle(
+                "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
         TextField rowtext = new TextField();
         rowtext.setText(String.valueOf(arr[0]));
         rowtext.setPrefSize(200, 30);
         rowtext.setPromptText("Enter row no...");
 
         Label columnlable = new Label("Columns");
-        columnlable.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        columnlable.setStyle(
+                "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
         TextField columntext = new TextField();
         columntext.setText(String.valueOf(arr[1]));
         columntext.setPrefSize(200, 30);
@@ -75,21 +96,31 @@ public class UpdateRoom extends Application {
 
 
         Button editbutton = new Button("Update");
-        editbutton.setStyle("-fx-background-radius: 10; " +
-                "-fx-border-radius: 10;" +
-                " -fx-border-color: black;" +
-                " -fx-text-fill: black; " +
-                "-fx-font-weight: bold;" +
-                " -fx-font-size: 20px;");
-
+        editbutton.setStyle(
+                "-fx-background-color: #185FA5;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-padding: 8 24 8 24;" +
+                        "-fx-cursor: hand;"
+        );
         editbutton.setOnAction(e -> {
             editpane.setBottom(bottombox);
             bottombox.setVisible(true);
+            HomePage homepageobj = new HomePage();
+            try {
+                RoomScreen.room(homepageobj);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
 
             try {
                 int row = Integer.parseInt(rowtext.getText());
                 int column = Integer.parseInt(columntext.getText());
                 dbMethods.updatedata(roomno, row, column);
+
+
                 notificationlable.setText("Room updated Successfully!");
             } catch (NumberFormatException ex) {
                 notificationlable.setText("Error: Please enter valid numbers.");
