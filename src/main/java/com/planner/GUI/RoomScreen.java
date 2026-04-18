@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -13,6 +14,7 @@ import javafx.scene.shape.Line;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -36,6 +38,15 @@ public class RoomScreen extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Scene mainscene = new Scene(room(null), 1200, 700);
+        URL css = getClass().getResource("/app.css");
+        if (css != null) {
+            mainscene.getStylesheets().add(css.toExternalForm());
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setContentText("CSS File Not Found");
+            alert.showAndWait();
+        }
         stage.setScene(mainscene);
         stage.setX(0);
         stage.setY(0);
@@ -53,7 +64,7 @@ public class RoomScreen extends Application {
         );
         VBox contentbox = new VBox(20);
         contentbox.setPadding(new Insets(24, 32, 32, 32));
-        contentbox.setStyle("-fx-background-color: #e4ecf0;");
+        contentbox.setStyle("-fx-background-color: #F8F9FA;");
 
         HBox hBox = new HBox(6);
         hBox.setAlignment(Pos.CENTER_LEFT);
@@ -62,7 +73,7 @@ public class RoomScreen extends Application {
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
 
-        header.setPadding(new Insets(10));
+        header.setSpacing(20);
 
         Region sepe = new Region();
         sepe.setPrefHeight(1);
@@ -71,15 +82,25 @@ public class RoomScreen extends Application {
 
         VBox titleBox = new VBox(4);
         Label title = new Label("Room & Capacity Management");
-
         title.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
                         "-fx-font-size: 22px;" +
                         "-fx-font-weight: bold;"
         );
+        Label subtitle = new Label("Manage room assets and seating limits.");
+        subtitle.setStyle(
+                "-fx-text-fill: #6B7280; -fx-font-size: 13;" +
+                        "-fx-font-style: italic;"
+        );
 
 
-        titleBox.getChildren().addAll(title);
+
+
+
+        titleBox.getChildren().addAll(title,subtitle);
+
+        Region spa = new Region();
+        HBox.setHgrow(spa, Priority.ALWAYS);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -112,20 +133,20 @@ public class RoomScreen extends Application {
             stage.initOwner(addRoomBtn.getScene().getWindow());
             stage.showAndWait();
         });
-        header.getChildren().addAll(titleBox, spacer, addRoomBtn);
 
 
-        HBox row = new HBox(16);
+
+
 
         VBox capacityCard = capacity();
-        capacityCard.setPrefSize(400,150);
+        capacityCard.setPrefSize(200,80);
         VBox techCard = totalRoomCount();
-        techCard.setPrefSize(400,150);
+        techCard.setPrefSize(200,80);
 
 
-        row.setAlignment(Pos.CENTER);
 
-        row.getChildren().addAll(techCard,capacityCard);
+        header.getChildren().addAll(titleBox,spa, techCard,capacityCard,spacer, addRoomBtn);
+
 
 
         FlowPane roomcardrow = new FlowPane();
@@ -145,7 +166,7 @@ public class RoomScreen extends Application {
 
 
 
-        contentbox.getChildren().addAll(hBox,header,sepe,row,roomcardrow);
+        contentbox.getChildren().addAll(hBox,header,sepe,roomcardrow);
         scrollpane.setContent(contentbox);
         borderPane.setCenter(scrollpane);
 
@@ -154,7 +175,8 @@ public class RoomScreen extends Application {
     }
     private static VBox capacity() throws SQLException {
         VBox card = new VBox(6);
-        card.setPadding(new Insets(18, 20, 18, 20));
+        card.getStyleClass().add("roomcard");
+        card.setPadding(new Insets(10, 20, 10, 20));
         card.setStyle(
                 "-fx-background-color: WHITE;" +
                         "-fx-background-radius: 10;" +
@@ -165,9 +187,7 @@ public class RoomScreen extends Application {
 
         Label tagLabel = new Label("LIVE CAPACITY");
         tagLabel.setStyle(
-                "-fx-text-fill: #7a7a9a;" +
-                        "-fx-font-size: 10px;" +
-                        "-fx-font-weight: bold;"
+                "-fx-text-fill: #6B7280; -fx-font-size: 14;"
         );
 
         totalstudentcapacity =dbMethods.totalcapacity();
@@ -175,14 +195,12 @@ public class RoomScreen extends Application {
         Label numLabel = new Label(String.valueOf(totalstudentcapacity));
         numLabel.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
-                        "-fx-font-size: 32px;" +
-                        "-fx-font-weight: bold;"
+                "-fx-font-size: 28; -fx-font-weight: bold;"
         );
 
         Label subLabel = new Label("Total Load Seats");
         subLabel.setStyle(
-                "-fx-text-fill: #7a7a9a;" +
-                        "-fx-font-size: 11px;"
+                "-fx-text-fill: #6B7280; -fx-font-size: 11;"
         );
 
         Region spacer = new Region();
@@ -195,7 +213,8 @@ public class RoomScreen extends Application {
     }
     private static VBox totalRoomCount() throws SQLException {
         VBox card = new VBox(6);
-        card.setPadding(new Insets(18, 20, 18, 20));
+        card.getStyleClass().add("roomcard");
+        card.setPadding(new Insets(15, 20, 15, 20));
         card.setStyle(
                 "-fx-background-color: WHITE;" +
                         "-fx-background-radius: 10;" +
@@ -204,11 +223,9 @@ public class RoomScreen extends Application {
                         "-fx-border-width: 1;"
         );
 
-        Label tagLabel = new Label("Total Room");
+        Label tagLabel = new Label("TOTAL ROOMS");
         tagLabel.setStyle(
-                "-fx-text-fill: #7a7a9a;" +
-                        "-fx-font-size: 10px;" +
-                        "-fx-font-weight: bold;"
+                "-fx-text-fill: #7a7a9a;" +"-fx-text-fill: #6B7280; -fx-font-size: 14;"
         );
 
         totalrooms =dbMethods.totalroom();
@@ -234,17 +251,8 @@ public class RoomScreen extends Application {
                         "-fx-border-radius: 10;" +
                         "-fx-border-width: 1;"
         );
+        card.getStyleClass().add("roomcard");
 
-//        StackPane imgBox = new StackPane();
-//        imgBox.setPrefHeight(130);
-//        imgBox.setStyle(
-//                "-fx-background-color: #2a2a3e;" +
-//                        "-fx-background-radius: 10 10 0 0;"
-//        );
-
-        Label roomIcon = new Label();
-        roomIcon.setStyle("-fx-font-size: 36px;");
-//        imgBox.getChildren().add(roomIcon);
 
         VBox body = new VBox(8);
         body.setPadding(new Insets(14, 16, 14, 16));
@@ -257,8 +265,8 @@ public class RoomScreen extends Application {
         );
 
         Region seperator = new Region();
-        seperator.setPrefHeight(1);
-        seperator.setStyle("-fx-background-color: #e0e0ec;");
+
+        seperator.setStyle("-fx-background-color: #e6e6ed;");
         seperator.setMaxWidth(Double.MAX_VALUE);
 
         Label locationLabel = new Label("ADMIN CENTER - BLOCK A");
@@ -284,6 +292,7 @@ public class RoomScreen extends Application {
 
         Region sep = new Region();
         sep.setPrefHeight(1);
+
         sep.setStyle("-fx-background-color: #e0e0ec;");
         sep.setMaxWidth(Double.MAX_VALUE);
 
@@ -292,17 +301,9 @@ public class RoomScreen extends Application {
         bottomRow.setPadding(new Insets(4, 0, 0, 0));
 
         Button editBtn = new Button("EDIT DETAILS");
-        editBtn.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-text-fill: #1a56db;" +
-                        "-fx-font-size: 10px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-border-color: #e0e0ec;" +
-                        "-fx-border-radius: 4;" +
-                        "-fx-border-width: 1;" +
-                        "-fx-padding: 5 10 5 10;" +
-                        "-fx-cursor: hand;"
-        );
+        editBtn.getStyleClass().add("editbutton");
+
+
         editBtn.setOnAction(e->{
             try {
                 UpdateRoom update = new UpdateRoom();
@@ -316,17 +317,17 @@ public class RoomScreen extends Application {
 
         });
 
-        Button dashBtn = new Button("—");
-        dashBtn.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-text-fill: #7a7a9a;" +
-                        "-fx-font-size: 12px;" +
-                        "-fx-border-color: #e0e0ec;" +
-                        "-fx-border-radius: 4;" +
-                        "-fx-border-width: 1;" +
-                        "-fx-padding: 5 10 5 10;" +
-                        "-fx-cursor: hand;"
-        );
+        Button dashBtn = new Button("\uD83D\uDDD1");
+        dashBtn.getStyleClass().add("deletebutton");
+        dashBtn.setOnAction(e->{
+            Notification notification = new Notification();
+            notification.confirm("Are you sure you want to delete "+roomNo);
+            try {
+                dbMethods.deleterow(roomNo);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         bottomRow.getChildren().addAll(editBtn, dashBtn);
         body.getChildren().addAll(roomnolabel, seperator,locationLabel, detailsRow, sep, bottomRow);
@@ -334,4 +335,5 @@ public class RoomScreen extends Application {
 
         return card;
     }
+
 }
