@@ -7,11 +7,13 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.net.URL;
 import java.sql.SQLException;
+import javafx.scene.Node;
 
 public class HomePage extends Application {
 
@@ -20,7 +22,7 @@ public class HomePage extends Application {
     private Button activeButton = null;
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws SQLException {
 
         root = new BorderPane();
 
@@ -29,6 +31,7 @@ public class HomePage extends Application {
         StackPane mainStack = new StackPane(content);
 
         Scene scene = new Scene(mainStack, 1000, 650);
+
         URL css = getClass().getResource("/app.css");
         if (css != null) {
             scene.getStylesheets().add(css.toExternalForm());
@@ -78,48 +81,70 @@ public class HomePage extends Application {
         in.play();
     }
 
-    private BorderPane createDashboardScreen() {
+    private BorderPane createDashboardScreen() throws SQLException {
 
         BorderPane rootLayout = new BorderPane();
 
-        HBox mainLayout = new HBox();
-
         VBox sidebar = createSidebar();
+        rootLayout.setLeft(sidebar);
 
         rightSide = new BorderPane();
-        rightSide.setTop(createHeader());
-     //   rightSide.setBottom(createDeveloperSection());
 
-        HBox.setHgrow(rightSide, Priority.ALWAYS);
-        mainLayout.getChildren().addAll(sidebar, rightSide);
+        rightSide.setTop(createTopBar("Dashboard"));
+        rightSide.setCenter(Screens.dashboardContent(this));
 
-        rootLayout.setCenter(mainLayout);
+        rootLayout.setCenter(rightSide);
 
         return rootLayout;
     }
-    private BorderPane createHeader() {
+    private HBox createTopBar(String titleText){
 
-        BorderPane header = new BorderPane();
-        header.setPadding(new Insets(10, 20, 10, 20));
-        //header.getStyleClass().add("glass");
+        HBox topBar = new HBox();
+        topBar.setPrefHeight(60);
+        topBar.setPadding(new Insets(0, 25, 0, 25));
+        topBar.setAlignment(Pos.CENTER_LEFT);
 
-        VBox centerBox = new VBox(2);
-        centerBox.setAlignment(Pos.CENTER);
+        topBar.getStyleClass().add("top-bar");
 
-        Label heading = new Label("Manage your exam seating efficiently");
-        heading.getStyleClass().add("dashboard-title");
+        //  LEFT TITLE (FIXED STYLE)
+        Label title = new Label(titleText);
+        title.getStyleClass().add("title");
 
-        Label subtitle = new Label("Smart Exam Arrangement System");
-        subtitle.getStyleClass().add("hyyuser");
+        //  SPACER (CRITICAL)
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        centerBox.getChildren().addAll(heading, subtitle);
-        header.setCenter(centerBox);
+        //  SEARCH FIELD (FIXED LOOK)
+        TextField search = new TextField();
+        search.setPromptText("Search...");
+        search.setPrefWidth(220);
+        search.setPrefHeight(36);
 
-        Label username = new Label("Admin");
-        username.setStyle("-fx-text-fill: #111827; -fx-font-weight: bold;");
-        header.setRight(username);
+        search.getStyleClass().add("search-box");
 
-        return header;
+        Label bell = new Label("🔔");
+        bell.setStyle("-fx-font-size: 16px;");
+        bell.setMinWidth(30);
+        bell.setAlignment(Pos.CENTER);
+
+        Label user = new Label("Admin User");
+        user.setStyle(
+                "-fx-font-size: 13px;" +
+                        "-fx-font-weight: 600;" +
+                        "-fx-text-fill: #111827;"
+        );
+
+        //  AVATAR (FIX SIZE)
+        Circle avatar = new Circle(14);
+        avatar.setFill(Color.LIGHTGRAY);
+
+        //  RIGHT SECTION (IMPORTANT SPACING)
+        HBox right = new HBox(12, search, bell, user, avatar);
+        right.setAlignment(Pos.CENTER_RIGHT);
+
+        topBar.getChildren().addAll(title, spacer, right);
+
+        return topBar;
     }
 
     private SVGPath getDashboardIcon() {
@@ -130,7 +155,7 @@ public class HomePage extends Application {
                 "M3 13h8V3H3v10zm10 8h8V3h-8v18zM3 21h8v-6H3v6zm10 0h8v-6h-8v6z"
         );
 
-        icon.setFill(Color.GRAY);
+        icon.setStyle("-fx-fill: #6B7280;");
         icon.setScaleX(1.2);
         icon.setScaleY(1.2);
 
@@ -145,22 +170,20 @@ public class HomePage extends Application {
                 "M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"
         );
 
-        icon.setFill(Color.GRAY);
+        icon.setStyle("-fx-fill: #6B7280;");
         icon.setScaleX(1.2);
         icon.setScaleY(1.2);
 
         return icon;
     }
 
-    private SVGPath getClassroomIcon() {
-
+    private SVGPath getRoomIcon() {
         SVGPath icon = new SVGPath();
 
         icon.setContent(
-                "M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 13L3.74 10 12 5l8.26 5L12 16z"
+                "M4 3h12v14H4V3zm2 2v10h8V5H6zm1 2h2v2H7V7zm4 0h2v2h-2V7zm-4 4h2v2H7v-2zm4 0h2v2h-2v-2z"
         );
-
-        icon.setFill(Color.GRAY);
+        icon.setStyle("-fx-fill: #6B7280;");
         icon.setScaleX(1.2);
         icon.setScaleY(1.2);
 
@@ -174,8 +197,7 @@ public class HomePage extends Application {
         icon.setContent(
                 "M16 13v-2H7V8l-5 4 5 4v-3h9zm3-10H9a2 2 0 00-2 2v3h2V5h10v14H9v-3H7v3a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2z"
         );
-
-        icon.setFill(Color.GRAY);
+        icon.setStyle("-fx-fill: #6B7280;");
         icon.setScaleX(1.2);
         icon.setScaleY(1.2);
 
@@ -184,54 +206,80 @@ public class HomePage extends Application {
 
     private VBox createSidebar() {
 
-        VBox sidebar = new VBox(10);
+        VBox sidebar = new VBox(20);
         sidebar.setPadding(new Insets(20));
-        sidebar.setPrefWidth(220);
-        sidebar.getStyleClass().add("glass");
+        sidebar.setPrefWidth(230);
+        sidebar.getStyleClass().add("sidebar");
 
-        // 🔷 Buttons
-        Button dashboard = createSidebarButton("Dashboard", getDashboardIcon(),
-                () -> switchCenter(new Pane()));
-        Button arrangement = createSidebarButton(
-                "Arrangements",
-                getArrangementIcon(),
-                () -> switchCenter(Screens.arrangementContent(this))
-        );
+        // LOGO SECTION
+        VBox logoBox = new VBox(5);
+        Label title = new Label("E - SAP");
+        title.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
 
-        Button room = createSidebarButton("Add Room", getClassroomIcon(),
+        Label subtitle = new Label("ADMIN");
+        subtitle.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 10;");
+
+        logoBox.getChildren().addAll(title, subtitle);
+
+        // MENU
+        VBox menu = new VBox(10);
+
+        Button dashboard = createSidebarButton("Dashboard", getDashboardIcon(), true,
                 () -> {
-                    try {
-                        switchCenter(RoomScreen.room(this));
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    switchScreen(createTopBar("Dashboard"), Screens.dashboardContent(this));
                 });
+
+        Button students = createSidebarButton("Arrangements", getArrangementIcon(), false,
+                () -> switchScreen(createTopBar("Arrangements"), new Pane()));
+
+
+        Button data = createSidebarButton("Data Import", getArrangementIcon(), false,
+                () -> switchScreen(createTopBar("Data Import"), new Pane()));
+
+        menu.getChildren().addAll(dashboard, students, data);
+
+        //  PRIMARY BUTTON
+        Button newExam = new Button("+ New Exam");
+        newExam.getStyleClass().add("primary-btn");
+        newExam.setPrefWidth(180);
+
+        //  BOTTOM SECTION
+        VBox bottom = new VBox(10);
+
+        Button settings = new Button("Settings");
+        Button support = new Button("Support");
+
+        settings.getStyleClass().add("sidebar-secondary");
+        support.getStyleClass().add("sidebar-secondary");
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        Button logout = createSidebarButton("Logout", getLogoutIcon(),
-                () -> switchCenter(new Pane()));
+        Button logout = new Button("Logout");
+        logout.getStyleClass().add("sidebar-secondary");
 
-        sidebar.getChildren().addAll(dashboard, arrangement, room, spacer, logout);
+        bottom.getChildren().addAll(newExam, settings, support, spacer, logout);
+
+        sidebar.getChildren().addAll(logoBox, menu, bottom);
 
         return sidebar;
     }
-
-    private Button createSidebarButton(String text, SVGPath icon, Runnable action) {
+    private Button createSidebarButton(String text, SVGPath icon, boolean active, Runnable action) {
 
         Button btn = new Button(text);
         btn.setGraphic(icon);
-
         btn.setContentDisplay(ContentDisplay.LEFT);
         btn.setGraphicTextGap(10);
+
+        btn.setMaxWidth(Double.MAX_VALUE);
+
         btn.getStyleClass().add("sidebar-btn");
 
-        // Hover effect
-        btn.setOnMouseEntered(e -> icon.setFill(Color.BLUE));
-        btn.setOnMouseExited(e -> icon.setFill(Color.GRAY));
+        if (active) {
+            btn.getStyleClass().add("sidebar-active");
+            icon.setStyle("-fx-fill: #2563EB;");
+        }
 
-        // Click action
         btn.setOnAction(e -> {
             highlightActive(btn);
             action.run();
@@ -239,45 +287,24 @@ public class HomePage extends Application {
 
         return btn;
     }
-
     private void highlightActive(Button btn) {
 
         if (activeButton != null) {
             activeButton.getStyleClass().remove("sidebar-active");
+
+            // reset icon color
+            ((SVGPath) activeButton.getGraphic()).setStyle("-fx-fill: #6B7280;");
         }
 
         btn.getStyleClass().add("sidebar-active");
+
+        // set active icon color
+        ((SVGPath) btn.getGraphic()).setStyle("-fx-fill: #2563EB;");
+
         activeButton = btn;
     }
 
-    //  DASHBOARD
 
-    private HBox createDeveloperSection() {
-
-        HBox container = new HBox(15);
-        container.setAlignment(Pos.CENTER);
-        container.setPadding(new Insets(15));
-        container.setPrefHeight(80);
-        container.setPadding(new Insets(10, 20, 10, 20));
-        container.getStyleClass().add("glass");
-
-        Label devs = new Label("Developed By:");
-        devs.getStyleClass().add("dashboard-title");
-
-        HBox devRow = new HBox(25);
-        devRow.setAlignment(Pos.CENTER);
-
-
-        HBox dev1 = createDeveloperCard("E-SAPlogo.jpg", "Name 1", "CSE-A");
-        HBox dev2 = createDeveloperCard("E-SAPlogo.jpg", "Name 2", "CSE-A");
-        HBox dev3 = createDeveloperCard("E-SAPlogo.jpg", "Name 3", "CSE-A");
-
-        devRow.getChildren().addAll(dev1, dev2, dev3);
-
-        container.getChildren().addAll(devs, devRow);
-
-        return container;
-    }
 
     private HBox createDeveloperCard(String imagePath, String name, String section) {
 
@@ -316,6 +343,12 @@ public class HomePage extends Application {
     //  ROOM SCREEN
 
     //  FADE SWITCH
+
+    public void switchScreen(Node topBar, Node content) {
+        rightSide.setTop(topBar);
+        switchCenter(content);
+    }
+
     public void switchCenter(Node newContent) {
         Node current = rightSide.getCenter();
 
