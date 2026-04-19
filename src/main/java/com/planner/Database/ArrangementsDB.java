@@ -8,7 +8,7 @@ import static com.planner.Database.DB_Methods.con;
 
 public class ArrangementsDB {
 
-    private static final String URL = "jdbc:mysql://192.168.137.1:3306/arrangements";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/arrangements";
     //10.225.181.20
     private static final String USERNAME = "remote";
     private static final String PASSWORD = "root";
@@ -25,6 +25,14 @@ public class ArrangementsDB {
     public static Connection connection() throws SQLException {
         Connection con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         return con;
+    }
+    public static void updateCandidate(String table,String stu,String NStu, String row)  throws SQLException {
+        Connection con = connection();
+        PreparedStatement ps = con.prepareStatement("UPDATE "+table+" SET "+row+"=? WHERE "+row+"=?");
+        ps.setString(1, NStu);
+        ps.setString(2, stu);
+        ps.executeUpdate();
+
     }
 
     public static List<List<String>> fetcharrData(String arr_table_name) {
