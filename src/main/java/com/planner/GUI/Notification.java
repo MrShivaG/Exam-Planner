@@ -30,8 +30,8 @@ public class Notification extends Application {
             String css = Notification.class.getResource("/app.css").toExternalForm();
             dialogPane.getStylesheets().add(css);
             dialogPane.getStyleClass().add("alert-dialog");
-        } catch (NullPointerException e) {
-            System.err.println("Error: 'app.css' file nahi mili! Check karein ki file same package mein hai ya nahi.");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         Optional<ButtonType> result = alert.showAndWait();
