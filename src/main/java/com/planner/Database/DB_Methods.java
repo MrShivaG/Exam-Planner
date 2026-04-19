@@ -24,7 +24,7 @@ public class DB_Methods {
 
 
     public static void insertData(int room_no, int rows, int column, boolean availability) throws SQLException {
-        PreparedStatement ps = con.prepareStatement("insert ignore into class_room(room_no, class_row, class_column, capacity, availability) values(?, ?, ?, ?, ?)");
+        PreparedStatement ps = con.prepareStatement("insert into class_room(room_no, class_row, class_column, capacity, availability) values(?, ?, ?, ?, ?)");
         ps.setInt(1, room_no);
         ps.setInt(2, rows);
         ps.setInt(3, column);
@@ -91,7 +91,7 @@ public class DB_Methods {
             System.out.println("Error: " + e.getMessage());
             return 0;
         }
-        return count; // 0 ki jagah variable return karein
+        return count;
     }
 
     public static int totalcapacity() throws SQLException {
