@@ -1,5 +1,6 @@
 package com.planner.GUI;
 
+import com.planner.Database.ArrangementsDB;
 import com.planner.Database.DB_Methods;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -102,8 +103,6 @@ public class Screens {
                 () -> openFileChooser(app)
         );
 
-        VBox vBox = new VBox(20);
-        vBox.setAlignment(Pos.CENTER);
 
         Label session = new Label("Enter Session");
         session.getStyleClass().add("hyyuser");
@@ -112,10 +111,6 @@ public class Screens {
         textField.setPromptText("2037-38");
         textField.getStyleClass().add("hyyuser");
 
-        vBox.getChildren().addAll(session, textField);
-
-        VBox vBox1 = new VBox(20);
-        vBox1.setAlignment(Pos.CENTER);
 
         Label label1 = new Label("Enter Date");
         label1.getStyleClass().add("hyyuser");
@@ -124,11 +119,6 @@ public class Screens {
         textField1.setPromptText("Exam Date");
         textField1.getStyleClass().add("hyyuser");
 
-        vBox1.getChildren().addAll(label1, textField1);
-
-        VBox vBox2 = new VBox(20);
-        vBox2.setAlignment(Pos.CENTER);
-
         Label label2 = new Label("Arrangement Name");
         label2.getStyleClass().add("hyyuser");
 
@@ -136,7 +126,17 @@ public class Screens {
         textField2.setPromptText("i.e. Exam Arrangement");
         textField2.getStyleClass().add("hyyuser");
 
-        vBox2.getChildren().addAll(label2, textField2);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(5);
+        gridPane.setVgap(20);
+        gridPane.add(session, 0,0);
+        gridPane.add(textField, 1, 0);
+        gridPane.add(label1, 0,1);
+        gridPane.add(textField1, 1,1);
+        gridPane.add(label2, 0,2);
+        gridPane.add(textField2, 1,2);
 
         Button next = new Button("Next ≫ ");
 //        next.setDisable(true);
@@ -188,10 +188,10 @@ public class Screens {
         next.getStyleClass().add("primary-btn");
 
         grid.add(card, 0, 0);
-        grid.add(vBox, 1, 0);
-        grid.add(vBox1, 2, 0);
-        grid.add(vBox2, 3, 0);
-        grid.add(next, 3, 1);
+        grid.add(gridPane, 1, 0);
+     //   grid.add(vBox1, 2, 0);
+       // grid.add(vBox2, 3, 0);
+        grid.add(next, 2, 1);
         grid.setMaxWidth(1000);
 
         layout.setLeft(grid);
@@ -788,9 +788,13 @@ public class Screens {
                 ex.printStackTrace();
             }
             System.out.println("Seating Generated Successfully!");
+
 //            Alert alert = new Alert(Alert.AlertType.INFORMATION);
 //            alert.setContentText("Seating Generated Successfully!");
 //            alert.showAndWait();
+
+            ArrTableView.show(arr_table_name,roomNo,date);
+
         });
 
 
