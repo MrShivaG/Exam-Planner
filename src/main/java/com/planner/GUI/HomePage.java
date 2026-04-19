@@ -175,12 +175,23 @@ public class HomePage extends Application {
         SVGPath icon = new SVGPath();
 
         icon.setContent(
-                "M4 3h12v14H4V3zm2 2v10h8V5H6zm1 2h2v2H7V7zm4 0h2v2h-2V7zm-4 4h2v2H7v-2zm4 0h2v2h-2v-2z"
+                "M3 7h18v10H3V7zm2 2v6h14V9H5zM7 17v2h2v-2H7zm8 0v2h2v-2h-2z"
         );
-        icon.setStyle("-fx-fill: #6B7280;");
-        icon.setScaleX(1.2);
-        icon.setScaleY(1.2);
 
+        icon.setStyle("-fx-fill: #6B7280;");
+        return icon;
+    }
+
+    private SVGPath getAboutIcon() {
+        SVGPath icon = new SVGPath();
+
+        icon.setContent(
+                "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 " +
+                        "10-4.48 10-10S17.52 2 12 2zm0 4a1.5 1.5 0 110 3 " +
+                        "1.5 1.5 0 010-3zm2 12h-4v-2h1v-4h-1v-2h3v6h1v2z"
+        );
+
+        icon.setStyle("-fx-fill: #6B7280;");
         return icon;
     }
 
@@ -244,7 +255,7 @@ public class HomePage extends Application {
         bottom.setAlignment(Pos.BOTTOM_CENTER);
         bottom.setPadding(new Insets(0, 0, 30, 0));
 
-        Button about = createSidebarButton("About", getLogoutIcon(), false,
+        Button about = createSidebarButton("About", getAboutIcon() , false,
                 () -> switchScreen(createTopBar("About"), Screens.about(this)));
         about.setAlignment(Pos.CENTER);
 
