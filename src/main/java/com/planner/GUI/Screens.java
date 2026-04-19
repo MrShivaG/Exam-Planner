@@ -824,7 +824,7 @@ public class Screens {
             try {
                 Arrange arrange = new Arrange();
 
-                ArrayList<String> tablenames = arrange.arrange(roomsArray, "2024-05-10");
+                ArrayList<String> tablenames = arrange.arrange(roomsArray, "2024_05_10");
 
                 System.out.println(tablenames);
 
