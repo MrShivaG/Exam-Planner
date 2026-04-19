@@ -9,12 +9,14 @@ import com.planner.Database.database;
 public class Arrange {
     FatchStudents fatchstudents =new FatchStudents();
 
-    public void arrange(int[] classroomsArray ,String Date) throws SQLException {
+    public ArrayList<String> arrange(int[] classroomsArray ,String Date) throws SQLException {
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
 
         database Database = new database();
         Connection conn1 = Database.connection();
+
+        ArrayList<String> ReturnStatement = new ArrayList<>();
 
         System.out.println("ArrangeDB: "+arrangementsDB.connectDB());
 
@@ -77,6 +79,9 @@ public class Arrange {
                 System.out.println(ps.toString());
                 ps.executeUpdate();
             }
+            //int totalCap = db.;
+            PreparedStatement psForarranfDB = conn.prepareStatement("inserte");
+            ReturnStatement.add(Date+"_"+classes.get(currentClassIndex));
 
             if (students.isEmpty()){
                 System.out.println("No students Left");
@@ -89,11 +94,13 @@ public class Arrange {
 
         }
 
+        return ReturnStatement;
+
     }
     void createTable(Connection conn,int Column,String Date) throws SQLException {
 
         PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+" (Row1 VARCHAR(100))");
-        PreparedStatement ps0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+"_Range"+" (Branch VARCHAR(50), st Varchar(50), sp varchar(50))");
+        PreparedStatement ps0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+"_Range"+" (Sub_Code VARCHAR(50), st Varchar(50), sp varchar(50))");
         ps0.executeUpdate();
         //ps.setString(1, Date);
         ps.executeUpdate();
