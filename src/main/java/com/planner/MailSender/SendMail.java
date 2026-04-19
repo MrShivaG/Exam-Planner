@@ -54,6 +54,10 @@ public class SendMail {
             "              <td>{{NAME}}</td>\n" +
             "            </tr>\n" +
             "            <tr>\n" +
+            "              <td><strong>Enrollment Number</strong></td>\n" +
+            "              <td>{{Enroll_NO}}</td>\n" +
+            "            </tr>\n" +
+            "            <tr>\n" +
             "              <td><strong>Room Number</strong></td>\n" +
             "              <td>{{ROOM_NO}}</td>\n" +
             "            </tr>\n" +
@@ -130,8 +134,10 @@ public class SendMail {
                     message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email_id));
                     String html = templete
                             .replace("{{NAME}}", name)
-                            .replace("{{ROOM_NO}}", room_no);
-                    message.setSubject("Room no. details");
+                            .replace("{{ROOM_NO}}", room_no)
+                            .replace("{{Enroll_NO}}",enroll);
+
+                    message.setSubject("Regarding your today examination");
                     message.setContent(html, "text/html");
                     //message.setText("Hi,\n "+name+"\n from SISTec-R\n here are your sitting details"+room_no);
 
@@ -152,9 +158,4 @@ public class SendMail {
 
     }
 
-    public static void main(String[] args) throws SQLException {
-        SendMail sm = new SendMail();
-        String sr = sm.Sendmail(new String[]{"0537CS241103"},"104");
-        System.out.println(sr);
-    }
 }
