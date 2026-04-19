@@ -3,42 +3,32 @@ package com.planner.GUI;
 import com.planner.Database.ArrangementsDB;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.print.PrinterJob;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArrTableView {
 
-    public static void show(String tableName, String roomNo, String date) {
+    public static BorderPane show(String tableName, String roomNo, String date) {
 
         List<List<String>> data = ArrangementsDB.fetcharrData(tableName);
 
 
         if (data == null) {
-            Notification.message("Kshama karein! Table '" + tableName + "' database mein nahi mili.\nKripya pehle arrangement generate karein.");
-            return;
+            Notification.message("Sorry! The table " + tableName + " was not found in the database.");
+
         }
         if (data.isEmpty()) {
-            Notification.message("Table toh mil gayi par usme koi data nahi hai.");
-            return;
+            Notification.message("The table was found, but it has no data.");
+
         }
 
         String branch1 = "";
@@ -63,34 +53,37 @@ public class ArrTableView {
         final List<List<String>> finalData = data;
 
         // --- Layout Designing ---
+
         VBox mainLayout = new VBox(10);
-        mainLayout.setPadding(new Insets(20));
-        mainLayout.setStyle("-fx-background-color: white;");
+        mainLayout.setPadding(new Insets(15,40,15,40));
+
+
 
         Label roomLabel = new Label("Room No: " + roomNo);
         roomLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        roomLabel.setUnderline(true);
         HBox roomBox = new HBox(roomLabel);
         roomBox.setAlignment(Pos.CENTER);
 
+        HBox details = new HBox();
         Label dateLabel = new Label("Date: " + date);
         dateLabel.setFont(Font.font("Arial", 13));
 
         Label branchLabel = new Label("Branch: " + branch1 + "\nBranch: " + branch2);
         branchLabel.setFont(Font.font("Arial", 13));
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox branchdateBox = new HBox(branchLabel, spacer, dateLabel);
+        VBox branchdateBox = new VBox(branchLabel, dateLabel);
 
         Label timelable = new Label("TIME - 10:00 - 01:00");
         timelable.setStyle("-fx-font-size: 14px; -fx-text-fill: #6B7280;");
+
 
         // --- Grid Setup ---
         int colCount = data.size();
         int rowCount = data.get(0).size();
 
         GridPane grid = new GridPane();
+        grid.setStyle("-fx-background-color: white;");
+        grid.setAlignment(Pos.CENTER_LEFT);
         grid.setHgap(2);
         grid.setVgap(2);
 
@@ -114,8 +107,38 @@ public class ArrTableView {
             }
         }
 
-        // --- Buttons & Actions ---
+        //Buttons & Actions
+        Button backbutton = new Button("Back");
+        backbutton.setStyle(
+                "-fx-background-color:#1a56db;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 6;" +
+                        "-fx-padding: 10 18 10 18;" +
+                        "-fx-cursor: hand;"
+        );
+        backbutton.setOnAction(e -> {
+            HomePage.rightSide.setCenter(Screens.dashboardContent(new HomePage()));
+            HomePage.rightSide.setTop(HomePage.createTopBar("Dashboard"));
+        });
+        HBox bottombox = new HBox();
+        bottombox.getChildren().add(backbutton);
+        bottombox.setPadding(new Insets(10));
+
+
+
         Button printBtn = new Button("Print");
+        printBtn.setStyle(
+                "-fx-background-color:#1a56db;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 6;" +
+                        "-fx-padding: 10 18 10 18;" +
+                        "-fx-cursor: hand;"
+        );
+
 
         printBtn.setOnAction(e -> {
             javafx.print.PrinterJob job = javafx.print.PrinterJob.createPrinterJob();
@@ -124,19 +147,25 @@ public class ArrTableView {
             }
         });
 
+        VBox rightbox = new VBox();
+        rightbox.setSpacing(20);
+        rightbox.getChildren().add(printBtn);
 
 
 
-        HBox btnBox = new HBox(10, printBtn);
-        btnBox.setAlignment(Pos.CENTER_RIGHT);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Region spacer1 = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        mainLayout.getChildren().addAll(roomBox, branchdateBox, timelable, grid, btnBox);
 
-        // --- Window Show ---
-        Stage stage = new Stage();
-        stage.setTitle("Exam Seating Arrangement");
-        stage.setScene(new Scene(mainLayout, 750, 500));
-        stage.show();
+        details.getChildren().addAll(branchdateBox,spacer,rightbox);
+        mainLayout.getChildren().addAll(roomBox,details,timelable);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(mainLayout);
+        borderPane.setCenter(grid);
+        borderPane.setBottom(bottombox);
+        return borderPane;
     }
 
 }
