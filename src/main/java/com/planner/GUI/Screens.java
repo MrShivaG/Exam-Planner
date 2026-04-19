@@ -1,5 +1,6 @@
 package com.planner.GUI;
 
+import com.planner.Database.ArrangementsDB;
 import com.planner.Database.DB_Methods;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -37,6 +38,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.TableView;
+import javafx.util.StringConverter;
 
 import static com.planner.Database.ArrangementsDB.fetcharrData;
 
@@ -102,8 +104,6 @@ public class Screens {
                 () -> openFileChooser(app)
         );
 
-        VBox vBox = new VBox(20);
-        vBox.setAlignment(Pos.CENTER);
 
         Label session = new Label("Enter Session");
         session.getStyleClass().add("hyyuser");
@@ -112,22 +112,45 @@ public class Screens {
         textField.setPromptText("2037-38");
         textField.getStyleClass().add("hyyuser");
 
-        vBox.getChildren().addAll(session, textField);
-
-        VBox vBox1 = new VBox(20);
-        vBox1.setAlignment(Pos.CENTER);
 
         Label label1 = new Label("Enter Date");
         label1.getStyleClass().add("hyyuser");
 
-        TextField textField1 = new TextField();
-        textField1.setPromptText("Exam Date");
-        textField1.getStyleClass().add("hyyuser");
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPromptText("Select Date");
 
-        vBox1.getChildren().addAll(label1, textField1);
+// optional: set today as default
+        datePicker.setValue(LocalDate.now());
 
-        VBox vBox2 = new VBox(20);
-        vBox2.setAlignment(Pos.CENTER);
+// format how date appears (dd-MM-yyyy)
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty())
+                        ? LocalDate.parse(string, formatter)
+                        : null;
+            }
+        });
+
+        datePicker.setDayCellFactory(dp -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #f0f0f0;");
+                }
+            }
+        });
+
+
 
         Label label2 = new Label("Arrangement Name");
         label2.getStyleClass().add("hyyuser");
@@ -136,7 +159,17 @@ public class Screens {
         textField2.setPromptText("i.e. Exam Arrangement");
         textField2.getStyleClass().add("hyyuser");
 
-        vBox2.getChildren().addAll(label2, textField2);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(5);
+        gridPane.setVgap(20);
+        gridPane.add(session, 0,0);
+        gridPane.add(textField, 1, 0);
+        gridPane.add(label1, 0,1);
+        gridPane.add(datePicker, 1,1);
+        gridPane.add(label2, 0,2);
+        gridPane.add(textField2, 1,2);
 
         Button next = new Button("Next ≫ ");
 //        next.setDisable(true);
@@ -156,7 +189,15 @@ public class Screens {
         next.setOnAction(e -> {
 
             String sessions = textField.getText();
-            String date = textField1.getText();
+            LocalDate selectedDate = datePicker.getValue();
+
+            if (selectedDate == null) {
+                Notification.message("Please select a date!");
+                return;
+            }
+
+// convert to String (same format used everywhere)
+            String date = selectedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String name = textField2.getText();
 
             //  VALIDATION
@@ -188,10 +229,10 @@ public class Screens {
         next.getStyleClass().add("primary-btn");
 
         grid.add(card, 0, 0);
-        grid.add(vBox, 1, 0);
-        grid.add(vBox1, 2, 0);
-        grid.add(vBox2, 3, 0);
-        grid.add(next, 3, 1);
+        grid.add(gridPane, 1, 0);
+     //   grid.add(vBox1, 2, 0);
+       // grid.add(vBox2, 3, 0);
+        grid.add(next, 2, 1);
         grid.setMaxWidth(1000);
 
         layout.setLeft(grid);
@@ -728,7 +769,6 @@ public class Screens {
             selectedRooms.remove(selected);
         });
 
-
         Button generateBtn = new Button("Generate Seating");
         generateBtn.getStyleClass().add("primary-btn");
 
@@ -781,19 +821,23 @@ public class Screens {
                 return;
             }
 
-            Arrange arrange = new Arrange();
-
             try {
-                arrange.arrange(roomsArray, "2024-05-10");
+                Arrange arrange = new Arrange();
+
+                ArrayList<String> tablenames = arrange.arrange(roomsArray, "2024_05_10");
+
+                System.out.println(tablenames);
+
+                Gen_seat.showtable(String.valueOf(tablenames));
+                System.out.println("Seating Generated Successfully!");
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            System.out.println("Seating Generated Successfully!");
 //            Alert alert = new Alert(Alert.AlertType.INFORMATION);
 //            alert.setContentText("Seating Generated Successfully!");
 //            alert.showAndWait();
         });
-
 
         VBox rightPanel = new VBox(10,
                 new Label("Selected Rooms (Priority)"),

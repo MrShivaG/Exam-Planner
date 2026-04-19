@@ -9,12 +9,14 @@ import com.planner.Database.database;
 public class Arrange {
     FatchStudents fatchstudents =new FatchStudents();
 
-    public void arrange(int[] classroomsArray ,String Date) throws SQLException {
+    public ArrayList<String> arrange(int[] classroomsArray ,String Date, String Session11) throws SQLException {
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
 
         database Database = new database();
         Connection conn1 = Database.connection();
+
+        ArrayList<String> ReturnStatement = new ArrayList<>();
 
         System.out.println("ArrangeDB: "+arrangementsDB.connectDB());
 
@@ -45,6 +47,7 @@ public class Arrange {
             query = query+");";
 
             createTable(conn,RC[0],Table_name);
+            int totalstu=0;
 
 
             int index=0;
@@ -59,8 +62,7 @@ public class Arrange {
                     try {
                         ps.setString(j,students.get(index).getStudents().get(0));
                         students.get(index).getStudents().remove(0);
-
-
+                        totalstu++;
 
                         if (students.get(index).getStudents().isEmpty()){
                             students.remove(index);
@@ -77,6 +79,16 @@ public class Arrange {
                 System.out.println(ps.toString());
                 ps.executeUpdate();
             }
+            int totalCap = RC[0]*RC[1];
+            ReturnStatement.add(Date+"_"+classes.get(currentClassIndex));
+            PreparedStatement ps11 = conn1.prepareStatement("Insert into arrangementdb values (?,NULL,?,?,?,?,NULL,NULL)");
+            ps11.setString(1, Date+"_"+classes.get(currentClassIndex));
+            ps11.setString(2, Date);
+            ps11.setString(3, Session11);
+            ps11.setString(4, String.valueOf(totalCap));
+            ps11.setString(5, String.valueOf(totalstu));
+            ps11.executeUpdate();
+
 
             if (students.isEmpty()){
                 System.out.println("No students Left");
@@ -89,12 +101,12 @@ public class Arrange {
 
         }
 
+        return ReturnStatement;
+
     }
     void createTable(Connection conn,int Column,String Date) throws SQLException {
 
         PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+" (Row1 VARCHAR(100))");
-        PreparedStatement ps0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+"_Range"+" (Branch VARCHAR(50), st Varchar(50), sp varchar(50))");
-        ps0.executeUpdate();
         //ps.setString(1, Date);
         ps.executeUpdate();
         System.out.println("Table created");
