@@ -250,7 +250,7 @@ public class Screens {
         Label heading = new Label("System Overview");
         heading.setStyle("-fx-font-size: 22; -fx-font-weight: bold;");
 
-        Label sub = new Label("Institutional performance for Fall Semester 2024.");
+        Label sub = new Label("Institutional performance for For Semester 2026.");
         sub.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13;-fx-font-style: italic;");
 
         VBox header = new VBox(5, heading, sub);
@@ -431,10 +431,10 @@ public class Screens {
         arrButton.setStyle("-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;");
 
-        arrButton.setOnAction(e ->
-                ArrTableView.show(arr_table_name,roomNo,date)
-        );
-
+        arrButton.setOnAction(e -> {
+            Node node = ArrTableView.show(arr_table_name, roomNo, date);
+            HomePage.rightSide.setCenter(node);
+        });
 
 
         HBox arrrowBox = new HBox();
@@ -458,34 +458,35 @@ public class Screens {
 
     public static String getExamStatus(String dateStr, String timeRange) {
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d-M-yyyy");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDate examDate = null;
+        String[] dateFormats = {"d_M_yyyy", "d-M-yyyy", "dd-MM-yyyy", "dd_MM_yyyy"};
+        for (String fmt : dateFormats) {
+            try {
+                examDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(fmt));
+                break;
+            } catch (Exception ignored) {}
+        }
+        if (examDate == null) return "Invalid Date";
 
         try {
-
-            LocalDate examDate = LocalDate.parse(dateStr, dateFormatter);
             LocalDate today = LocalDate.now();
 
             String startTimeStr = timeRange.split("-")[0].trim();
-
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime startTime = LocalTime.parse(startTimeStr, timeFormatter);
             LocalTime now = LocalTime.now();
 
             if (examDate.isBefore(today)) {
                 return "Completed";
-            }
-            else if (examDate.equals(today)) {
-
+            } else if (examDate.equals(today)) {
                 if (now.isAfter(startTime)) {
                     return "Completed";
                 } else {
                     return "Today";
                 }
-            }
-            else if (examDate.equals(today.plusDays(1))) {
+            } else if (examDate.equals(today.plusDays(1))) {
                 return "Tomorrow";
-            }
-            else {
+            } else {
                 long daysLeft = ChronoUnit.DAYS.between(today, examDate);
                 return "In " + daysLeft + " days";
             }
