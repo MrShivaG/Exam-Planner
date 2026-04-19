@@ -80,7 +80,6 @@ public class Arrange {
                 ps.executeUpdate();
             }
             //int totalCap = db.;
-            PreparedStatement psForarranfDB = conn.prepareStatement("inserte");
             ReturnStatement.add(Date+"_"+classes.get(currentClassIndex));
 
             if (students.isEmpty()){
@@ -100,8 +99,6 @@ public class Arrange {
     void createTable(Connection conn,int Column,String Date) throws SQLException {
 
         PreparedStatement ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+" (Row1 VARCHAR(100))");
-        PreparedStatement ps0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS "+Date+"_Range"+" (Sub_Code VARCHAR(50), st Varchar(50), sp varchar(50))");
-        ps0.executeUpdate();
         //ps.setString(1, Date);
         ps.executeUpdate();
         System.out.println("Table created");
