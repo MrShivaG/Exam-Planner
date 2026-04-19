@@ -1,19 +1,20 @@
 package com.planner.GUI;
 
 import com.planner.Database.DB_Methods;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.sql.SQLException;
 
@@ -36,10 +37,9 @@ public class AddNewRoom extends Application {
                         "-fx-font-weight: bold;" +
                         "-fx-text-fill: #111827;"
         );
-        Separator sep = new Separator();
-        sep.setStyle("-fx-background-color: BLACK;");
 
-        headerbox.getChildren().addAll(headerlabel,sep);
+
+        headerbox.getChildren().addAll(headerlabel);
 
         GridPane contentPane = new GridPane();
         contentPane.setStyle(
@@ -109,6 +109,7 @@ public class AddNewRoom extends Application {
             roompane.setBottom(bottombox);
             bottombox.setVisible(true);
 
+
             try {
                 int roomno = Integer.parseInt(roomnotext.getText());
                 int rowno = Integer.parseInt(rowtext.getText());
@@ -120,7 +121,17 @@ public class AddNewRoom extends Application {
                 notificationlable.setText("Error: Please enter valid numbers.");
             } catch (SQLException ev) {
                 notificationlable.setText("Error: Room already exists .");
+            }catch(Exception ev){
+
             }
+
+            roomnotext.setText("");
+            rowtext.setText("");
+            columntext.setText("");
+            PauseTransition pause = new PauseTransition(Duration.seconds(5));
+            pause.setOnFinished(ev -> bottombox.setVisible(false));
+
+            pause.play();
         });
 
 
