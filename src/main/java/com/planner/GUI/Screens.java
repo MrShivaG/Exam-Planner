@@ -768,7 +768,6 @@ public class Screens {
             selectedRooms.remove(selected);
         });
 
-
         Button generateBtn = new Button("Generate Seating");
         generateBtn.getStyleClass().add("primary-btn");
 
@@ -834,15 +833,10 @@ public class Screens {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
-
 //            Alert alert = new Alert(Alert.AlertType.INFORMATION);
 //            alert.setContentText("Seating Generated Successfully!");
 //            alert.showAndWait();
-
-
         });
-
 
         VBox rightPanel = new VBox(10,
                 new Label("Selected Rooms (Priority)"),
