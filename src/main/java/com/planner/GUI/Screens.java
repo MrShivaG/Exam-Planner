@@ -38,6 +38,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.TableView;
+import javafx.util.StringConverter;
 
 import static com.planner.Database.ArrangementsDB.fetcharrData;
 
@@ -115,9 +116,41 @@ public class Screens {
         Label label1 = new Label("Enter Date");
         label1.getStyleClass().add("hyyuser");
 
-        TextField textField1 = new TextField();
-        textField1.setPromptText("Exam Date");
-        textField1.getStyleClass().add("hyyuser");
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPromptText("Select Date");
+
+// optional: set today as default
+        datePicker.setValue(LocalDate.now());
+
+// format how date appears (dd-MM-yyyy)
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty())
+                        ? LocalDate.parse(string, formatter)
+                        : null;
+            }
+        });
+
+        datePicker.setDayCellFactory(dp -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #f0f0f0;");
+                }
+            }
+        });
+
+
 
         Label label2 = new Label("Arrangement Name");
         label2.getStyleClass().add("hyyuser");
@@ -134,7 +167,7 @@ public class Screens {
         gridPane.add(session, 0,0);
         gridPane.add(textField, 1, 0);
         gridPane.add(label1, 0,1);
-        gridPane.add(textField1, 1,1);
+        gridPane.add(datePicker, 1,1);
         gridPane.add(label2, 0,2);
         gridPane.add(textField2, 1,2);
 
@@ -156,7 +189,15 @@ public class Screens {
         next.setOnAction(e -> {
 
             String sessions = textField.getText();
-            String date = textField1.getText();
+            LocalDate selectedDate = datePicker.getValue();
+
+            if (selectedDate == null) {
+                Notification.message("Please select a date!");
+                return;
+            }
+
+// convert to String (same format used everywhere)
+            String date = selectedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String name = textField2.getText();
 
             //  VALIDATION
@@ -780,20 +821,25 @@ public class Screens {
                 return;
             }
 
-            Arrange arrange = new Arrange();
-
             try {
-                arrange.arrange(roomsArray, "2024-05-10");
+                Arrange arrange = new Arrange();
+
+                ArrayList<String> tablenames = arrange.arrange(roomsArray, "2024-05-10");
+
+                System.out.println(tablenames);
+
+                Gen_seat.showtable(String.valueOf(tablenames));
+                System.out.println("Seating Generated Successfully!");
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            System.out.println("Seating Generated Successfully!");
+
 
 //            Alert alert = new Alert(Alert.AlertType.INFORMATION);
 //            alert.setContentText("Seating Generated Successfully!");
 //            alert.showAndWait();
 
-            Gen_seat.showtable("17_04_2026_301");
 
         });
 
