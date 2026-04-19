@@ -1,7 +1,5 @@
 package com.planner.Database;
 
-import com.mysql.cj.jdbc.CallableStatementWrapper;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -35,11 +33,10 @@ public class DB_Methods {
         ps.executeUpdate();
 
     }
-    public void deleterow(int room_no) throws SQLException {
+    public void deleteRoom(int room_no) throws SQLException {
         PreparedStatement ps = con.prepareStatement("delete from class_room where room_no = ?");
         ps.setInt(1, room_no);
         ps.executeUpdate();
-        con.close();
     }
 
     public void updatedata(int room_no,int rows,int columns) throws SQLException {
@@ -114,13 +111,11 @@ public class DB_Methods {
         List<String[]> arrangement = new ArrayList<>();
         while (rs.next()) {
             String arr_table_name = rs.getString("arr_table_name");
-            String arr_name = rs.getString("arr_name");
             String  arr_date = rs.getString("arr_date");
             String  capacity = rs.getString("capacity");
             String  arr_session = rs.getString("arr_session");
-            String  arr_status = rs.getString("arr_status");
             String  students = rs.getString("students");
-            arrangement.add(new String[]{arr_table_name,arr_name, arr_date, capacity, arr_session,arr_status,students});
+            arrangement.add(new String[]{arr_table_name, arr_date, capacity, arr_session,students});
         }
         return arrangement;
     }

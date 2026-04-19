@@ -136,7 +136,7 @@ public class AddNewRoom extends Application {
         roompane.setTop(headerbox);
         roompane.setCenter(contentPane);
         Stage stage = new Stage();
-        Scene scene = new Scene(roompane,400,500);
+        Scene scene = new Scene(roompane,400,400);
         stage.setScene(scene);
         return stage;
     }

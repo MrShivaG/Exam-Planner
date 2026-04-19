@@ -28,220 +28,115 @@ import java.util.List;
 public class ArrTableView {
 
     public static void show(String tableName, String roomNo, String date) {
-        try {
-            List<List<String>> data = ArrangementsDB.fetcharrData(tableName);
+
+        List<List<String>> data = ArrangementsDB.fetcharrData(tableName);
 
 
-            String branch1 = "";
-            String branch2 = "";
-            String branch3 = "";
-            outer:
-            for (List<String> row : data) {
-                for (String cell : row) {
-                    if (cell != null && cell.length() >= 6) {
-                        String b = cell.substring(4, 6);
-                        if (branch1.isEmpty()) {
-                            branch1 = b;
-                        } else if (!b.equals(branch1) && branch2.isEmpty()) {
-                            branch2 = b;
-                            break outer;
-                        }
-                    }
-                }
-            }
-
-            final String finalBranch1 = branch1;
-            final String finalBranch2 = branch2;
-            final List<List<String>> finalData = data;
-
-            // Main layout
-            VBox mainLayout = new VBox(10);
-            mainLayout.setPadding(new Insets(20));
-            mainLayout.setStyle("-fx-background-color: white;");
-
-
-            Label roomLabel = new Label("Room No: " + roomNo);
-            roomLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-            roomLabel.setUnderline(true);
-            HBox roomBox = new HBox(roomLabel);
-            roomBox.setAlignment(Pos.CENTER);
-
-            // Date right side
-            Label dateLabel = new Label("Date: " + date);
-            dateLabel.setFont(Font.font("Arial", 13));
-            HBox branchdateBox = new HBox();
-
-
-            // Branch info
-            Label branchLabel = new Label("Branch: " + branch1 + "\nBranch: " + branch2);
-            branchLabel.setFont(Font.font("Arial", 13));
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
-            branchdateBox.getChildren().addAll(branchLabel,spacer,dateLabel);
-
-            Label timelable = new Label("TIME - "+"10:00 - 01:00");
-            timelable.setStyle(
-                    "-fx-font-size: 14px;" +
-                            "-fx-text-fill: #6B7280;"
-            );
-
-
-            // Grid table
-            int colCount = data.size();
-            int rowCount = data.get(0).size();
-
-            GridPane grid = new GridPane();
-            grid.setHgap(2);
-            grid.setVgap(2);
-
-            for (int r = 0; r < rowCount; r++) {
-                for (int c = 0; c < colCount; c++) {
-                    String cellValue = "";
-                    if (c < data.size() && r < data.get(c).size()) {
-                        cellValue = data.get(c).get(r);
-                    }
-
-                    Label cell = new Label(cellValue);
-                    cell.setMinWidth(130);
-                    cell.setMinHeight(30);
-                    cell.setAlignment(Pos.CENTER);
-                    cell.setPadding(new Insets(4));
-                    cell.setStyle("-fx-border-color: black; -fx-border-width: 1;");
-
-                    boolean isBold = (r + c) % 2 == 0;
-                    if (isBold) {
-                        cell.setFont(Font.font("Arial", FontWeight.BOLD, 13));
-                    } else {
-                        cell.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
-                    }
-
-                    grid.add(cell, c, r);
-                }
-            }
-
-            // Buttons
-            Button printBtn = new Button("Print");
-            Button saveBtn = new Button("Save as PDF");
-
-            printBtn.setFont(Font.font("Arial", 13));
-            saveBtn.setFont(Font.font("Arial", 13));
-
-            // Print action
-            printBtn.setOnAction(e -> {
-                PrinterJob job = PrinterJob.createPrinterJob();
-                if (job != null && job.showPrintDialog(null)) {
-                    boolean success = job.printPage(mainLayout);
-                    if (success) job.endJob();
-                }
-            });
-
-            // Save as PDF action
-            saveBtn.setOnAction(e -> {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("PDF Save Karo");
-                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF File", "*.pdf"));
-                fileChooser.setInitialFileName(tableName + ".pdf");
-                File file = fileChooser.showSaveDialog(null);
-                if (file != null) {
-                    savePDF(file, finalData, roomNo, date, finalBranch1, finalBranch2);
-                }
-            });
-
-            HBox btnBox = new HBox(10, printBtn, saveBtn);
-            btnBox.setAlignment(Pos.CENTER_RIGHT);
-
-            mainLayout.getChildren().addAll(roomBox, branchdateBox,timelable, grid, btnBox);
-
-            Stage stage = new Stage();
-            stage.setTitle("Seating Arrangement");
-            Scene scene = new Scene(mainLayout, 750, 500);
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        if (data == null) {
+            Notification.message("Kshama karein! Table '" + tableName + "' database mein nahi mili.\nKripya pehle arrangement generate karein.");
+            return;
         }
+        if (data.isEmpty()) {
+            Notification.message("Table toh mil gayi par usme koi data nahi hai.");
+            return;
+        }
+
+        String branch1 = "";
+        String branch2 = "";
+        outer:
+        for (List<String> row : data) {
+            for (String cell : row) {
+                if (cell != null && cell.length() >= 6) {
+                    String b = cell.substring(4, 6);
+                    if (branch1.isEmpty()) {
+                        branch1 = b;
+                    } else if (!b.equals(branch1) && branch2.isEmpty()) {
+                        branch2 = b;
+                        break outer;
+                    }
+                }
+            }
+        }
+
+        final String finalBranch1 = branch1;
+        final String finalBranch2 = branch2;
+        final List<List<String>> finalData = data;
+
+        // --- Layout Designing ---
+        VBox mainLayout = new VBox(10);
+        mainLayout.setPadding(new Insets(20));
+        mainLayout.setStyle("-fx-background-color: white;");
+
+        Label roomLabel = new Label("Room No: " + roomNo);
+        roomLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        roomLabel.setUnderline(true);
+        HBox roomBox = new HBox(roomLabel);
+        roomBox.setAlignment(Pos.CENTER);
+
+        Label dateLabel = new Label("Date: " + date);
+        dateLabel.setFont(Font.font("Arial", 13));
+
+        Label branchLabel = new Label("Branch: " + branch1 + "\nBranch: " + branch2);
+        branchLabel.setFont(Font.font("Arial", 13));
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox branchdateBox = new HBox(branchLabel, spacer, dateLabel);
+
+        Label timelable = new Label("TIME - 10:00 - 01:00");
+        timelable.setStyle("-fx-font-size: 14px; -fx-text-fill: #6B7280;");
+
+        // --- Grid Setup ---
+        int colCount = data.size();
+        int rowCount = data.get(0).size();
+
+        GridPane grid = new GridPane();
+        grid.setHgap(2);
+        grid.setVgap(2);
+
+        for (int r = 0; r < rowCount; r++) {
+            for (int c = 0; c < colCount; c++) {
+                String cellValue = (c < data.size() && r < data.get(c).size()) ? data.get(c).get(r) : "";
+
+                Label cell = new Label(cellValue);
+                cell.setMinWidth(130);
+                cell.setMinHeight(30);
+                cell.setAlignment(Pos.CENTER);
+                cell.setPadding(new Insets(4));
+                cell.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+
+                if ((r + c) % 2 == 0) {
+                    cell.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+                } else {
+                    cell.setFont(Font.font("Arial", FontWeight.NORMAL, 13));
+                }
+                grid.add(cell, c, r);
+            }
+        }
+
+        // --- Buttons & Actions ---
+        Button printBtn = new Button("Print");
+
+        printBtn.setOnAction(e -> {
+            javafx.print.PrinterJob job = javafx.print.PrinterJob.createPrinterJob();
+            if (job != null && job.showPrintDialog(null)) {
+                if (job.printPage(mainLayout)) job.endJob();
+            }
+        });
+
+
+
+
+        HBox btnBox = new HBox(10, printBtn);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+        mainLayout.getChildren().addAll(roomBox, branchdateBox, timelable, grid, btnBox);
+
+        // --- Window Show ---
+        Stage stage = new Stage();
+        stage.setTitle("Exam Seating Arrangement");
+        stage.setScene(new Scene(mainLayout, 750, 500));
+        stage.show();
     }
 
-    private static void savePDF(File file, List<List<String>> data,
-                                String roomNo, String date,
-                                String branch1, String branch2) {
-        try (PDDocument doc = new PDDocument()) {
-            PDPage page = new PDPage(PDRectangle.A4);
-            doc.addPage(page);
-
-            PDType1Font fontNormal = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
-            PDType1Font fontBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-
-            float pageWidth = PDRectangle.A4.getWidth();
-            float pageHeight = PDRectangle.A4.getHeight();
-            float margin = 30;
-
-            int colCount = data.size();
-            int rowCount = data.get(0).size();
-
-            float cellWidth = (pageWidth - 2 * margin) / colCount;
-            float cellHeight = 22;
-            float tableTop = pageHeight - 100;
-
-            try (PDPageContentStream cs = new PDPageContentStream(doc, page)) {
-
-                // Room No - center
-                String roomText = "Room No: " + roomNo;
-                float roomTextWidth = fontBold.getStringWidth(roomText) / 1000 * 13;
-                cs.beginText();
-                cs.setFont(fontBold, 13);
-                cs.newLineAtOffset((pageWidth - roomTextWidth) / 2, pageHeight - 40);
-                cs.showText(roomText);
-                cs.endText();
-
-                // Date - right
-                String dateText = "Date: " + date;
-                float dateWidth = fontNormal.getStringWidth(dateText) / 1000 * 11;
-                cs.beginText();
-                cs.setFont(fontNormal, 11);
-                cs.newLineAtOffset(pageWidth - margin - dateWidth, pageHeight - 60);
-                cs.showText(dateText);
-                cs.endText();
-
-                // Branch info
-                cs.beginText();
-                cs.setFont(fontNormal, 11);
-                cs.newLineAtOffset(margin, pageHeight - 80);
-                cs.showText("Branch: " + branch1 + "          Branch: " + branch2);
-                cs.endText();
-
-                // Table
-                for (int r = 0; r < rowCount; r++) {
-                    for (int c = 0; c < colCount; c++) {
-                        String cellValue = "";
-                        if (c < data.size() && r < data.get(c).size()) {
-                            cellValue = data.get(c).get(r);
-                        }
-
-                        float x = margin + c * cellWidth;
-                        float y = tableTop - r * cellHeight;
-
-                        // Cell border
-                        cs.setLineWidth(0.5f);
-                        cs.addRect(x, y - cellHeight, cellWidth, cellHeight);
-                        cs.stroke();
-
-                        // Cell text
-                        boolean isBold = (r + c) % 2 == 0;
-                        cs.beginText();
-                        cs.setFont(isBold ? fontBold : fontNormal, 9);
-                        cs.newLineAtOffset(x + 4, y - cellHeight + 7);
-                        cs.showText(cellValue != null ? cellValue : "");
-                        cs.endText();
-                    }
-                }
-            }
-
-            doc.save(file);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 }

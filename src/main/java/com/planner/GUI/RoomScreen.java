@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Line;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -63,7 +62,7 @@ public class RoomScreen extends Application {
                         "-fx-border-color: transparent;"
         );
         VBox contentbox = new VBox(20);
-        contentbox.setPadding(new Insets(24, 32, 32, 32));
+        contentbox.setPadding(new Insets(10, 32, 32, 32));
         contentbox.setStyle("-fx-background-color: #F8F9FA;");
 
         HBox hBox = new HBox(6);
@@ -80,7 +79,9 @@ public class RoomScreen extends Application {
         sepe.setStyle("-fx-background-color: BLACK;");
         sepe.setMaxWidth(Double.MAX_VALUE);
 
-        VBox titleBox = new VBox(4);
+        VBox titleBox = new VBox();
+        titleBox.setAlignment(Pos.CENTER);
+        titleBox.setPadding(new Insets(10,0,0,0));
         Label title = new Label("Room & Capacity Management");
         title.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
@@ -319,13 +320,20 @@ public class RoomScreen extends Application {
 
         Button dashBtn = new Button("\uD83D\uDDD1");
         dashBtn.getStyleClass().add("deletebutton");
-        dashBtn.setOnAction(e->{
-            Notification notification = new Notification();
-            notification.confirm("Are you sure you want to delete "+roomNo);
-            try {
-                dbMethods.deleterow(roomNo);
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+        dashBtn.setOnAction(e -> {
+
+            boolean isConfirmed = Notification.confirm("Are you sure you want to delete " + roomNo);
+
+
+            if (isConfirmed) {
+                try {
+                    dbMethods.deleteRoom(roomNo);
+                    Notification.message("Room " + roomNo + " successfully delete ho gaya.");
+
+                } catch (SQLException ex) {
+                    Notification.message("Delete karne mein error aayi: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
             }
         });
 

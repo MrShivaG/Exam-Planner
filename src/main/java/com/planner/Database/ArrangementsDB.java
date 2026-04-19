@@ -8,9 +8,10 @@ import static com.planner.Database.DB_Methods.con;
 
 public class ArrangementsDB {
 
-    private static final String URL = "jdbc:mysql://10.225.181.20:3306/arrangements";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "Kkc@#2007";
+    private static final String URL = "jdbc:mysql://192.168.137.1:3306/arrangements";
+    //10.225.181.20
+    private static final String USERNAME = "remote";
+    private static final String PASSWORD = "root";
 
 
     public static String connectDB(){
@@ -26,26 +27,31 @@ public class ArrangementsDB {
         return con;
     }
 
-    public static List<List<String>> fetcharrData(String arr_table_name) throws SQLException {
-        Connection con = connection();
-        String query = "SELECT * FROM `" + arr_table_name + "`";
-        PreparedStatement ps = con.prepareStatement(query);
-        ResultSet rs = ps.executeQuery();
-
-        ResultSetMetaData metaData = rs.getMetaData();
-        int columnCount = metaData.getColumnCount();
-
+    public static List<List<String>> fetcharrData(String arr_table_name) {
         List<List<String>> result = new ArrayList<>();
+        try (Connection con = connection()) {
+            String query = "SELECT * FROM `" + arr_table_name + "`";
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
-            List<String> row = new ArrayList<>();
-            for (int i = 1; i <= columnCount; i++) {
-                row.add(rs.getString(i));
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (rs.next()) {
+                List<String> row = new ArrayList<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    row.add(rs.getString(i));
+                }
+                result.add(row);
             }
-            result.add(row);
+            return result;
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1146) {
+                return null;
+            }
+            e.printStackTrace();
+            return null;
         }
-
-        return result;
     }
 
 }

@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
@@ -296,7 +297,7 @@ public class Screens {
             try {
                 List<String[]> arrangement = dbMethods.fetch_Arr_data();
                 for (String[] data : arrangement) {
-                    HBox card = databox(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+                    HBox card = databox(data[0], data[1], data[2], data[3], data[4]);
                     cardsContainer.getChildren().add(card);
                 }
             } catch (Exception e) {
@@ -315,7 +316,7 @@ public class Screens {
 
         return root;
     }
-    public static HBox databox(String arr_table_name, String arr_name, String date, String capacity, String session, String status, String student){
+    public static HBox databox(String arr_table_name,  String date, String capacity, String session,  String student){
         //room no. box
         VBox roomnobox = new VBox();
         roomnobox.setPadding(new Insets(5,5,5,5));
@@ -365,15 +366,22 @@ public class Screens {
         datebox.setPadding(new Insets(2, 0, 2, 0));
         datebox.getChildren().addAll(datelable,datedata);
 
+        String time = "10:00 - 01:00";
         Label timelable = new Label("            10:00 - 01:00");
         timelable.setStyle(
                 "-fx-font-size: 14px;" +
                         "-fx-text-fill: #6B7280;"
         );
+
         dateVbox.getChildren().addAll(datebox,timelable);
         //date and time end
 
-        String examStatus = getExamStatus(date);
+        String examStatus = getExamStatus(date,time);
+        HBox statusbox = new HBox();
+        statusbox.setAlignment(Pos.CENTER);
+        Label status = new Label("Status - ");
+        status.setStyle("-fx-text-fill: #1a1a2e;" +
+                "-fx-font-size: 18px;");
 
         Label statuslable = new Label();
         statuslable.setStyle(
@@ -384,9 +392,22 @@ public class Screens {
         );
         if (examStatus.equals("Today")) {
             statuslable.setText("HAPPENING TODAY");
-            statuslable.setStyle("-fx-text-fill: #EF4444; -fx-font-weight: bold;");
+            statuslable.setStyle("-fx-text-fill: #EF4444;" +
+                                 "-fx-font-size: 14px;"+
+                                 " -fx-font-weight: bold;" +
+                                 "-fx-font-style: italic;");
+            statusbox.getChildren().addAll(status,statuslable);
+        } else if (examStatus.equals("Completed")) {
+            statuslable.setText("COMPLETED");
+            statuslable.setStyle("-fx-text-fill: #10B981;" +
+                    "-fx-font-size: 18px;"+
+                    " -fx-font-weight: bold;" +
+                    "-fx-font-style: italic;");
+            statusbox.getChildren().addAll(status,statuslable);
+
         } else {
-            statuslable.setText("Status: " + examStatus);
+            statuslable.setText(examStatus);
+            statusbox.getChildren().addAll(status,statuslable);
         }
 
 
@@ -430,30 +451,48 @@ public class Screens {
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        arrrowBox.getChildren().addAll(roomnobox,dateVbox,spacer,statuslable,capacitybox,arrButton);
+        arrrowBox.getChildren().addAll(roomnobox,dateVbox,spacer,statusbox,capacitybox,arrButton);
 
         return arrrowBox;
     }
 
-    public static String getExamStatus(String dateStr) {
+    public static String getExamStatus(String dateStr, String timeRange) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-M-yyyy");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d-M-yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
+        try {
 
-        LocalDate examDate = LocalDate.parse(dateStr, formatter);
-        LocalDate today = LocalDate.now();
+            LocalDate examDate = LocalDate.parse(dateStr, dateFormatter);
+            LocalDate today = LocalDate.now();
 
-        // 3. Compare karein
-        if (examDate.equals(today)) {
-            return "Today";
-        } else if (examDate.equals(today.plusDays(1))) {
-            return "Tomorrow";
-        } else if (examDate.isBefore(today)) {
-            return "Completed";
-        } else {
+            String startTimeStr = timeRange.split("-")[0].trim();
 
-            long daysLeft = ChronoUnit.DAYS.between(today, examDate);
-            return "In " + daysLeft + " days";
+            LocalTime startTime = LocalTime.parse(startTimeStr, timeFormatter);
+            LocalTime now = LocalTime.now();
+
+            if (examDate.isBefore(today)) {
+                return "Completed";
+            }
+            else if (examDate.equals(today)) {
+
+                if (now.isAfter(startTime)) {
+                    return "Completed";
+                } else {
+                    return "Today";
+                }
+            }
+            else if (examDate.equals(today.plusDays(1))) {
+                return "Tomorrow";
+            }
+            else {
+                long daysLeft = ChronoUnit.DAYS.between(today, examDate);
+                return "In " + daysLeft + " days";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Invalid Format";
         }
     }
 

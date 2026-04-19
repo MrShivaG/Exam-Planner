@@ -140,7 +140,7 @@ public class UpdateRoom extends Application {
         editpane.setTop(headerbox);
         editpane.setCenter(contentPane);
         Stage stage = new Stage();
-        Scene scene = new Scene(editpane,400,500);
+        Scene scene = new Scene(editpane,400,400);
         stage.setScene(scene);
         return stage;
     }
