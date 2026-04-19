@@ -793,7 +793,7 @@ public class Screens {
 //            alert.setContentText("Seating Generated Successfully!");
 //            alert.showAndWait();
 
-            ArrTableView.show(arr_table_name,roomNo,date);
+            Gen_seat.showtable("17_04_2026_301");
 
         });
 
