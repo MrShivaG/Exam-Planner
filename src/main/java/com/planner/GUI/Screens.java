@@ -60,33 +60,6 @@ public class Screens {
     public Screens() throws SQLException {
     }
 
-    //  ARRANGEMENT SCREEN
-    public static BorderPane arrangementContent(HomePage app) {
-
-        BorderPane layout = new BorderPane();
-
-//        Button button = new Button("+ New Arrangement");
-//        button.getStyleClass().add("button-primary");
-//        button.setOnAction(e -> app.switchCenter(dataScreen(app)));
-
-//        HBox topBox = new HBox(button);
-//        topBox.setAlignment(Pos.CENTER_RIGHT);
-//        topBox.setPadding(new Insets(20));
-
-//        layout.setTop(topBox);
-
-//        StackPane card = CardComponent.createCard(
-//                "Data Input",
-//                "Enter student data",
-//                "/input.png",
-//                () -> app.switchCenter(dataScreen(app))
-//        );
-
-        // layout.setLeft(app.switchCenter(dataScreen(app)));
-
-        return layout;
-    }
-
     //  DATA SCREEN
     public static BorderPane dataScreen(HomePage app) {
 
@@ -171,20 +144,20 @@ public class Screens {
         gridPane.add(textField2, 1,2);
 
         Button next = new Button("Next ≫ ");
-//        next.setDisable(true);
-//        Runnable validate = () -> {
-//            boolean valid =
-//                    selectedFile != null &&
-//                            !textField.getText().isEmpty() &&
-//                            !textField1.getText().isEmpty() &&
-//                            !textField2.getText().isEmpty();
-//
-//            next.setDisable(!valid);
-//        };
+        next.setDisable(true);
+        Runnable validate = () -> {
+            boolean valid =
+                    selectedFile != null &&
+                            !textField.getText().isEmpty() &&
+                            datePicker.getValue() != null &&
+                            !textField2.getText().isEmpty();
 
-//        textField.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
-//        textField1.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
-//        textField2.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
+            next.setDisable(!valid);
+        };
+
+        textField.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
+        datePicker.valueProperty().addListener((obs, oldVal, newVal) -> validate.run());
+        textField2.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
         next.setOnAction(e -> {
 
             String sessions = textField.getText();
@@ -200,20 +173,20 @@ public class Screens {
             String name = textField2.getText();
 
             //  VALIDATION
-//            if (selectedFile == null ||
-//                    sessions.isEmpty() ||
-//                    date.isEmpty() ||
-//                    name.isEmpty()) {
-//
-//                System.out.println("All Entries Not Filled!");
-//
-//                Alert alert = new Alert(Alert.AlertType.WARNING);
-//                alert.setTitle("Incomplete Data");
-//                alert.setContentText("Please fill all fields and upload file.");
-//                alert.showAndWait();
-//
-//                return; //  STOP HERE
-//            }
+            if (selectedFile == null ||
+                    sessions.isEmpty() ||
+                    date.isEmpty() ||
+                    name.isEmpty()) {
+
+                System.out.println("All Entries Not Filled!");
+
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Incomplete Data");
+                alert.setContentText("Please fill all fields and upload file.");
+                alert.showAndWait();
+
+                return; //  STOP HERE
+            }
 
             //  PROCEED
             ExcelWork excelWork = new ExcelWork();
@@ -229,8 +202,6 @@ public class Screens {
 
         grid.add(card, 0, 0);
         grid.add(gridPane, 1, 0);
-     //   grid.add(vBox1, 2, 0);
-       // grid.add(vBox2, 3, 0);
         grid.add(next, 2, 1);
         grid.setMaxWidth(1000);
 
@@ -661,18 +632,24 @@ public class Screens {
             List<Teacher> maleList = db.getTeachersByGender("Male");
             List<Teacher> femaleList = db.getTeachersByGender("Female");
 
+            Collections.shuffle(maleList);
+            Collections.shuffle(femaleList);
+
             int rooms = selectedRooms.size();
 
-            if (maleList.size() < rooms || femaleList.size() < rooms) {
-                Notification.message(
-                        "Not enough teachers!\n" +
-                                "Rooms: " + rooms +
-                                "\nMale: " + maleList.size() +
-                                "\nFemale: " + femaleList.size()
-                );
-                return false;
-            }
+            for (int i = 0; i < selectedRooms.size(); i++) {
 
+                Room room = selectedRooms.get(i);
+
+                Teacher male = maleList.get(i);
+                Teacher female = femaleList.get(i);
+
+                List<Teacher> list = new ArrayList<>();
+                list.add(male);
+                list.add(female);
+
+                roomTeachers.put(room.getRoomNo(), list);
+            }
 
             Collections.shuffle(maleList);
             Collections.shuffle(femaleList);
@@ -840,12 +817,12 @@ public class Screens {
 
             if (roomsArray == null || roomsArray.length == 0) {
                 System.out.println("No rooms selected!");
-//                Alert alert = new Alert(Alert.AlertType.WARNING);
-//                alert.setTitle("No Room Selected");
-//                alert.setHeaderText("Selection Required");
-//                alert.setContentText("Please select at least one room before generating seating.");
-//
-//                alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Room Selected");
+                alert.setHeaderText("Selection Required");
+                alert.setContentText("Please select at least one room before generating seating.");
+
+                alert.showAndWait();
                 return;
             }
 
@@ -854,15 +831,6 @@ public class Screens {
                     .sum();
 
             int totalStudents = Screens.totalStudents;
-
-//            try {
-//                totalStudents = new FatchStudents().fatchStudent()
-//                        .stream()
-//                      //  .mapToInt(s -> s.getLength())
-//                       // .sum();
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
 
             if (totalCapacity < totalStudents) {
 
@@ -886,17 +854,16 @@ public class Screens {
 
                 ArrayList<String> tablenames = arrange.arrange(roomsArray, date, session);
 
-
-                    app.switchCenter(Gen_seat.showTablesScreen(tablenames, date, session));
+                app.switchCenter(Gen_seat.showTablesScreen(tablenames, date, session));
 
                 System.out.println("Seating Generated Successfully!");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Seating Generated Successfully!");
+                alert.showAndWait();
 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setContentText("Seating Generated Successfully!");
-//            alert.showAndWait();
         });
 
         VBox rightPanel = new VBox(10,
