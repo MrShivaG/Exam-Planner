@@ -82,15 +82,15 @@ public class Screens {
 
 
         Label session = new Label("Enter Session");
-        session.getStyleClass().add("hyyuser");
+        session.getStyleClass().add("form-label");
 
         TextField textField = new TextField();
         textField.setPromptText("2025-26");
-        textField.getStyleClass().add("hyyuser");
+        textField.getStyleClass().add("input-field");
 
 
         Label label1 = new Label("Enter Date");
-        label1.getStyleClass().add("hyyuser");
+        label1.getStyleClass().add("form-label");
 
         DatePicker datePicker = new DatePicker();
         datePicker.setPromptText("Select Date");
@@ -129,11 +129,11 @@ public class Screens {
 
 
         Label label2 = new Label("Arrangement Name");
-        label2.getStyleClass().add("hyyuser");
+        label2.getStyleClass().add("form-label");
 
         TextField textField2 = new TextField();
         textField2.setPromptText("i.e. Exam Arrangement");
-        textField2.getStyleClass().add("hyyuser");
+        textField2.getStyleClass().add("input-field");
 
 
         GridPane gridPane = new GridPane();

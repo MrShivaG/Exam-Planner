@@ -3,6 +3,12 @@ package com.planner.GUI;
 import com.planner.Database.ArrangementsDB;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.print.PageOrientation;
+import javafx.print.Paper;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
@@ -19,6 +25,14 @@ public class Gen_seat {
         VBox main = new VBox(30);
         main.setPadding(new Insets(20));
         main.setStyle("-fx-background-color: #F8F9FA;");
+
+        Button printBtn = new Button("Print");
+        printBtn.getStyleClass().add("primary-btn");
+
+        HBox topBar = new HBox(printBtn);
+        topBar.setAlignment(Pos.CENTER_RIGHT);
+
+        main.getChildren().add( topBar);
 
         for (String tableName : tableNames) {
 
@@ -42,6 +56,39 @@ public class Gen_seat {
 
             main.getChildren().add(sheet);
         }
+
+        printBtn.setOnAction(e -> {
+
+            PrinterJob job = PrinterJob.createPrinterJob();
+            job.getJobSettings().setPageLayout(
+                    job.getPrinter().createPageLayout(
+                            Paper.A4,
+                            PageOrientation.LANDSCAPE,
+                            Printer.MarginType.DEFAULT
+                    )
+            );
+
+            if (job != null && job.showPrintDialog(main.getScene().getWindow())) {
+
+                boolean success = true;
+
+                for (Node node : main.getChildren()) {
+
+                    // skip top bar (buttons)
+                    if (node instanceof HBox) continue;
+
+                    if (!job.printPage(node)) {
+                        success = false;
+                        break;
+                    }
+                }
+
+                if (success) {
+                    job.endJob();
+                    Notification.message("Printed Successfully");
+                }
+            }
+        });
 
         ScrollPane scroll = new ScrollPane(main);
         scroll.setFitToWidth(true);
