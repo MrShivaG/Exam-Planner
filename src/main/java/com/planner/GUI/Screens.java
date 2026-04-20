@@ -28,15 +28,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.sql.Connection;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+
 import javafx.scene.control.TableView;
 import javafx.util.StringConverter;
 
@@ -47,8 +46,8 @@ public class Screens {
     public static Label totalStudentsLabel = new Label("0");
     public static List<String> subjects = new ArrayList<>();
     private static File selectedFile = null;
-
     static DB_Methods dbMethods;
+    public static Map<Integer, List<Teacher>> roomTeachers = new HashMap<>();
 
     static {
         try {
@@ -109,7 +108,7 @@ public class Screens {
         session.getStyleClass().add("hyyuser");
 
         TextField textField = new TextField();
-        textField.setPromptText("2037-38");
+        textField.setPromptText("2025-26");
         textField.getStyleClass().add("hyyuser");
 
 
@@ -224,7 +223,7 @@ public class Screens {
             Screens.totalStudentsLabel.setText(String.valueOf(Screens.totalStudents));
             Screens.subjects = result.subList(1, result.size());
 
-            app.switchCenter(roomTableScreen(app));
+            app.switchCenter(roomTableScreen(app, date, sessions));
         });
         next.getStyleClass().add("primary-btn");
 
@@ -579,10 +578,8 @@ public class Screens {
 
         boolean isConnected = false;
 
-        try {
-            if (dbMethods != null && dbMethods.con != null && !dbMethods.con.isClosed()) {
-                isConnected = true;
-            }
+        try (Connection c = ArrangementsDB.connection()) {
+            isConnected = true;
         } catch (Exception e) {
             isConnected = false;
         }
@@ -657,7 +654,51 @@ public class Screens {
         return card;
     }
 
-    public static VBox roomTableScreen(HomePage app) {
+    public static boolean autoAssignTeachers(List<Room> selectedRooms) {
+        try {
+            DB_Methods db = new DB_Methods();
+
+            List<Teacher> maleList = db.getTeachersByGender("Male");
+            List<Teacher> femaleList = db.getTeachersByGender("Female");
+
+            int rooms = selectedRooms.size();
+
+            if (maleList.size() < rooms || femaleList.size() < rooms) {
+                Notification.message(
+                        "Not enough teachers!\n" +
+                                "Rooms: " + rooms +
+                                "\nMale: " + maleList.size() +
+                                "\nFemale: " + femaleList.size()
+                );
+                return false;
+            }
+
+
+            Collections.shuffle(maleList);
+            Collections.shuffle(femaleList);
+
+            roomTeachers.clear();
+
+
+            for (int i = 0; i < rooms; i++) {
+                Room room = selectedRooms.get(i);
+
+                List<Teacher> list = new ArrayList<>();
+                list.add(maleList.get(i));
+                list.add(femaleList.get(i));
+
+                roomTeachers.put(room.getRoomNo(), list);
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            Notification.message("Error assigning teachers");
+            return false;
+        }
+    }
+
+    public static VBox roomTableScreen(HomePage app, String date, String session) {
 
         ObservableList<Room> selectedRooms = FXCollections.observableArrayList();
 
@@ -765,7 +806,26 @@ public class Screens {
 
         removeBtn.setOnAction(e -> {
             Room selected = selectedList.getSelectionModel().getSelectedItem();
-            selectedRooms.remove(selected);
+            if (selected != null) {
+                selectedRooms.remove(selected);
+            }
+        });
+
+        Button assignBtn = new Button("Assign Teacher");
+        assignBtn.getStyleClass().add("primary-btn");
+
+        assignBtn.setOnAction(e -> {
+
+            if (selectedRooms.isEmpty()) {
+                Notification.message("Please select rooms first");
+                return;
+            }
+
+            boolean ok = Screens.autoAssignTeachers(selectedRooms);
+
+            if (ok) {
+                Notification.message("Teachers auto-assigned successfully!");
+            }
         });
 
         Button generateBtn = new Button("Generate Seating");
@@ -793,7 +853,7 @@ public class Screens {
                     .mapToInt(Room::getCapacity)
                     .sum();
 
-            int totalStudents = 0;
+            int totalStudents = Screens.totalStudents;
 
 //            try {
 //                totalStudents = new FatchStudents().fatchStudent()
@@ -821,13 +881,14 @@ public class Screens {
             }
 
             try {
+
                 Arrange arrange = new Arrange();
 
-                ArrayList<String> tablenames = arrange.arrange(roomsArray, "2024_05_10");
+                ArrayList<String> tablenames = arrange.arrange(roomsArray, date, session);
 
-                System.out.println(tablenames);
 
-                Gen_seat.showtable(String.valueOf(tablenames));
+                    app.switchCenter(Gen_seat.showTablesScreen(tablenames, date, session));
+
                 System.out.println("Seating Generated Successfully!");
 
             } catch (Exception ex) {
@@ -843,6 +904,7 @@ public class Screens {
                 selectedList,
                 new HBox(10),
                 removeBtn,
+                assignBtn,
                 generateBtn
         );
 
