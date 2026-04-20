@@ -19,15 +19,19 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.time.LocalTime;
 import java.util.*;
@@ -1186,13 +1190,26 @@ public class Screens {
                 )
         );
 
-        Region avatar = new Region();
-        avatar.setPrefSize(80, 80);
-        avatar.setStyle(
-                "-fx-background-color: #E5E7EB;" +
-                        "-fx-background-radius: 50;"
-        );
+        InputStream is = Screens.class.getResourceAsStream("/E-SAPlogo.jpg");
 
+        if (is == null) {
+            System.out.println("Image not found!");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Image not Found");
+            alert.setContentText("Please Give Correct Path.");
+            alert.showAndWait();
+        }
+
+        Image image = new Image(is);
+
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(120);   // bigger size
+        imageView.setFitHeight(120);
+        imageView.setPreserveRatio(false);
+
+// Circle clip (perfect round)
+        Circle clip = new Circle(60, 60, 60); // centerX, centerY, radius
+        imageView.setClip(clip);
         Label nameLabel = new Label(name);
         nameLabel.setStyle(
                 "-fx-font-size: 16px;" +
@@ -1212,7 +1229,7 @@ public class Screens {
                         "-fx-font-size: 12px;"
         );
 
-        card.getChildren().addAll(avatar, nameLabel, branchLabel, sectionLabel);
+        card.getChildren().addAll(imageView, nameLabel, branchLabel, sectionLabel);
 
         return card;
     }
