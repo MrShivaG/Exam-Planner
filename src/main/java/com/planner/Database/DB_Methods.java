@@ -1,5 +1,7 @@
 package com.planner.Database;
 
+import com.planner.GUI.Teacher;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -120,4 +122,24 @@ public class DB_Methods {
         return arrangement;
     }
 
+    public List<Teacher> getTeachersByGender(String gender) throws SQLException {
+
+        List<Teacher> list = new ArrayList<>();
+
+        String query = "SELECT name, gender FROM teachers WHERE gender = ?";
+
+        PreparedStatement ps = con.prepareStatement(query);
+        ps.setString(1, gender);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String name = rs.getString("name");
+            String gen = rs.getString("gender");
+
+            list.add(new Teacher(name, gen));
+        }
+
+        return list;
+    }
 }
