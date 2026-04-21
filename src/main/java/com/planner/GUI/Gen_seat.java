@@ -18,9 +18,8 @@ public class Gen_seat {
 
     public static ScrollPane showTablesScreen(
             List<String> tableNames,
-            String date,
-            String session
-    ) {
+            ExamConfig config
+    ){
 
         VBox main = new VBox(30);
         main.setPadding(new Insets(20));
@@ -46,13 +45,7 @@ public class Gen_seat {
 
             List<Teacher> teachers = Screens.roomTeachers.get(roomNo);
 
-            VBox sheet = createExamSheet(
-                    tableName,
-                    data,
-                    date,
-                    session,
-                    teachers
-            );
+            VBox sheet =createExamSheet(tableName, data, config, teachers);
 
             main.getChildren().add(sheet);
         }
@@ -60,10 +53,14 @@ public class Gen_seat {
         printBtn.setOnAction(e -> {
 
             PrinterJob job = PrinterJob.createPrinterJob();
+            if(job == null){
+                Notification.message("!No Printer Found!");
+                return;
+            }
             job.getJobSettings().setPageLayout(
                     job.getPrinter().createPageLayout(
                             Paper.A4,
-                            PageOrientation.LANDSCAPE,
+                            PageOrientation.PORTRAIT,
                             Printer.MarginType.DEFAULT
                     )
             );
@@ -96,11 +93,12 @@ public class Gen_seat {
         return scroll;
     }
 
-    private static VBox createExamSheet(String tableName,
-                                        List<List<String>> data,
-                                        String date,
-                                        String session,
-                                        List<Teacher> teachers) {
+    private static VBox createExamSheet(
+            String tableName,
+            List<List<String>> data,
+            ExamConfig config,
+            List<Teacher> teachers
+    ){
 
         VBox sheet = new VBox(10);
         sheet.setPadding(new Insets(20));
@@ -109,14 +107,15 @@ public class Gen_seat {
         String roomNo = tableName.substring(tableName.lastIndexOf("_") + 1);
 
 
-        Label college = new Label("SAGAR INSTITUTE OF SCIENCE, TECHNOLOGY & RESEARCH BHOPAL (SISTec-R)");
+        Label college = new Label(config.getCollegeName());
         college.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-        Label exam = new Label("B. Tech. " + session + " EXAMINATION (Seating Plan)");
-        exam.setStyle("-fx-font-size: 12px;");
+        Label exam = new Label("B. Tech. " + config.getSession() + " EXAMINATION");        exam.setStyle("-fx-font-size: 12px;");
 
         Label room = new Label("Room No: " + roomNo);
-        Label dateLabel = new Label("Date: " + date);
+        Label dateLabel = new Label(
+                "Date: " + DateUtil.formatForUI(config.getDate())
+        );
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -127,8 +126,8 @@ public class Gen_seat {
         header.setAlignment(Pos.CENTER);
 
 
-        String branch1 = "u";
-        String branch2 = "tt";
+        String branch1 = "";
+        String branch2 = "";
 
         outer:
         for (List<String> row : data) {
@@ -147,17 +146,17 @@ public class Gen_seat {
         }
 
         Label branch = new Label("Branch: " + branch1 + "  " + branch2);
-        Label subject = new Label("Subject: Auto Generated"); // later connect DB
+        Label subject = new Label("Subject: " + config.getSubject());
 
         VBox infoBox = new VBox(5, branch, subject);
 
 
-        Label time = new Label("Time: 10:00 AM to 01:00 PM");
-
+        Label time = new Label("Time: " + config.getExamTime());
 
         GridPane grid = new GridPane();
         grid.setHgap(2);
         grid.setVgap(2);
+        grid.setAlignment(Pos.CENTER);
 
         int rows = data.size();
         int cols = data.get(0).size();
@@ -177,7 +176,6 @@ public class Gen_seat {
                 if (value != null && !value.equalsIgnoreCase("null")) {
                     totalStudents++;
                 }
-
                 grid.add(cell, j, i);
             }
         }
@@ -236,3 +234,16 @@ public class Gen_seat {
         return sheet;
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
