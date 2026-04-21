@@ -44,6 +44,7 @@ import javafx.scene.control.TableView;
 import javafx.util.StringConverter;
 
 import static com.planner.Database.ArrangementsDB.fetcharrData;
+import static org.apache.poi.ss.util.DateParser.parseDate;
 
 public class Screens {
     public static int totalStudents = 0;
@@ -59,9 +60,6 @@ public class Screens {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public Screens() throws SQLException {
     }
 
     //  DATA SCREEN
@@ -88,17 +86,14 @@ public class Screens {
         textField.setPromptText("2025-26");
         textField.getStyleClass().add("input-field");
 
-
         Label label1 = new Label("Enter Date");
         label1.getStyleClass().add("form-label");
 
         DatePicker datePicker = new DatePicker();
         datePicker.setPromptText("Select Date");
 
-// optional: set today as default
         datePicker.setValue(LocalDate.now());
 
-// format how date appears (dd-MM-yyyy)
         datePicker.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -135,17 +130,58 @@ public class Screens {
         textField2.setPromptText("i.e. Exam Arrangement");
         textField2.getStyleClass().add("input-field");
 
+        Label collegeLabel = new Label("College Name");
+        collegeLabel.getStyleClass().add("form-label");
+
+        TextField collegeField = new TextField();
+        collegeField.setPromptText("SISTec-R");
+        collegeField.getStyleClass().add("input-field");
+
+
+        Label timeLabel = new Label("Exam Time");
+        timeLabel.getStyleClass().add("form-label");
+
+        TextField timeField = new TextField();
+        timeField.setPromptText("10:00 - 01:00");
+        timeField.getStyleClass().add("input-field");
+
+
+        Label subjectLabel = new Label("Subject");
+        subjectLabel.getStyleClass().add("form-label");
+
+        TextField subjectField = new TextField();
+        subjectField.setPromptText("CS-401");
+        subjectField.getStyleClass().add("input-field");
 
         GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(5);
-        gridPane.setVgap(20);
-        gridPane.add(session, 0,0);
-        gridPane.add(textField, 1, 0);
-        gridPane.add(label1, 0,1);
-        gridPane.add(datePicker, 1,1);
-        gridPane.add(label2, 0,2);
-        gridPane.add(textField2, 1,2);
+        gridPane.setAlignment(Pos.CENTER_LEFT);
+        gridPane.setHgap(15);
+        gridPane.setVgap(18);
+        gridPane.add(label2, 0, 0);
+        gridPane.add(textField2, 1, 0);
+
+        gridPane.add(collegeLabel, 0, 1);
+        gridPane.add(collegeField, 1, 1);
+
+        gridPane.add(session, 0, 2);
+        gridPane.add(textField, 1, 2);
+
+        gridPane.add(label1, 0, 3);
+        gridPane.add(datePicker, 1, 3);
+
+        gridPane.add(timeLabel, 0, 4);
+        gridPane.add(timeField, 1, 4);
+
+        gridPane.add(subjectLabel, 0, 5);
+        gridPane.add(subjectField, 1, 5);
+
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setMinWidth(150);
+
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setMinWidth(250);
+
+        gridPane.getColumnConstraints().addAll(col1, col2);
 
         Button next = new Button("Next ≫ ");
         next.setDisable(true);
@@ -164,6 +200,16 @@ public class Screens {
         textField2.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
         next.setOnAction(e -> {
 
+            ExamConfig config = new ExamConfig();
+
+            config.setCollegeName(collegeField.getText());
+            config.setExamTime(timeField.getText());
+            config.setSession(textField.getText());
+            config.setSubject(subjectField.getText());
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            config.setDate(datePicker.getValue());
+
             String sessions = textField.getText();
             LocalDate selectedDate = datePicker.getValue();
 
@@ -172,14 +218,12 @@ public class Screens {
                 return;
             }
 
-// convert to String (same format used everywhere)
-            String date = selectedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
             String name = textField2.getText();
 
             //  VALIDATION
             if (selectedFile == null ||
                     sessions.isEmpty() ||
-                    date.isEmpty() ||
+                    datePicker.getValue() == null ||
                     name.isEmpty()) {
 
                 System.out.println("All Entries Not Filled!");
@@ -200,13 +244,18 @@ public class Screens {
             Screens.totalStudentsLabel.setText(String.valueOf(Screens.totalStudents));
             Screens.subjects = result.subList(1, result.size());
 
-            app.switchCenter(roomTableScreen(app, date, sessions));
+            app.switchCenter(roomTableScreen(app, config));
         });
         next.getStyleClass().add("primary-btn");
 
+        VBox mainForm = new VBox(20, gridPane);
+        mainForm.getStyleClass().add("card");
+        mainForm.setPadding(new Insets(20));
+        mainForm.getChildren().add(next);
+
         grid.add(card, 0, 0);
-        grid.add(gridPane, 1, 0);
-        grid.add(next, 2, 1);
+        grid.add(mainForm, 1, 0);
+      //  grid.add(next, 2, 1);
         grid.setMaxWidth(1000);
 
         layout.setLeft(grid);
@@ -214,7 +263,6 @@ public class Screens {
         layout.setPadding(new Insets(0, 0, 0, 100));
         return layout;
     }
-
 
     public static void openFileChooser(HomePage app) {
 
@@ -265,7 +313,7 @@ public class Screens {
         Label heading = new Label("System Overview");
         heading.setStyle("-fx-font-size: 22; -fx-font-weight: bold;");
 
-        Label sub = new Label("Institutional performance for Fall Semester 2024.");
+        Label sub = new Label("Institutional performance for All Semester 2026.");
         sub.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13;-fx-font-style: italic;");
 
         VBox header = new VBox(5, heading, sub);
@@ -358,9 +406,7 @@ public class Screens {
                         "-fx-font-size: 18px;" +
                         "-fx-font-weight: 650;"
         );
-        roomnobox.getChildren().addAll(roomnolable,roomnodata);
-        //room no box end
-
+       roomnobox.getChildren().addAll(roomnolable,roomnodata);
 
         //Date and time
         VBox dateVbox = new VBox();
@@ -471,14 +517,30 @@ public class Screens {
         return arrrowBox;
     }
 
+    public static LocalDate parseDate(String dateStr) {
+
+        List<DateTimeFormatter> formats = List.of(
+                DateTimeFormatter.ofPattern("dd_MM_yyyy"),
+                DateTimeFormatter.ofPattern("d-M-yyyy"),
+                DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+                DateTimeFormatter.ofPattern("yyyy_MM_dd")
+        );
+
+        for (DateTimeFormatter formatter : formats) {
+            try {
+                return LocalDate.parse(dateStr, formatter);
+            } catch (Exception ignored) {}
+        }
+
+        throw new RuntimeException("Invalid date format: " + dateStr);
+    }
+
     public static String getExamStatus(String dateStr, String timeRange) {
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d-M-yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
         try {
-
-            LocalDate examDate = LocalDate.parse(dateStr, dateFormatter);
+            LocalDate examDate = parseDate(dateStr);
             LocalDate today = LocalDate.now();
 
             String startTimeStr = timeRange.split("-")[0].trim();
@@ -679,15 +741,16 @@ public class Screens {
         }
     }
 
-    public static VBox roomTableScreen(HomePage app, String date, String session) {
+    public static VBox roomTableScreen(HomePage app, ExamConfig config) {
 
         ObservableList<Room> selectedRooms = FXCollections.observableArrayList();
 
-        Label selectedRoomsLabel = new Label("0");
+        //Label selectedRoomsLabel = new Label("0");
         Label selectedCapacityLabel = new Label("0");
         Label statusLabel = new Label();
         statusLabel.setText("Select rooms to check capacity");
-        statusLabel.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 6;");
+        statusLabel.setStyle("-fx-text-fill: #6B7280;" +
+                " -fx-font-size: 12;");
 
         ListView<Room> selectedList = new ListView<>(selectedRooms);
         selectedList.getStyleClass().add("list-view");
@@ -856,9 +919,11 @@ public class Screens {
 
                 Arrange arrange = new Arrange();
 
-                ArrayList<String> tablenames = arrange.arrange(roomsArray, date, session);
+                ArrayList<String> tablenames = arrange.arrange(roomsArray, DateUtil.formatForDB(config.getDate()), config.getSession());
 
-                app.switchCenter(Gen_seat.showTablesScreen(tablenames, date, session));
+                app.switchCenter(
+                        Gen_seat.showTablesScreen(tablenames, config)
+                );
 
                 System.out.println("Seating Generated Successfully!");
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -870,8 +935,9 @@ public class Screens {
             }
         });
 
+        Label selectedTitle = new Label("Selected Rooms (Priority Wise): 0");
         VBox rightPanel = new VBox(10,
-                new Label("Selected Rooms (Priority)"),
+                selectedTitle,
                 selectedList,
                 new HBox(10),
                 removeBtn,
@@ -949,7 +1015,10 @@ public class Screens {
                     } else {
                         selectedRooms.remove(room);
                     }
-                    selectedRoomsLabel.setText(String.valueOf(selectedRooms.size()));
+                    //selectedRoomsLabel.setText(String.valueOf(selectedRooms.size()));
+                    selectedTitle.setText(
+                            "Selected Rooms (Priority Wise): " + selectedRooms.size()
+                    );
 
                     int selectedCapacity = selectedRooms.stream()
                             .mapToInt(Room::getCapacity)
@@ -967,7 +1036,6 @@ public class Screens {
                 });
 
             }
-
 
             @Override
             protected void updateItem(Boolean item, boolean empty) {
@@ -990,8 +1058,8 @@ public class Screens {
         capCol.setStyle("-fx-alignment: CENTER;");
         rowCol.setStyle("-fx-alignment: CENTER;");
         colCol.setStyle("-fx-alignment: CENTER;");
-        selectCol.setPrefWidth(50);
-        selectCol.setMaxWidth(50);
+        selectCol.setPrefWidth(75);
+        selectCol.setMaxWidth(75);
         selectCol.setResizable(false);
 
         table.setMaxWidth(650);
@@ -1021,11 +1089,51 @@ public class Screens {
 
         HBox infoBar = new HBox(20);
         infoBar.setPadding(new Insets(10));
+//
+        VBox subjectsBox = new VBox(5);
+
+// 2 column grid
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(5);
+
+        int col = 0;
+        int row = 0;
+
+        for (String sub : Screens.subjects) {
+
+            Label chip = new Label(sub);
+            chip.setStyle(
+                    "-fx-background-color: #EEF4FF;" +
+                            "-fx-text-fill: #2563EB;" +
+                            "-fx-padding: 4 8;" +
+                            "-fx-background-radius: 10;" +
+                            "-fx-font-size: 10;"
+            );
+
+            grid.add(chip, col, row);
+
+            col++;
+            if (col == 2) {
+                col = 0;
+                row++;
+            }
+        }
+
+        ScrollPane scroll = new ScrollPane(grid);
+        scroll.setFitToWidth(true);
+        scroll.setPrefHeight(80);
+        scroll.setStyle("-fx-background-color: transparent;");
+
+        subjectsBox.getChildren().add(scroll);
+
+        VBox card4 = createInfoCard("Subjects", new Label(""));
+        card4.getChildren().set(1, subjectsBox);
 
         VBox card1 = createInfoCard("Total Students", Screens.totalStudentsLabel);
         VBox card2 = createInfoCard("Total Rooms", new Label(String.valueOf(totalRooms)));
         VBox card3 = createInfoCard("Total Capacity", new Label(String.valueOf(totalCapacity)));
-        VBox card4 = createInfoCard("Selected Rooms", selectedRoomsLabel);
+      //  VBox card4 = createInfoCard("Selected Rooms", selectedRoomsLabel);
         VBox card5 = createInfoCard("Selected Capacity", selectedCapacityLabel);
         VBox card6 = createInfoCard("Status", statusLabel);
 
@@ -1075,7 +1183,10 @@ public class Screens {
         Label t = new Label(title);
         t.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12;");
 
+        valueLabel.setWrapText(true);
+        valueLabel.setMaxWidth(160);
         valueLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+        //valueLabel.setAlignment(Pos.CENTER_LEFT);
 
         card.getChildren().addAll(t, valueLabel);
 
