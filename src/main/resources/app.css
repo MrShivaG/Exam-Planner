@@ -1,8 +1,7 @@
 .root {
-    -fx-background-color: #F8F9FA;
     -fx-font-family: "Manrope";
+    -fx-background-color: #F8F9FA;
 }
-
 
 
 .sidebar-btn:hover {
@@ -15,48 +14,58 @@
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 16;
     -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 15, 0.2, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0.15, 0, 2);
 }
 
 .card:hover {
     -fx-background-color: #f5f9ff;
-    -fx-effect: dropshadow(gaussian, rgba(37, 99, 239, 0.25), 25, 0.3, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0.2, 0, 4);
 }
+
 .cardrow{
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 15, 0.2, 0, 4);
 }
-.cardrow:hover{
+
+.cardrow:hover {
     -fx-background-color: #f5f9ff;
-    -fx-effect: dropshadow(gaussian, rgba(37, 99, 239, 0.25), 25, 0.3, 6, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0.2, 0, 4);
 }
 
+/* ===== FORM LABEL ===== */
+.form-label {
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* ===== INPUT FIELD ===== */
+.input-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+.input-field:focused {
+    -fx-border-color: #2563EB;
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.15), 4, 0.2, 0, 0);
+}
 
 .status-dot-online {
-    -fx-fill: #13fa02;
-
-    /* Border styling for better definition */
-    -fx-stroke: #0ca301;
-    -fx-stroke-type: inside;
-    -fx-stroke-width: 1;
-
-    /* Strong Glow Effect */
-    -fx-effect: dropshadow(gaussian, #13fa02, 12, 0.5, 0, 0);
+    -fx-fill: #10B981;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3), 6, 0.3, 0, 0);
 }
-
 
 .status-dot-offline {
     -fx-fill: #EF4444;
-    -fx-stroke: #B91C1C;
-    -fx-stroke-type: inside;
-    -fx-stroke-width: 1;
-
-    /* Soft Red Glow */
-    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.6), 8, 0.4, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3), 6, 0.3, 0, 0);
 }
 
-.roomcard:hover{
+.roomcard:hover {
     -fx-background-color: #f5f9ff;
-    -fx-effect: dropshadow(gaussian, rgba(37, 99, 239, 0.25), 25, 0.3, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0.2, 0, 4);
 }
 
 .editbutton {
@@ -78,7 +87,6 @@
 
 .deletebutton {
     -fx-background-color: transparent;
-    -fx-background-color: transparent;
     -fx-text-fill: #7a7a9a;
     -fx-font-size: 22px;
     -fx-border-color: #e0e0ec;
@@ -96,22 +104,18 @@
 
 
 
-title.setStyle{
-"-fx-font-size: 16px;" +
-"-fx-font-weight: 600;" +
-"-fx-text-fill: #111827;"
+.title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #111827;
 }
 
-subtitle.setStyle {
-"-fx-font-size: 10px;" + "-fx-text-fill: #6B7280;" + "-fx-letter-spacing: 1;"
+.subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6B7280;
 }
 
-.button-primary {
-    -fx-background-color: linear-gradient(to bottom, #0056D2, #0041A8);
-    -fx-background-radius: 12;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
+
 
 .top-bar {
     -fx-background-color: #ffffff;
@@ -140,14 +144,12 @@ subtitle.setStyle {
     -fx-background-radius: 10;
 }
 
-.sidebar-btn:hover {
-    -fx-background-color: #F3F6FB;
-}
 
 /* Active */
 .sidebar-active {
     -fx-background-color: #EEF4FF;
     -fx-text-fill: #2563EB;
+    -fx-background-radius: 10;
 }
 
 /* Primary button */
@@ -182,7 +184,7 @@ subtitle.setStyle {
 
 .table-view .column-header .label {
     -fx-text-fill: #6b7280;
-    -fx-font-size: 13px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
@@ -205,8 +207,8 @@ subtitle.setStyle {
 
 /* ===== CELLS ===== */
 .table-cell {
-    -fx-padding: 12;
-    -fx-text-fill: #2b3437;
+    -fx-padding: 10 12;
+    -fx-text-fill: #374151;
     -fx-font-size: 14px;
 }
 
@@ -261,7 +263,7 @@ subtitle.setStyle {
 
 /* Selected item */
 .list-cell:filled:selected {
-    -fx-background-color: #E8F0FE;
+    -fx-background-color: #EEF4FF;
     -fx-text-fill: #2563EB;
     -fx-background-radius: 10;
 }
@@ -278,7 +280,7 @@ subtitle.setStyle {
 
 /* Header Section (Top bar) */
 .alert-dialog .header-panel {
-    -fx-background-color: #d11002; /* Purple color jo aapki image mein hai */
+    -fx-background-color: #2563EB; /* Purple color jo aapki image mein hai */
 }
 
 .alert-dialog .header-panel .label {
@@ -297,10 +299,9 @@ subtitle.setStyle {
 
 /* Buttons Styling */
 .alert-dialog .button {
-    -fx-background-color: #8e24aa;
+    -fx-background-color: #2563EB;
     -fx-text-fill: white;
-    -fx-background-radius: 4px;
-    -fx-cursor: hand;
+    -fx-background-radius: 6;
 }
 
 .alert-dialog .button:hover {

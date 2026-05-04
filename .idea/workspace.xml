@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="update screens">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/DateUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/ExamConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Teacher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Database/ArrangementsDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Database/ArrangementsDB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Database/DB_Methods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Database/DB_Methods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Database/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Database/database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/app.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MrChaurasiaJi&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MrShivaG/Exam-Planner.git&quot;,
+    &quot;accountId&quot;: &quot;e47cb918-2b5c-412b-acb1-6d02125bed1a&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3CJLnkzsZtZYhyEalJfVpIR1QiV" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.AddNewRoom.executor": "Run",
+    "Application.Dashboard.executor": "Run",
+    "Application.DashboardContent.executor": "Run",
+    "Application.EditRoom.executor": "Run",
+    "Application.HomePage.executor": "Run",
+    "Application.RoomScreen.executor": "Run",
+    "Application.SeatingPrintApp.executor": "Run",
+    "Application.UpdateRoom.executor": "Run",
+    "Application.database.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Merging main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/java/project/Exam-Planner",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.40804598",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.HomePage">
+    <configuration name="AddNewRoom" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.AddNewRoom" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HomePage" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../Program Files/Java/jdk-21.0.10" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.HomePage" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RoomScreen" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.RoomScreen" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SeatingPrintApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.SeatingPrintApp" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="database" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.Database.database" />
+      <module name="Exam-Planner" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.Database.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.SeatingPrintApp" />
+      <item itemvalue="Application.database" />
+      <item itemvalue="Application.AddNewRoom" />
+      <item itemvalue="Application.HomePage" />
+      <item itemvalue="Application.RoomScreen" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.HomePage" />
+        <item itemvalue="Application.RoomScreen" />
+        <item itemvalue="Application.SeatingPrintApp" />
+        <item itemvalue="Application.database" />
+        <item itemvalue="Application.AddNewRoom" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="" />
+      <created>1776098895074</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776098895074</updated>
+    </task>
+    <task id="LOCAL-00001" summary="add update method">
+      <option name="closed" value="true" />
+      <created>1776105140306</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776105140306</updated>
+    </task>
+    <task id="LOCAL-00002" summary="create addNewRoom class">
+      <option name="closed" value="true" />
+      <created>1776105176360</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776105176361</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update roomscreen class">
+      <option name="closed" value="true" />
+      <created>1776105211158</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1776105211158</updated>
+    </task>
+    <task id="LOCAL-00004" summary="create updateroom class">
+      <option name="closed" value="true" />
+      <created>1776105236538</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1776105236538</updated>
+    </task>
+    <task id="LOCAL-00005" summary="updated roomscreen">
+      <option name="closed" value="true" />
+      <created>1776354954452</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1776354954452</updated>
+    </task>
+    <task id="LOCAL-00006" summary="updated updateroom">
+      <option name="closed" value="true" />
+      <created>1776354986152</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1776354986152</updated>
+    </task>
+    <task id="LOCAL-00007" summary="updated ArrangementsDB">
+      <option name="closed" value="true" />
+      <created>1776529027070</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529027070</updated>
+    </task>
+    <task id="LOCAL-00008" summary="updated DB_methods">
+      <option name="closed" value="true" />
+      <created>1776529084307</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529084307</updated>
+    </task>
+    <task id="LOCAL-00009" summary="updated addnewroom">
+      <option name="closed" value="true" />
+      <created>1776529116665</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529116665</updated>
+    </task>
+    <task id="LOCAL-00010" summary="create ArrTableView">
+      <option name="closed" value="true" />
+      <created>1776529150528</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529150528</updated>
+    </task>
+    <task id="LOCAL-00011" summary="updated CardComponent">
+      <option name="closed" value="true" />
+      <created>1776529235556</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529235556</updated>
+    </task>
+    <task id="LOCAL-00012" summary="updated notification">
+      <option name="closed" value="true" />
+      <created>1776529284028</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529284028</updated>
+    </task>
+    <task id="LOCAL-00013" summary="updated RoomScreen">
+      <option name="closed" value="true" />
+      <created>1776529312754</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529312754</updated>
+    </task>
+    <task id="LOCAL-00014" summary="updated Screens">
+      <option name="closed" value="true" />
+      <created>1776529346145</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529346145</updated>
+    </task>
+    <task id="LOCAL-00015" summary="updated UpdateRoom">
+      <option name="closed" value="true" />
+      <created>1776529406843</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529406843</updated>
+    </task>
+    <task id="LOCAL-00016" summary="updated app">
+      <option name="closed" value="true" />
+      <created>1776529432991</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529432991</updated>
+    </task>
+    <task id="LOCAL-00017" summary="updated pom.xml">
+      <option name="closed" value="true" />
+      <created>1776529471398</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529471398</updated>
+    </task>
+    <task id="LOCAL-00018" summary="updated database">
+      <option name="closed" value="true" />
+      <created>1776529658921</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1776529658921</updated>
+    </task>
+    <task id="LOCAL-00019" summary="updated homepage">
+      <option name="closed" value="true" />
+      <created>1776530443830</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1776530443830</updated>
+    </task>
+    <task id="LOCAL-00020" summary="updated">
+      <option name="closed" value="true" />
+      <created>1776530491883</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1776530491883</updated>
+    </task>
+    <task id="LOCAL-00021" summary="updated pom">
+      <option name="closed" value="true" />
+      <created>1776534692879</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1776534692879</updated>
+    </task>
+    <task id="LOCAL-00022" summary="updated DB method">
+      <option name="closed" value="true" />
+      <created>1776626023046</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1776626023047</updated>
+    </task>
+    <task id="LOCAL-00023" summary="updated add new room">
+      <option name="closed" value="true" />
+      <created>1776626047775</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1776626047775</updated>
+    </task>
+    <task id="LOCAL-00024" summary="updated arrtableview">
+      <option name="closed" value="true" />
+      <created>1776626089013</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1776626089013</updated>
+    </task>
+    <task id="LOCAL-00025" summary="updated homepage">
+      <option name="closed" value="true" />
+      <created>1776626109242</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1776626109242</updated>
+    </task>
+    <task id="LOCAL-00026" summary="updated notification">
+      <option name="closed" value="true" />
+      <created>1776626130074</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1776626130074</updated>
+    </task>
+    <task id="LOCAL-00027" summary="updated roomscreen">
+      <option name="closed" value="true" />
+      <created>1776626152058</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1776626152058</updated>
+    </task>
+    <task id="LOCAL-00028" summary="updated screen">
+      <option name="closed" value="true" />
+      <created>1776626175993</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1776626175993</updated>
+    </task>
+    <task id="LOCAL-00029" summary="update arrtableview">
+      <option name="closed" value="true" />
+      <created>1777871985034</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1777871985034</updated>
+    </task>
+    <task id="LOCAL-00030" summary="update screens">
+      <option name="closed" value="true" />
+      <created>1777872003438</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1777872003438</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update roomscreen class" />
+    <MESSAGE value="create updateroom class" />
+    <MESSAGE value="updated updateroom" />
+    <MESSAGE value="updated ArrangementsDB" />
+    <MESSAGE value="updated DB_methods" />
+    <MESSAGE value="updated addnewroom" />
+    <MESSAGE value="create ArrTableView" />
+    <MESSAGE value="updated CardComponent" />
+    <MESSAGE value="updated RoomScreen" />
+    <MESSAGE value="updated Screens" />
+    <MESSAGE value="updated UpdateRoom" />
+    <MESSAGE value="updated app" />
+    <MESSAGE value="updated pom.xml" />
+    <MESSAGE value="updated database" />
+    <MESSAGE value="updated" />
+    <MESSAGE value="updated pom" />
+    <MESSAGE value="updated DB method" />
+    <MESSAGE value="updated add new room" />
+    <MESSAGE value="updated arrtableview" />
+    <MESSAGE value="updated homepage" />
+    <MESSAGE value="updated notification" />
+    <MESSAGE value="updated roomscreen" />
+    <MESSAGE value="updated screen" />
+    <MESSAGE value="update arrtableview" />
+    <MESSAGE value="update screens" />
+    <option name="LAST_COMMIT_MESSAGE" value="update screens" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/planner/GUI/DashboardContent.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
