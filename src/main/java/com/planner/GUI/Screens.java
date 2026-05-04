@@ -358,6 +358,7 @@ public class Screens {
         return root;
     }
     public static HBox databox(String arr_table_name,  String date, String capacity, String session,  String student){
+
         //room no. box
         VBox roomnobox = new VBox();
         roomnobox.setPadding(new Insets(5,5,5,5));
@@ -375,6 +376,7 @@ public class Screens {
                 "-fx-font-size: 16px;" +
                         "-fx-text-fill: #6B7280;"
         );
+
         int lastDash = arr_table_name.lastIndexOf("_");
         String roomNo = arr_table_name.substring(lastDash + 1);
 
@@ -417,6 +419,7 @@ public class Screens {
         dateVbox.getChildren().addAll(datebox,timelable);
         //date and time end
 
+        //exam status
         String examStatus = getExamStatus(date,time);
         HBox statusbox = new HBox();
         statusbox.setAlignment(Pos.CENTER);
@@ -452,6 +455,7 @@ public class Screens {
         }
 
 
+
         //capacity
         VBox capacitybox = new VBox();
         Label capacitylable = new Label("Capacity");
@@ -482,7 +486,7 @@ public class Screens {
         arrrowBox.getStyleClass().add("cardrow");
         arrrowBox.setSpacing(30);
         arrrowBox.setPadding(new Insets(5,20,5,20));
-        arrrowBox.setAlignment(Pos.CENTER_RIGHT);
+        arrrowBox.setAlignment(Pos.CENTER);
         arrrowBox.setStyle("-fx-background-color: #F8F9FA;"+
                 "-fx-background-radius: 10;" +
                 "-fx-border-color: #c0c8df;" +
@@ -824,7 +828,7 @@ public class Screens {
             try {
                 Arrange arrange = new Arrange();
 
-                ArrayList<String> tablenames = arrange.arrange(roomsArray, "2024_05_10");
+                ArrayList<String> tablenames = arrange.arrange(roomsArray, "2024_05_10","2024-2028");
 
                 System.out.println(tablenames);
 
