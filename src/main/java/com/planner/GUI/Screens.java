@@ -224,7 +224,6 @@ public class Screens {
             }
 
             String name = textField2.getText();
-
             //  VALIDATION
             if (selectedFile == null ||
                     sessions.isEmpty() ||
@@ -238,10 +237,10 @@ public class Screens {
                 alert.setContentText("Please fill all fields and upload file.");
                 alert.showAndWait();
 
-                return; //  STOP HERE
+                return;
             }
 
-            //  PROCEED
+
             ExcelWork excelWork = new ExcelWork();
 
             ArrayList<String> result = excelWork.fatchExcel(selectedFile.getAbsolutePath());
@@ -569,15 +568,14 @@ public class Screens {
 
         card.getStyleClass().add("card");
 
-        //  SMALL TITLE
+
         Label label = new Label(title);
         label.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14;");
 
-        //  BIG NUMBER
+
         Label number = new Label(value);
         number.setStyle("-fx-font-size: 28; -fx-font-weight: bold;");
 
-        //  FOOTER
         HBox footer = new HBox(20);
         footer.setAlignment(Pos.CENTER_LEFT);
 
@@ -903,19 +901,10 @@ public class Screens {
             }
 
             try {
-
-                Arrange arrange = new Arrange();
-
-                ArrayList<String> tablenames = arrange.arrange(roomsArray, DateUtil.formatForDB(config.getDate()), config.getSession());
-
                 app.switchCenter(
                         ConfirmScreen(app, config, selectedRooms, config.getFileName())
                 );
 
-                System.out.println("Seating Generated Successfully!");
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Seating Generated Successfully!");
-                alert.showAndWait();
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -1254,7 +1243,6 @@ public class Screens {
 
         confirmBtn.setOnAction(e -> {
 
-            // NOW ACTUAL GENERATION
             Arrange arrange = new Arrange();
 
             int[] roomsArray = selectedRooms.stream()
@@ -1271,6 +1259,11 @@ public class Screens {
                 app.switchCenter(
                         Gen_seat.showTablesScreen(tables, config)
                 );
+
+                System.out.println("Seating Generated Successfully!");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Seating Generated Successfully!");
+                alert.showAndWait();
 
             } catch (Exception ex) {
                 Notification.message("Error generating seating");
