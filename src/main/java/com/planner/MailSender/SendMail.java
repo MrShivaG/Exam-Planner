@@ -101,7 +101,7 @@ public class SendMail {
         database db = new database();
         Connection conn = db.connection();
         final String from = "shivaahirwar2005@gmail.com";
-        final String password = "fkaw ttha grxr isvb";
+        final String password = "iflp drmq mipu ozsa";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -122,12 +122,12 @@ public class SendMail {
             ResultSet rs = ps.executeQuery();
             String email_id = null;
             String name = "";
+            System.out.println();
             while (rs.next()) {
                 email_id = rs.getString("Email_ID");
                 name = rs.getString("Name");
             }
             if(email_id!=null) {
-                System.out.println(name+email_id+"ji");
                 try {
                     Message message = new MimeMessage(session);
                     message.setFrom(new InternetAddress(from));

@@ -17,6 +17,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.planner.GUI.HomePage.createTopBar;
+
 
 public class RoomScreen extends Application {
     static int totalrooms;
@@ -133,10 +135,6 @@ public class RoomScreen extends Application {
             stage.initOwner(addRoomBtn.getScene().getWindow());
             stage.showAndWait();
         });
-
-
-
-
 
         VBox capacityCard = capacity();
         capacityCard.setPrefSize(200,80);

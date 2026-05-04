@@ -18,6 +18,8 @@ import javafx.util.Duration;
 
 import java.sql.SQLException;
 
+import static com.planner.GUI.HomePage.createTopBar;
+
 public class AddNewRoom extends Application {
     DB_Methods dbMethods ;
     @Override
@@ -132,6 +134,15 @@ public class AddNewRoom extends Application {
             pause.setOnFinished(ev -> bottombox.setVisible(false));
 
             pause.play();
+
+            try {
+                HomePage app =  new HomePage();
+
+                app.switchScreen(createTopBar("Show Room"), RoomScreen.room(app));
+            } catch (SQLException sqlException) {
+                throw new RuntimeException(sqlException);
+            }
+
         });
 
 

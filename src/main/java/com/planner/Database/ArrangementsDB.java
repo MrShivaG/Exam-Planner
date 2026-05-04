@@ -8,7 +8,7 @@ import static com.planner.Database.DB_Methods.con;
 
 public class ArrangementsDB {
 
-    private static final String URL = "jdbc:mysql://10.225.181.20:3306/arrangements";
+    private static final String URL = "jdbc:mysql://localhost:3306/arrangements";
     //10.225.181.20
     private static final String USERNAME = "remote";
     private static final String PASSWORD = "root";
