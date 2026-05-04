@@ -224,7 +224,7 @@ public class Screens {
             }
 
             String name = textField2.getText();
-            //  VALIDATION
+
             if (selectedFile == null ||
                     sessions.isEmpty() ||
                     datePicker.getValue() == null ||
@@ -569,10 +569,8 @@ public class Screens {
 
         card.getStyleClass().add("card");
 
-
         Label label = new Label(title);
         label.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14;");
-
 
         Label number = new Label(value);
         number.setStyle("-fx-font-size: 28; -fx-font-weight: bold;");
@@ -858,7 +856,7 @@ public class Screens {
             }
         });
 
-        Button generateBtn = new Button("Generate Seating");
+        Button generateBtn = new Button("Confirm Seating");
         generateBtn.getStyleClass().add("primary-btn");
 
         generateBtn.setOnAction(e -> {
@@ -866,7 +864,6 @@ public class Screens {
             int[] roomsArray = selectedRooms.stream()
                     .mapToInt(Room::getRoomNo)
                     .toArray();
-
 
             if (roomsArray == null || roomsArray.length == 0) {
                 System.out.println("No rooms selected!");
@@ -901,15 +898,9 @@ public class Screens {
                 return;
             }
 
-            try {
-                app.switchCenter(
-                        ConfirmScreen(app, config, selectedRooms, config.getFileName())
-                );
-
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            app.switchCenter(
+                    ConfirmScreen(app, config, selectedRooms, config.getFileName())
+            );
         });
 
         Label selectedTitle = new Label("Selected Rooms (Priority Wise): 0");
