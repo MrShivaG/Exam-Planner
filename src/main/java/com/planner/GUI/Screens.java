@@ -496,9 +496,10 @@ public class Screens {
         arrButton.setStyle("-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;");
 
-        arrButton.setOnAction(e ->
-                ArrTableView.show(arr_table_name,roomNo,date)
-        );
+        arrButton.setOnAction(e ->{
+            Node node = ArrTableView.show(arr_table_name, roomNo, date);
+            HomePage.rightSide.setCenter(node);
+        });
 
 
 

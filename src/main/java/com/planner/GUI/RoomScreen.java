@@ -61,6 +61,8 @@ public class RoomScreen extends Application {
                         "-fx-background: transparent;" +
                         "-fx-border-color: transparent;"
         );
+
+
         VBox contentbox = new VBox(20);
         contentbox.setPadding(new Insets(10, 32, 32, 32));
         contentbox.setStyle("-fx-background-color: #F8F9FA;");
@@ -74,10 +76,7 @@ public class RoomScreen extends Application {
 
         header.setSpacing(20);
 
-        Region sepe = new Region();
-        sepe.setPrefHeight(1);
-        sepe.setStyle("-fx-background-color: BLACK;");
-        sepe.setMaxWidth(Double.MAX_VALUE);
+
 
         VBox titleBox = new VBox();
         titleBox.setAlignment(Pos.CENTER);
@@ -100,11 +99,11 @@ public class RoomScreen extends Application {
 
         titleBox.getChildren().addAll(title,subtitle);
 
-        Region spa = new Region();
-        HBox.setHgrow(spa, Priority.ALWAYS);
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Region spacer1 = new Region();
+        HBox.setHgrow(spacer1, Priority.ALWAYS);
 
         Button addRoomBtn = new Button("+ Add Class Room");
         addRoomBtn.setStyle(
@@ -146,9 +145,19 @@ public class RoomScreen extends Application {
 
 
 
-        header.getChildren().addAll(titleBox,spa, techCard,capacityCard,spacer, addRoomBtn);
+        header.getChildren().addAll(titleBox,spacer, techCard,capacityCard,spacer1, addRoomBtn);
 
-
+        VBox cardBox = new VBox();
+        cardBox.setPadding(new Insets(15));
+        cardBox.setPrefSize(500, 400);
+        cardBox.setMaxWidth(Double.MAX_VALUE);
+        cardBox.setStyle(
+                "-fx-background-color: #ffffff;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #c0c8d0;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-border-width: 1;"
+        );
 
         FlowPane roomcardrow = new FlowPane();
         roomcardrow.setHgap(20);
@@ -166,8 +175,8 @@ public class RoomScreen extends Application {
 
 
 
-
-        contentbox.getChildren().addAll(hBox,header,sepe,roomcardrow);
+        cardBox.getChildren().addAll(roomcardrow);
+        contentbox.getChildren().addAll(hBox,header,cardBox);
         scrollpane.setContent(contentbox);
         borderPane.setCenter(scrollpane);
 
@@ -328,10 +337,10 @@ public class RoomScreen extends Application {
             if (isConfirmed) {
                 try {
                     dbMethods.deleteRoom(roomNo);
-                    Notification.message("Room " + roomNo + " successfully delete ho gaya.");
+                    Notification.message("Room " + roomNo + " successfully deleted.");
 
                 } catch (SQLException ex) {
-                    Notification.message("Delete karne mein error aayi: " + ex.getMessage());
+                    Notification.message("An error occurred while deleting." + ex.getMessage());
                     ex.printStackTrace();
                 }
             }

@@ -18,7 +18,7 @@ import javafx.scene.Node;
 public class HomePage extends Application {
 
     private BorderPane root;
-    private BorderPane rightSide;
+    public static BorderPane rightSide;
     private Button activeButton = null;
 
     @Override
@@ -75,7 +75,7 @@ public class HomePage extends Application {
         in.play();
     }
 
-    private BorderPane createDashboardScreen() {
+    public BorderPane createDashboardScreen() {
 
         BorderPane rootLayout = new BorderPane();
 
@@ -91,7 +91,7 @@ public class HomePage extends Application {
 
         return rootLayout;
     }
-    private HBox createTopBar(String titleText){
+    public static HBox createTopBar(String titleText){
 
         HBox topBar = new HBox();
         topBar.setPrefHeight(60);
