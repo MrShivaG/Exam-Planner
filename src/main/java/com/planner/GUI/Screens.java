@@ -259,7 +259,7 @@ public class Screens {
 
         grid.add(card, 0, 0);
         grid.add(mainForm, 1, 0);
-      //  grid.add(next, 2, 1);
+        //  grid.add(next, 2, 1);
         grid.setMaxWidth(1000);
 
         layout.setLeft(grid);
@@ -410,7 +410,7 @@ public class Screens {
                         "-fx-font-size: 18px;" +
                         "-fx-font-weight: 650;"
         );
-       roomnobox.getChildren().addAll(roomnolable,roomnodata);
+        roomnobox.getChildren().addAll(roomnolable,roomnodata);
 
         //Date and time
         VBox dateVbox = new VBox();
@@ -458,9 +458,9 @@ public class Screens {
         if (examStatus.equals("Today")) {
             statuslable.setText("HAPPENING TODAY");
             statuslable.setStyle("-fx-text-fill: #EF4444;" +
-                                 "-fx-font-size: 14px;"+
-                                 " -fx-font-weight: bold;" +
-                                 "-fx-font-style: italic;");
+                    "-fx-font-size: 14px;"+
+                    " -fx-font-weight: bold;" +
+                    "-fx-font-style: italic;");
             statusbox.getChildren().addAll(status,statuslable);
         } else if (examStatus.equals("Completed")) {
             statuslable.setText("COMPLETED");
@@ -1101,7 +1101,7 @@ public class Screens {
         VBox card1 = createInfoCard("Total Students", Screens.totalStudentsLabel);
         VBox card2 = createInfoCard("Total Rooms", new Label(String.valueOf(totalRooms)));
         VBox card3 = createInfoCard("Total Capacity", new Label(String.valueOf(totalCapacity)));
-      //  VBox card4 = createInfoCard("Selected Rooms", selectedRoomsLabel);
+        //  VBox card4 = createInfoCard("Selected Rooms", selectedRoomsLabel);
         VBox card5 = createInfoCard("Selected Capacity", selectedCapacityLabel);
         VBox card6 = createInfoCard("Status", statusLabel);
 

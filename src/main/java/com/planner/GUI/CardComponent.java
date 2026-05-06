@@ -43,7 +43,7 @@ public class CardComponent {
         subtitle.getStyleClass().add("subtitle");
 
         Button btn = new Button("Open");
-        btn.getStyleClass().add("button-primary");
+        btn.getStyleClass().add("primary-btn");
         btn.setPrefHeight(50);
         btn.setPrefWidth(150);
 
