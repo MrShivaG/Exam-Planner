@@ -44,7 +44,7 @@ public class Gen_seat {
                     tableName.substring(tableName.lastIndexOf("_") + 1)
             );
 
-            List<Teacher> teachers = TeacherAssign.roomTeachers.get(roomNo);
+            List<Teacher> teachers = TeacherAssign.getRoomTeachers().get(roomNo);
 
             VBox sheet =createExamSheet(tableName, data, config, teachers);
 

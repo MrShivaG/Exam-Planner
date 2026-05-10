@@ -1,7 +1,13 @@
 package com.planner.GUI.Screens;
 
-import com.planner.GUI.Screens.ConfirmScreen;
-import com.planner.GUI.Screens.TeacherAssign;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javafx.scene.Cursor;
+import javafx.scene.layout.FlowPane;
+
+import javafx.scene.layout.Region;
+import javafx.scene.layout.Priority;
 
 import com.planner.Database.DB_Methods;
 import com.planner.GUI.*;
@@ -26,12 +32,355 @@ public class RoomTableScreen {
 
         ObservableList<Room> selectedRooms = FXCollections.observableArrayList();
 
+        TableView<Room> table = new TableView<>();
+
+        final int[] requiredSeats = {SharedData.totalStudents};
+
+
+        ToggleGroup arrangementGroup = new ToggleGroup();
+
+        RadioButton linearBtn = new RadioButton("Use This Layout");
+        RadioButton alternateStrictBtn = new RadioButton("Use This Layout");
+        RadioButton alternateBalancedBtn = new RadioButton("Use This Layout");
+
+        linearBtn.setToggleGroup(arrangementGroup);
+        alternateStrictBtn.setToggleGroup(arrangementGroup);
+        alternateBalancedBtn.setToggleGroup(arrangementGroup);
+
+        alternateBalancedBtn.setSelected(true);
+
+        Label selectedCapacityLabel = new Label("0 / " + requiredSeats[0]);
+        Label selectedTitle = new Label("Selected Rooms (Priority Wise): 0");
+
         //Label selectedRoomsLabel = new Label("0");
-        Label selectedCapacityLabel = new Label("0");
         Label statusLabel = new Label();
         statusLabel.setText("Select rooms to check capacity");
         statusLabel.setStyle("-fx-text-fill: #6B7280;" +
                 " -fx-font-size: 12;");
+
+        Runnable updateRequiredSeats = () -> {
+
+            if (alternateStrictBtn.isSelected()) {
+
+                requiredSeats[0] = calculateRequiredSeats();
+
+            } else {
+
+                requiredSeats[0] = SharedData.totalStudents;
+            }
+
+            int selectedCapacity = selectedRooms.stream()
+                    .mapToInt(Room::getCapacity)
+                    .sum();
+
+            selectedCapacityLabel.setText(
+                    selectedCapacity + " / " + requiredSeats[0]
+            );
+
+
+            if (selectedCapacity >= requiredSeats[0]) {
+
+                statusLabel.setText(" Enough Capacity");
+
+                statusLabel.setStyle(
+                        "-fx-text-fill: green;" +
+                                "-fx-font-weight: bold;"
+                );
+
+            } else {
+
+                statusLabel.setText(" Not Enough Capacity");
+
+                statusLabel.setStyle(
+                        "-fx-text-fill: red;" +
+                                "-fx-font-weight: bold;"
+                );
+            }
+
+        };
+
+        linearBtn.setOnAction(e -> updateRequiredSeats.run());
+        alternateStrictBtn.setOnAction(e -> updateRequiredSeats.run());
+        alternateBalancedBtn.setOnAction(e -> updateRequiredSeats.run());
+
+        updateRequiredSeats.run();
+
+        Label subjectPriorityTitle =
+                new Label("Subject Seating Priority");
+
+        subjectPriorityTitle.setStyle(
+                "-fx-font-size: 20;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
+
+        Label subjectPriorityDesc =
+                new Label(
+                        "Arrange subjects in the order you want " +
+                                "them to receive seating priority during " +
+                                "seating generation."
+                );
+
+        subjectPriorityDesc.setWrapText(true);
+
+        subjectPriorityDesc.setStyle(
+                "-fx-text-fill: #6B7280;" +
+                        "-fx-font-size: 13;"
+        );
+
+        ListView<String> subjectPriorityList =
+                new ListView<>(SharedData.prioritizedSubjects);
+
+        subjectPriorityList.setPrefHeight(220);
+
+        subjectPriorityList.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-control-inner-background: transparent;"
+
+
+        );
+
+        subjectPriorityList.setCellFactory(lv -> {
+
+            ListCell<String> cell = new ListCell<>() {
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+
+                        setGraphic(null);
+
+                    } else {
+
+                        Label dragHandle = new Label("⋮⋮");
+
+                        dragHandle.setStyle(
+                                "-fx-text-fill: #9CA3AF;" +
+                                        "-fx-font-size: 15;" +
+                                        "-fx-font-weight: bold;"
+                        );
+
+                        Label subject = new Label(item);
+
+                        subject.setStyle(
+                                "-fx-font-size: 14;" +
+                                        "-fx-font-weight: bold;" +
+                                        "-fx-text-fill: #111827;"
+                        );
+
+                        Label subText =
+                                new Label(
+                                        "Included in seating arrangement"
+                                );
+
+                        subText.setStyle(
+                                "-fx-text-fill: #6B7280;" +
+                                        "-fx-font-size: 11;"
+                        );
+
+                        VBox textBox = new VBox(
+                                subject,
+                                subText
+                        );
+
+                        textBox.setSpacing(3);
+
+                        Label badge = new Label();
+
+                        if (getIndex() == 0) {
+
+                            badge.setText("Highest Priority");
+
+                            badge.setStyle(
+                                    "-fx-background-color: #DCFCE7;" +
+                                            "-fx-text-fill: #166534;" +
+                                            "-fx-padding: 4 10;" +
+                                            "-fx-background-radius: 30;" +
+                                            "-fx-font-size: 10;" +
+                                            "-fx-font-weight: bold;"
+                            );
+
+                        } else {
+
+                            badge.setText(
+                                    "Priority " + (getIndex() + 1)
+                            );
+
+                            badge.setStyle(
+                                    "-fx-background-color: #EEF2FF;" +
+                                            "-fx-text-fill: #3730A3;" +
+                                            "-fx-padding: 4 10;" +
+                                            "-fx-background-radius: 30;" +
+                                            "-fx-font-size: 10;" +
+                                            "-fx-font-weight: bold;"
+                            );
+                        }
+
+                        Region spacer = new Region();
+
+                        HBox.setHgrow(
+                                spacer,
+                                Priority.ALWAYS
+                        );
+
+                        HBox row = new HBox(
+                                14,
+                                dragHandle,
+                                textBox,
+                                spacer,
+                                badge
+                        );
+
+                        row.setAlignment(Pos.CENTER_LEFT);
+
+                        VBox wrapper = new VBox(row);
+
+                        wrapper.setPadding(new Insets(16));
+
+                        wrapper.setStyle(
+                                "-fx-background-color: white;" +
+                                        "-fx-background-radius: 14;" +
+                                        "-fx-border-color: #E5E7EB;" +
+                                        "-fx-border-radius: 14;" +
+                                        "-fx-border-width: 1;"
+                        );
+
+                        wrapper.setOnMouseEntered(e -> {
+
+                            wrapper.setStyle(
+                                    "-fx-background-color: #FAFAFA;" +
+                                            "-fx-background-radius: 14;" +
+                                            "-fx-border-color: #CBD5E1;" +
+                                            "-fx-border-radius: 14;" +
+                                            "-fx-border-width: 1;"
+                            );
+                        });
+
+                        wrapper.setOnMouseExited(e -> {
+
+                            wrapper.setStyle(
+                                    "-fx-background-color: white;" +
+                                            "-fx-background-radius: 14;" +
+                                            "-fx-border-color: #E5E7EB;" +
+                                            "-fx-border-radius: 14;" +
+                                            "-fx-border-width: 1;"
+                            );
+                        });
+
+                        setGraphic(wrapper);
+
+                        setStyle(
+                                "-fx-background-color: transparent;" +
+                                        "-fx-padding: 6 0;"
+                        );
+                    }
+                }
+            };
+
+            // DRAG START
+            cell.setOnDragDetected(event -> {
+
+                if (!cell.isEmpty()) {
+
+                    Dragboard db =
+                            cell.startDragAndDrop(
+                                    TransferMode.MOVE
+                            );
+
+                    ClipboardContent cc =
+                            new ClipboardContent();
+
+                    cc.putString(
+                            String.valueOf(cell.getIndex())
+                    );
+
+                    db.setContent(cc);
+
+                    event.consume();
+                }
+            });
+
+            // DRAG OVER
+            cell.setOnDragOver(event -> {
+
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+
+                    event.acceptTransferModes(
+                            TransferMode.MOVE
+                    );
+                }
+
+                event.consume();
+            });
+
+            // DROP
+            cell.setOnDragDropped(event -> {
+
+                Dragboard db = event.getDragboard();
+
+                if (db.hasString()) {
+
+                    int draggedIndex =
+                            Integer.parseInt(db.getString());
+
+                    String draggedItem =
+                            subjectPriorityList
+                                    .getItems()
+                                    .remove(draggedIndex);
+
+                    int dropIndex;
+
+                    if (cell.isEmpty()) {
+
+                        dropIndex =
+                                subjectPriorityList
+                                        .getItems()
+                                        .size();
+
+                    } else {
+
+                        dropIndex = cell.getIndex();
+                    }
+
+                    subjectPriorityList
+                            .getItems()
+                            .add(dropIndex, draggedItem);
+
+                    event.setDropCompleted(true);
+
+                    subjectPriorityList
+                            .getSelectionModel()
+                            .select(dropIndex);
+
+                } else {
+
+                    event.setDropCompleted(false);
+                }
+
+                event.consume();
+            });
+
+            cell.setOnDragEntered(e -> {
+
+                cell.setStyle(
+                        "-fx-background-color: #E8F0FE;" +
+                                "-fx-background-radius: 14;"
+                );
+            });
+
+            cell.setOnDragExited(e -> {
+
+                cell.setStyle(
+                        "-fx-background-color: transparent;"
+                );
+            });
+
+            return cell;
+        });
 
         ListView<Room> selectedList = new ListView<>(selectedRooms);
         selectedList.getStyleClass().add("list-view");
@@ -133,24 +482,43 @@ public class RoomTableScreen {
         removeBtn.setOnAction(e -> {
             Room selected = selectedList.getSelectionModel().getSelectedItem();
             if (selected != null) {
+                selected.selectedProperty().set(false);
+
                 selectedRooms.remove(selected);
-            }
-        });
 
-        Button assignBtn = new Button("Assign Teacher");
-        assignBtn.getStyleClass().add("primary-btn");
+                table.refresh();
 
-        assignBtn.setOnAction(e -> {
+                selectedTitle.setText(
+                        "Selected Rooms (Priority Wise): " +
+                                selectedRooms.size()
+                );
 
-            if (selectedRooms.isEmpty()) {
-                Notification.message("Please select rooms first");
-                return;
-            }
+                int selectedCapacity = selectedRooms.stream()
+                        .mapToInt(Room::getCapacity)
+                        .sum();
 
-            boolean ok = TeacherAssign.autoAssignTeachers(selectedRooms);
+                selectedCapacityLabel.setText(
+                        selectedCapacity + " / " + requiredSeats[0]
+                );
 
-            if (ok) {
-                Notification.message("Teachers auto-assigned successfully!");
+                if (selectedCapacity >= requiredSeats[0]) {
+
+                    statusLabel.setText(" Enough Capacity");
+
+                    statusLabel.setStyle(
+                            "-fx-text-fill: green;" +
+                                    "-fx-font-weight: bold;"
+                    );
+
+                } else {
+
+                    statusLabel.setText(" Not Enough Capacity");
+
+                    statusLabel.setStyle(
+                            "-fx-text-fill: red;" +
+                                    "-fx-font-weight: bold;"
+                    );
+                }
             }
         });
 
@@ -159,18 +527,20 @@ public class RoomTableScreen {
 
         generateBtn.setOnAction(e -> {
 
-            int[] roomsArray = selectedRooms.stream()
-                    .mapToInt(Room::getRoomNo)
-                    .toArray();
+            if (selectedRooms.isEmpty()) {
 
-            if (roomsArray == null || roomsArray.length == 0) {
-                System.out.println("No rooms selected!");
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+
                 alert.setTitle("No Room Selected");
+
                 alert.setHeaderText("Selection Required");
-                alert.setContentText("Please select at least one room before generating seating.");
+
+                alert.setContentText(
+                        "Please select at least one room before generating seating."
+                );
 
                 alert.showAndWait();
+
                 return;
             }
 
@@ -178,16 +548,15 @@ public class RoomTableScreen {
                     .mapToInt(Room::getCapacity)
                     .sum();
 
-            int totalStudents = SharedData.totalStudents;
-
-            if (totalCapacity < totalStudents) {
+            if (totalCapacity < requiredSeats[0]) {
 
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Insufficient Capacity");
                 alert.setHeaderText("Not Enough Seats");
 
                 alert.setContentText(
-                        "Total Students: " + totalStudents +
+                        "Total Students: " + SharedData.totalStudents +
+                                "\nRequired Seats: " + requiredSeats[0] +
                                 "\nTotal Room Capacity: " + totalCapacity +
                                 "\n\nPlease select more rooms."
                 );
@@ -201,14 +570,15 @@ public class RoomTableScreen {
             );
         });
 
-        Label selectedTitle = new Label("Selected Rooms (Priority Wise): 0");
         VBox rightPanel = new VBox(10,
                 selectedTitle,
                 selectedList,
                 new HBox(10),
-                removeBtn,
-                assignBtn,
-                generateBtn
+                new VBox(
+                        10,
+                        removeBtn,
+                        generateBtn
+                )
         );
 
         rightPanel.setPadding(new Insets(20));
@@ -236,7 +606,6 @@ public class RoomTableScreen {
 //
 //            subjectPane.getChildren().add(chip);
 //        }
-        TableView<Room> table = new TableView<>();
 
         // Columns
         TableColumn<Room, Integer> roomCol = new TableColumn<>("Room No");
@@ -290,7 +659,7 @@ public class RoomTableScreen {
                             .mapToInt(Room::getCapacity)
                             .sum();
 
-                    if (selectedCapacity >= SharedData.totalStudents) {
+                    if (selectedCapacity >= requiredSeats[0]) {
                         statusLabel.setText(" Enough Capacity");
                         statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
                     } else {
@@ -298,7 +667,9 @@ public class RoomTableScreen {
                         statusLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
                     }
 
-                    selectedCapacityLabel.setText(String.valueOf(selectedCapacity));
+                    selectedCapacityLabel.setText(
+                            selectedCapacity + " / " + requiredSeats[0]
+                    );
                 });
 
             }
@@ -428,14 +799,125 @@ public class RoomTableScreen {
             }
         });
 
+        VBox linearCard = createArrangementCard(
+                linearBtn,
+                "Linear Seating",
+                "Students are seated continuously without empty gaps. Best for maximum seat utilization.",
+                "A A A A\nB B B B",
+                "Requires normal room capacity"
+        );
+
+        VBox strictCard = createArrangementCard(
+                alternateStrictBtn,
+                "Alternate Seating (Strict)",
+                "Students from different subjects are seated alternately. Empty seats will be inserted if one subject has fewer students.",
+                "A B A B\nA Null A Null",
+                "Requires higher room capacity"
+        );
+
+        VBox balancedCard = createArrangementCard(
+                alternateBalancedBtn,
+                "Alternate Seating (Balanced)",
+                "Students are seated alternately as much as possible. Remaining students are seated normally without empty gaps.",
+                "A B A B\nA A A A",
+                "Requires normal room capacity"
+        );
+
+        Label arrangementTitle = new Label("Arrangement Style");
+
+        arrangementTitle.setStyle(
+                "-fx-font-size: 18;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        FlowPane arrangementBox = new FlowPane();
+
+        arrangementBox.setHgap(20);
+        arrangementBox.setVgap(20);
+
+        arrangementBox.getChildren().addAll(
+                linearCard,
+                strictCard,
+                balancedCard
+        );
+
+        VBox arrangementSection = new VBox(
+                15,
+                arrangementTitle,
+                arrangementBox
+        );
+
         HBox layout = new HBox(20, table, rightPanel);
         layout.setPadding(new Insets(20));
 
         VBox vBox = new VBox(20);
-        vBox.getChildren().addAll(infoBar, layout); //, subjectPane
+        Label footer = new Label(
+                "Higher priority subjects are arranged first during seating generation."
+        );
+
+        footer.setStyle(
+                "-fx-text-fill: #9CA3AF;" +
+                        "-fx-font-size: 11;"
+        );
+
+        VBox subjectPriorityCard = new VBox(
+                14,
+                subjectPriorityTitle,
+                subjectPriorityDesc,
+                subjectPriorityList,
+                footer
+        );
+
+        subjectPriorityCard.setPadding(new Insets(20));
+
+        subjectPriorityCard.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 18;" +
+                        "-fx-border-color: #E5E7EB;" +
+                        "-fx-border-radius: 18;" +
+                        "-fx-border-width: 1;"
+        );
+
+        vBox.getChildren().addAll(
+                infoBar,
+                arrangementSection,
+                subjectPriorityCard,
+                layout
+        );
         vBox.setPadding(new Insets(20));
 
         return vBox;
+    }
+
+    private static int calculateRequiredSeats() {
+
+        try {
+
+            PreparedStatement ps =
+                    DB_Methods.con.prepareStatement(
+                            "SELECT COUNT(*) as total " +
+                                    "FROM rawdata " +
+                                    "GROUP BY Sub_code " +
+                                    "ORDER BY total DESC " +
+                                    "LIMIT 1"
+                    );
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                int maxSubjectStudents =
+                        rs.getInt("total");
+
+                return maxSubjectStudents * 2;
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     private static VBox createInfoCard(String title, Label valueLabel) {
@@ -455,6 +937,137 @@ public class RoomTableScreen {
         //valueLabel.setAlignment(Pos.CENTER_LEFT);
 
         card.getChildren().addAll(t, valueLabel);
+
+        return card;
+    }
+
+    private static VBox createArrangementCard(
+            RadioButton radio,
+            String title,
+            String description,
+            String example,
+            String capacityNote
+    ) {
+
+        Label titleLabel = new Label(title);
+
+        titleLabel.setStyle(
+                "-fx-font-size: 16;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
+
+        Label descLabel = new Label(description);
+
+        descLabel.setWrapText(true);
+
+        descLabel.setStyle(
+                "-fx-text-fill: #4B5563;" +
+                        "-fx-font-size: 12;"
+        );
+
+        Label exampleLabel = new Label(example);
+
+        exampleLabel.setStyle(
+                "-fx-font-family: 'Consolas';" +
+                        "-fx-font-size: 13;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #2563EB;"
+        );
+
+        Label capacityLabel = new Label(capacityNote);
+
+        capacityLabel.setStyle(
+                "-fx-text-fill: #059669;" +
+                        "-fx-font-size: 11;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        VBox card = new VBox(
+                12,
+                radio,
+                titleLabel,
+                descLabel,
+                exampleLabel,
+                capacityLabel
+        );
+
+        card.setPadding(new Insets(18));
+
+        card.setPrefWidth(280);
+
+        card.setStyle(
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 14;" +
+                        "-fx-border-color: #D1D5DB;" +
+                        "-fx-border-radius: 14;" +
+                        "-fx-border-width: 1;"
+        );
+
+        card.setCursor(Cursor.HAND);
+
+        Runnable updateCardStyle = () -> {
+
+            if (radio.isSelected()) {
+
+                card.setStyle(
+                        "-fx-background-color: #F8FBFF;" +
+                                "-fx-background-radius: 14;" +
+                                "-fx-border-color: #2563EB;" +
+                                "-fx-border-radius: 14;" +
+                                "-fx-border-width: 2;" +
+                                "-fx-effect: dropshadow(gaussian, rgba(37,99,235,0.15), 12, 0, 0, 4);"
+                );
+
+                card.setScaleX(1.02);
+                card.setScaleY(1.02);
+
+            } else {
+
+                card.setStyle(
+                        "-fx-background-color: white;" +
+                                "-fx-background-radius: 14;" +
+                                "-fx-border-color: #D1D5DB;" +
+                                "-fx-border-radius: 14;" +
+                                "-fx-border-width: 1;"
+                );
+
+                card.setScaleX(1);
+                card.setScaleY(1);
+            }
+        };
+
+        radio.selectedProperty().addListener((obs, oldV, newV) -> {
+            updateCardStyle.run();
+        });
+
+        updateCardStyle.run();
+
+        card.setOnMouseClicked(e -> {
+
+            radio.setSelected(true);
+
+            radio.fire();
+        });
+
+        card.setOnMouseEntered(e -> {
+
+            if (!radio.isSelected()) {
+
+                card.setStyle(
+                        "-fx-background-color: #FAFAFA;" +
+                                "-fx-background-radius: 14;" +
+                                "-fx-border-color: #CBD5E1;" +
+                                "-fx-border-radius: 14;" +
+                                "-fx-border-width: 1;"
+                );
+            }
+        });
+
+        card.setOnMouseExited(e -> {
+
+            updateCardStyle.run();
+        });
 
         return card;
     }

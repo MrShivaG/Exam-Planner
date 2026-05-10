@@ -9,19 +9,30 @@ import java.util.*;
 
 public class TeacherAssign {
 
-    public static Map<Integer, List<Teacher>> roomTeachers = new HashMap<>();
+    private static final Map<Integer, List<Teacher>> roomTeachers =
+            new HashMap<>();
+
+    public static Map<Integer, List<Teacher>> getRoomTeachers() {
+
+        return roomTeachers;
+    }
 
     public static boolean autoAssignTeachers(List<Room> selectedRooms) {
+
         try {
+
             DB_Methods db = new DB_Methods();
 
-            List<Teacher> maleList = db.getTeachersByGender("Male");
-            List<Teacher> femaleList = db.getTeachersByGender("Female");
+            List<Teacher> maleList =
+                    db.getTeachersByGender("Male");
+
+            List<Teacher> femaleList =
+                    db.getTeachersByGender("Female");
 
             Collections.shuffle(maleList);
             Collections.shuffle(femaleList);
 
-            int rooms = selectedRooms.size();
+            roomTeachers.clear();
 
             if (maleList.size() < selectedRooms.size()
                     || femaleList.size() < selectedRooms.size()) {
@@ -33,6 +44,8 @@ public class TeacherAssign {
                 return false;
             }
 
+            roomTeachers.clear();
+
             for (int i = 0; i < selectedRooms.size(); i++) {
 
                 Room room = selectedRooms.get(i);
@@ -41,24 +54,9 @@ public class TeacherAssign {
                 Teacher female = femaleList.get(i);
 
                 List<Teacher> list = new ArrayList<>();
+
                 list.add(male);
                 list.add(female);
-
-                roomTeachers.put(room.getRoomNo(), list);
-            }
-
-            Collections.shuffle(maleList);
-            Collections.shuffle(femaleList);
-
-            roomTeachers.clear();
-
-
-            for (int i = 0; i < rooms; i++) {
-                Room room = selectedRooms.get(i);
-
-                List<Teacher> list = new ArrayList<>();
-                list.add(maleList.get(i));
-                list.add(femaleList.get(i));
 
                 roomTeachers.put(room.getRoomNo(), list);
             }
@@ -66,9 +64,10 @@ public class TeacherAssign {
             return true;
 
         } catch (Exception e) {
-            Notification.message("Error assigning teachers");
+
+            Notification.message("Unable to assign teachers");
+
             return false;
         }
     }
-
 }

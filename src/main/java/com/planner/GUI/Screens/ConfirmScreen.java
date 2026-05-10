@@ -1,5 +1,7 @@
 package com.planner.GUI.Screens;
 
+import java.util.Map;
+
 import com.planner.Arrangement.Arrange;
 import com.planner.GUI.*;
 import javafx.geometry.Insets;
@@ -79,6 +81,92 @@ public class ConfirmScreen {
         VBox roomCard = new VBox(roomBox);
         roomCard.getStyleClass().add("card");
 
+        VBox teacherBox = new VBox(10);
+
+        Button assignBtn =
+                new Button("Auto Assign Teachers");
+
+        assignBtn.getStyleClass().add("primary-btn");
+
+        VBox assignedTeachersBox =
+                new VBox(10);
+
+        assignBtn.setOnAction(e -> {
+
+            boolean assigned =
+                    TeacherAssign.autoAssignTeachers(
+                            selectedRooms
+                    );
+
+            if (assigned) {
+
+                assignedTeachersBox.getChildren().clear();
+
+                Map<Integer, List<Teacher>> data =
+                        TeacherAssign.getRoomTeachers();
+
+                for (Integer roomNo : data.keySet()) {
+
+                    VBox card = new VBox(5);
+
+                    card.setPadding(new Insets(12));
+
+                    card.setStyle(
+                            "-fx-background-color: white;" +
+                                    "-fx-background-radius: 12;" +
+                                    "-fx-border-color: #E5E7EB;" +
+                                    "-fx-border-radius: 12;"
+                    );
+
+                    Label roomTitle =
+                            new Label("Room " + roomNo);
+
+                    roomTitle.setStyle(
+                            "-fx-font-size: 14;" +
+                                    "-fx-font-weight: bold;"
+                    );
+
+                    VBox teachersList =
+                            new VBox(4);
+
+                    for (Teacher t : data.get(roomNo)) {
+
+                        Label teacherLabel =
+                                new Label(
+                                        "• " + t.getName()
+                                );
+
+                        teachersList
+                                .getChildren()
+                                .add(teacherLabel);
+                    }
+
+                    card.getChildren().addAll(
+                            roomTitle,
+                            teachersList
+                    );
+
+                    assignedTeachersBox
+                            .getChildren()
+                            .add(card);
+                }
+
+                Notification.message(
+                        "Teachers assigned successfully!"
+                );
+            }
+        });
+
+        VBox teacherCard = new VBox(
+                15,
+                assignBtn,
+                assignedTeachersBox
+        );
+
+        teacherCard.setPadding(new Insets(20));
+
+        teacherCard.getStyleClass().add("card");
+
         Label students = new Label(
                 "Total Students: " + SharedData.totalStudentsLabel.getText()
         );
@@ -125,7 +213,14 @@ public class ConfirmScreen {
         HBox buttons = new HBox(10, backBtn, confirmBtn);
         buttons.setAlignment(Pos.CENTER_RIGHT);
 
-        main.getChildren().addAll(title, infoCard, roomCard, students, buttons);
+        main.getChildren().addAll(
+                title,
+                infoCard,
+                roomCard,
+                teacherCard,
+                students,
+                buttons
+        );
 
         return main;
     }
