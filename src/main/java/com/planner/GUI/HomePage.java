@@ -1,5 +1,8 @@
 package com.planner.GUI;
 
+import com.planner.GUI.Screens.AboutScreen;
+import com.planner.GUI.Screens.DashboardScreen;
+import com.planner.GUI.Screens.UploadScreen;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.*;
@@ -85,7 +88,7 @@ public class HomePage extends Application {
         rightSide = new BorderPane();
 
         rightSide.setTop(createTopBar("Dashboard"));
-        rightSide.setCenter(Screens.dashboardContent(this));
+        rightSide.setCenter(DashboardScreen.dashboardContent(this));
 
         rootLayout.setCenter(rightSide);
 
@@ -230,10 +233,10 @@ public class HomePage extends Application {
         VBox menu = new VBox(10);
 
         Button dashboard = createSidebarButton("Dashboard", getDashboardIcon(), true,
-                () -> switchScreen(createTopBar("Dashboard"), Screens.dashboardContent(this)));
+                () -> switchScreen(createTopBar("Dashboard"), DashboardScreen.dashboardContent(this)));
 
         Button arrangements = createSidebarButton("Arrangements", getArrangementIcon(), false,
-                () -> switchScreen(createTopBar("Arrangements"), Screens.dataScreen(this)));
+                () -> switchScreen(createTopBar("Arrangements"), UploadScreen.dataScreen(this)));
 
         Button showRoomBtn = createSidebarButton("Show Room", getRoomIcon(), false,
                 () -> {
@@ -255,7 +258,7 @@ public class HomePage extends Application {
         bottom.setPadding(new Insets(0, 0, 30, 0));
 
         Button about = createSidebarButton("About", getAboutIcon() , false,
-                () -> switchScreen(createTopBar("About"), Screens.about(this)));
+                () -> switchScreen(createTopBar("About"), AboutScreen.about(this)));
         about.setAlignment(Pos.CENTER);
 
         Button logout = createSidebarButton("Logout", getLogoutIcon(), false,

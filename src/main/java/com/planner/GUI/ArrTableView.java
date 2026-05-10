@@ -1,6 +1,7 @@
 package com.planner.GUI;
 
 import com.planner.Database.ArrangementsDB;
+import com.planner.GUI.Screens.DashboardScreen;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PageLayout;
@@ -239,7 +240,7 @@ public class ArrTableView {
                         "-fx-cursor: hand;"
         );
         backbutton.setOnAction(e -> {
-            HomePage.rightSide.setCenter(Screens.dashboardContent(new HomePage()));
+            HomePage.rightSide.setCenter(DashboardScreen.dashboardContent(new HomePage()));
             HomePage.rightSide.setTop(HomePage.createTopBar("Dashboard"));
         });
 

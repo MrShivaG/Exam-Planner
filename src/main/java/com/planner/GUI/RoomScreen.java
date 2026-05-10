@@ -129,7 +129,7 @@ public class RoomScreen extends Application {
         ));
 
         addRoomBtn.setOnAction(e -> {
-            AddNewRoom newroom = new AddNewRoom();
+            AddNewRoom newroom = new AddNewRoom(app);
             Stage stage = newroom.newroom();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(addRoomBtn.getScene().getWindow());

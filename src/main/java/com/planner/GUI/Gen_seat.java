@@ -1,6 +1,7 @@
 package com.planner.GUI;
 
 import com.planner.Database.ArrangementsDB;
+import com.planner.GUI.Screens.TeacherAssign;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PageOrientation;
@@ -43,7 +44,7 @@ public class Gen_seat {
                     tableName.substring(tableName.lastIndexOf("_") + 1)
             );
 
-            List<Teacher> teachers = Screens.roomTeachers.get(roomNo);
+            List<Teacher> teachers = TeacherAssign.roomTeachers.get(roomNo);
 
             VBox sheet =createExamSheet(tableName, data, config, teachers);
 

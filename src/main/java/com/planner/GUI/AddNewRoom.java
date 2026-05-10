@@ -21,6 +21,9 @@ import java.sql.SQLException;
 import static com.planner.GUI.HomePage.createTopBar;
 
 public class AddNewRoom extends Application {
+
+    private HomePage app;
+
     DB_Methods dbMethods ;
     @Override
     public void start(Stage stage) throws Exception {
@@ -28,6 +31,11 @@ public class AddNewRoom extends Application {
         stage.show();
 
     }
+
+    public AddNewRoom(HomePage app) {
+        this.app = app;
+    }
+
     public Stage newroom(){
         BorderPane roompane = new BorderPane();
         VBox headerbox = new VBox();
@@ -136,8 +144,6 @@ public class AddNewRoom extends Application {
             pause.play();
 
             try {
-                HomePage app =  new HomePage();
-
                 app.switchScreen(createTopBar("Show Room"), RoomScreen.room(app));
             } catch (SQLException sqlException) {
                 throw new RuntimeException(sqlException);
