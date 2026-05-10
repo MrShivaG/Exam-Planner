@@ -157,11 +157,11 @@ public class Screens {
         gridPane.setAlignment(Pos.CENTER_LEFT);
         gridPane.setHgap(15);
         gridPane.setVgap(18);
-        gridPane.add(label2, 0, 0);
-        gridPane.add(textField2, 1, 0);
+      //  gridPane.add(label2, 0, 0);
+      //  gridPane.add(textField2, 1, 0);
 
-        gridPane.add(collegeLabel, 0, 1);
-        gridPane.add(collegeField, 1, 1);
+     //   gridPane.add(collegeLabel, 0, 1);
+      //  gridPane.add(collegeField, 1, 1);
 
         gridPane.add(session, 0, 2);
         gridPane.add(textField, 1, 2);
@@ -172,8 +172,8 @@ public class Screens {
         gridPane.add(timeLabel, 0, 4);
         gridPane.add(timeField, 1, 4);
 
-        gridPane.add(subjectLabel, 0, 5);
-        gridPane.add(subjectField, 1, 5);
+       // gridPane.add(subjectLabel, 0, 5);
+       // gridPane.add(subjectField, 1, 5);
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setMinWidth(150);
@@ -189,15 +189,17 @@ public class Screens {
             boolean valid =
                     selectedFile != null &&
                             !textField.getText().isEmpty() &&
-                            datePicker.getValue() != null &&
-                            !textField2.getText().isEmpty();
+                            datePicker.getValue() != null ;
 
             next.setDisable(!valid);
         };
 
+//        &&
+//        !textField2.getText().isEmpty();
+
         textField.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
         datePicker.valueProperty().addListener((obs, oldVal, newVal) -> validate.run());
-        textField2.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
+      //  textField2.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
         next.setOnAction(e -> {
 
             ExamConfig config = new ExamConfig();
@@ -225,10 +227,12 @@ public class Screens {
 
             String name = textField2.getText();
 
+            //   ||name.isEmpty()
+
             if (selectedFile == null ||
                     sessions.isEmpty() ||
-                    datePicker.getValue() == null ||
-                    name.isEmpty()) {
+                    datePicker.getValue() == null
+                    ) {
 
                 System.out.println("All Entries Not Filled!");
 
@@ -831,6 +835,7 @@ public class Screens {
 
 
         Button removeBtn = new Button("Remove");
+        removeBtn.getStyleClass().add("primary-btn");
 
         removeBtn.setOnAction(e -> {
             Room selected = selectedList.getSelectionModel().getSelectedItem();
@@ -919,26 +924,26 @@ public class Screens {
         rightPanel.setSpacing(10);
 
 
-        FlowPane subjectPane = new FlowPane();
-        subjectPane.setHgap(10);
-        subjectPane.setVgap(10);
-        subjectPane.setPadding(new Insets(10));
+//        FlowPane subjectPane = new FlowPane();
+//        subjectPane.setHgap(10);
+//        subjectPane.setVgap(10);
+//        subjectPane.setPadding(new Insets(10));
+//        TableView<Room> table = new TableView<>();
+//        for (String sub : Screens.subjects) {
+//
+//            Label chip = new Label(sub);
+//
+//            chip.setStyle(
+//                    "-fx-background-color: #EEF4FF;" +
+//                            "-fx-text-fill: #2563EB;" +
+//                            "-fx-padding: 6 12;" +
+//                            "-fx-background-radius: 15;" +
+//                            "-fx-font-weight: bold;"
+//            );
+//
+//            subjectPane.getChildren().add(chip);
+//        }
         TableView<Room> table = new TableView<>();
-        for (String sub : Screens.subjects) {
-
-            Label chip = new Label(sub);
-
-            chip.setStyle(
-                    "-fx-background-color: #EEF4FF;" +
-                            "-fx-text-fill: #2563EB;" +
-                            "-fx-padding: 6 12;" +
-                            "-fx-background-radius: 15;" +
-                            "-fx-font-weight: bold;"
-            );
-
-            subjectPane.getChildren().add(chip);
-        }
-
 
         // Columns
         TableColumn<Room, Integer> roomCol = new TableColumn<>("Room No");
@@ -1074,7 +1079,7 @@ public class Screens {
             chip.setStyle(
                     "-fx-background-color: #EEF4FF;" +
                             "-fx-text-fill: #2563EB;" +
-                            "-fx-padding: 4 8;" +
+                            "-fx-padding: 0 8;" +
                             "-fx-background-radius: 10;" +
                             "-fx-font-size: 10;"
             );
@@ -1134,7 +1139,7 @@ public class Screens {
         layout.setPadding(new Insets(20));
 
         VBox vBox = new VBox(20);
-        vBox.getChildren().addAll(infoBar, subjectPane, layout);
+        vBox.getChildren().addAll(infoBar, layout); //, subjectPane
         vBox.setPadding(new Insets(20));
 
         return vBox;
@@ -1232,6 +1237,7 @@ public class Screens {
         confirmBtn.getStyleClass().add("primary-btn");
 
         Button backBtn = new Button("Back");
+        backBtn.getStyleClass().add("primary-btn");
 
         confirmBtn.setOnAction(e -> {
 
@@ -1247,7 +1253,7 @@ public class Screens {
                         DateUtil.formatForDB(config.getDate()),
                         config.getSession()
                 );
-
+//90000
                 app.switchCenter(
                         Gen_seat.showTablesScreen(tables, config)
                 );

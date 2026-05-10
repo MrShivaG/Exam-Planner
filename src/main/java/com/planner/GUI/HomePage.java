@@ -246,7 +246,6 @@ public class HomePage extends Application {
 
         menu.getChildren().addAll(dashboard, arrangements, showRoomBtn);
 
-
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
 
@@ -296,57 +295,24 @@ public class HomePage extends Application {
     private void highlightActive(Button btn) {
 
         if (activeButton != null) {
+
             activeButton.getStyleClass().remove("sidebar-active");
 
-// reset icon color
-            ((SVGPath) activeButton.getGraphic()).setStyle("-fx-fill: #6B7280;");
+            if (activeButton.getGraphic() instanceof SVGPath oldIcon) {
+                oldIcon.setStyle("-fx-fill: #6B7280;");
+            }
         }
 
-        btn.getStyleClass().add("sidebar-active");
+        if (!btn.getStyleClass().contains("sidebar-active")) {
+            btn.getStyleClass().add("sidebar-active");
+        }
 
-// set active icon color
-        ((SVGPath) btn.getGraphic()).setStyle("-fx-fill: #2563EB;");
+        if (btn.getGraphic() instanceof SVGPath newIcon) {
+            newIcon.setStyle("-fx-fill: #2563EB;");
+        }
 
         activeButton = btn;
     }
-
-
-
-    private HBox createDeveloperCard(String imagePath, String name, String section) {
-
-        HBox card = new HBox(10);
-        card.setAlignment(Pos.CENTER_LEFT);
-
-// ImageView image = new ImageView(
-// new Image(getClass().getResourceAsStream("com/planner/GUI/" + imagePath))
-// );
-//
-// image.setFitWidth(50);
-// image.setFitHeight(50);
-
-// Make circular image
-// Circle clip = new Circle(25, 25, 25);
-// image.setClip(clip);
-
-        VBox devdetail = new VBox(3);
-
-        Label nameLabel = new Label(name);
-        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;");
-
-        Label sectionLabel = new Label(section);
-        sectionLabel.setStyle("-fx-text-fill: #cfd8dc; -fx-font-size: 11;");
-
-        devdetail.getChildren().addAll(nameLabel, sectionLabel);
-
-        card.getChildren().addAll(devdetail);
-
-        return card;
-    }
-
-// CARD
-
-
-// ROOM SCREEN
 
 // FADE SWITCH
 
