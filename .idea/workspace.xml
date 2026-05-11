@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="update screens">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/ConfirmScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/ConfirmScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/RoomTableScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/RoomTableScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +34,10 @@
     &quot;accountId&quot;: &quot;e47cb918-2b5c-412b-acb1-6d02125bed1a&quot;
   }
 }</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -43,32 +46,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.AddNewRoom.executor": "Run",
-    "Application.Dashboard.executor": "Run",
-    "Application.DashboardContent.executor": "Run",
-    "Application.EditRoom.executor": "Run",
-    "Application.HomePage.executor": "Run",
-    "Application.RoomScreen.executor": "Run",
-    "Application.SeatingPrintApp.executor": "Run",
-    "Application.UpdateRoom.executor": "Run",
-    "Application.database.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/java/project/Exam-Planner",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.40804598",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.AddNewRoom.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Dashboard.executor&quot;: &quot;Run&quot;,
+    &quot;Application.DashboardContent.executor&quot;: &quot;Run&quot;,
+    &quot;Application.EditRoom.executor&quot;: &quot;Run&quot;,
+    &quot;Application.HomePage.executor&quot;: &quot;Run&quot;,
+    &quot;Application.RoomScreen.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SeatingPrintApp.executor&quot;: &quot;Run&quot;,
+    &quot;Application.UpdateRoom.executor&quot;: &quot;Run&quot;,
+    &quot;Application.database.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/java/project/Exam-Planner&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.40804598&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.HomePage">
     <configuration name="AddNewRoom" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.planner.GUI.AddNewRoom" />
@@ -85,10 +88,10 @@
       </method>
     </configuration>
     <configuration name="HomePage" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../Program Files/Java/jdk-21.0.10" />
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/Program Files/Java/jdk-21.0.10" />
       <option name="MAIN_CLASS_NAME" value="com.planner.GUI.HomePage" />
       <module name="Exam-Planner" />
-      <option name="VM_PARAMETERS" value="--module-path &quot;D:\Java\openjfx-26_windows-x64_bin-sdk\javafx-sdk-26\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\shiva\Downloads\JavaFX\openjfx-26_windows-x64_bin-sdk\javafx-sdk-26\lib&quot; --add-modules javafx.controls,javafx.fxml" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.planner.GUI.*" />
