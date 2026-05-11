@@ -51,6 +51,11 @@ public class RoomTableScreen {
 
         Label selectedCapacityLabel = new Label("0 / " + requiredSeats[0]);
         Label selectedTitle = new Label("Selected Rooms (Priority Wise): 0");
+        selectedTitle.setStyle(
+                "-fx-font-size: 16;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
 
         //Label selectedRoomsLabel = new Label("0");
         Label statusLabel = new Label();
@@ -131,7 +136,7 @@ public class RoomTableScreen {
         ListView<String> subjectPriorityList =
                 new ListView<>(SharedData.prioritizedSubjects);
 
-        subjectPriorityList.setPrefHeight(220);
+        subjectPriorityList.setPrefHeight(260);
 
         subjectPriorityList.setStyle(
                 "-fx-background-color: transparent;" +
@@ -368,14 +373,16 @@ public class RoomTableScreen {
 
                 cell.setStyle(
                         "-fx-background-color: #E8F0FE;" +
-                                "-fx-background-radius: 14;"
+                                "-fx-background-radius: 14;" +
+                                "-fx-padding: 6 0;"
                 );
             });
 
             cell.setOnDragExited(e -> {
 
                 cell.setStyle(
-                        "-fx-background-color: transparent;"
+                        "-fx-background-color: transparent;" +
+                                "-fx-padding: 6 0;"
                 );
             });
 
@@ -385,6 +392,13 @@ public class RoomTableScreen {
         ListView<Room> selectedList = new ListView<>(selectedRooms);
         selectedList.getStyleClass().add("list-view");
         selectedList.setPrefWidth(250);
+        selectedList.setPrefHeight(420);
+        selectedList.setFocusTraversable(false);
+        selectedList.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-control-inner-background: transparent;" +
+                        "-fx-background-insets: 0;"
+        );
 
         selectedList.setCellFactory(lv -> {
 
@@ -403,16 +417,66 @@ public class RoomTableScreen {
                         Label name = new Label("Room " + room.getRoomNo());
                         name.setStyle("-fx-font-weight: bold;");
 
-                        Label cap = new Label("Cap: " + room.getCapacity());
-                        cap.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11;");
+                        Label cap = new Label(
+                                room.getRows() + " × " +
+                                        room.getColumns() +
+                                        " • Capacity: " +
+                                        room.getCapacity()
+                        );                        cap.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11;");
 
                         VBox textBox = new VBox(name, cap);
                         textBox.setSpacing(3);
 
                         HBox row = new HBox(10, index, textBox);
+
                         row.setAlignment(Pos.CENTER_LEFT);
 
-                        setGraphic(row);
+                        VBox wrapper = new VBox(row);
+
+                        wrapper.setPadding(new Insets(12));
+
+                        wrapper.setStyle(
+                                "-fx-background-color: white;" +
+                                        "-fx-background-radius: 12;" +
+                                        "-fx-border-color: #E5E7EB;" +
+                                        "-fx-border-radius: 12;"
+                        );
+
+                        if (isSelected()) {
+                            wrapper.setStyle(
+                                    "-fx-background-color: #EFF6FF;" +
+                                            "-fx-background-radius: 12;" +
+                                            "-fx-border-color: #2563EB;" +
+                                            "-fx-border-radius: 12;"
+                            );
+                        }
+
+                        wrapper.setOnMouseEntered(e -> {
+
+                            wrapper.setStyle(
+                                    "-fx-background-color: #FAFAFA;" +
+                                            "-fx-background-radius: 12;" +
+                                            "-fx-border-color: #CBD5E1;" +
+                                            "-fx-border-radius: 12;"
+                            );
+                        });
+
+                        wrapper.setOnMouseExited(e -> {
+
+                            wrapper.setStyle(
+                                    "-fx-background-color: white;" +
+                                            "-fx-background-radius: 12;" +
+                                            "-fx-border-color: #E5E7EB;" +
+                                            "-fx-border-radius: 12;"
+                            );
+                        });
+
+                        setGraphic(wrapper);
+
+                        setStyle(
+                                "-fx-background-color: transparent;" +
+                                        "-fx-padding: 4 0;"
+                        );
                     }
                 }
             };
@@ -469,8 +533,30 @@ public class RoomTableScreen {
                 event.consume();
             });
 
-            cell.setOnDragEntered(e -> cell.setStyle("-fx-background-color: #E8F0FE;"));
-            cell.setOnDragExited(e -> cell.setStyle(""));
+            cell.setOnDragEntered(e -> {
+
+                cell.setStyle(
+                        "-fx-background-color: #E8F0FE;" +
+                                "-fx-background-radius: 12;" +
+                                "-fx-padding: 4 0;"
+                );
+            });
+
+            cell.setOnDragExited(e -> {
+
+                cell.setStyle(
+                        "-fx-background-color: transparent;" +
+                                "-fx-padding: 4 0;"
+                );
+            });
+
+            cell.selectedProperty().addListener((obs, oldV, newV) -> {
+
+                cell.setStyle(
+                        "-fx-background-color: transparent;" +
+                                "-fx-padding: 4 0;"
+                );
+            });
 
             return cell;
         });
@@ -478,6 +564,7 @@ public class RoomTableScreen {
 
         Button removeBtn = new Button("Remove");
         removeBtn.getStyleClass().add("primary-btn");
+        removeBtn.setMaxWidth(Double.MAX_VALUE);
 
         removeBtn.setOnAction(e -> {
             Room selected = selectedList.getSelectionModel().getSelectedItem();
@@ -524,6 +611,7 @@ public class RoomTableScreen {
 
         Button generateBtn = new Button("Confirm Seating");
         generateBtn.getStyleClass().add("primary-btn");
+        generateBtn.setMaxWidth(Double.MAX_VALUE);
 
         generateBtn.setOnAction(e -> {
 
@@ -570,19 +658,17 @@ public class RoomTableScreen {
             );
         });
 
+        VBox actionButtons;
+
         VBox rightPanel = new VBox(10,
                 selectedTitle,
                 selectedList,
-                new HBox(10),
-                new VBox(
-                        10,
-                        removeBtn,
-                        generateBtn
-                )
+                actionButtons = new VBox(10, removeBtn, generateBtn)
         );
-
+        actionButtons.setFillWidth(true);
+        VBox.setVgrow(selectedList, Priority.ALWAYS);
         rightPanel.setPadding(new Insets(20));
-        rightPanel.setPrefWidth(280);
+        rightPanel.setPrefWidth(320);
         rightPanel.getStyleClass().add("card");
         rightPanel.setSpacing(10);
 
@@ -699,11 +785,20 @@ public class RoomTableScreen {
         selectCol.setMaxWidth(75);
         selectCol.setResizable(false);
 
-        table.setMaxWidth(650);
+        //table.setMaxWidth(650);
+        table.setPrefWidth(700);
+        HBox.setHgrow(table, Priority.ALWAYS);
+        table.setPrefHeight(520);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         table.getColumns().addAll(selectCol, roomCol, rowCol, colCol, capCol);
 
+        table.setFixedCellSize(44);
+        table.setStyle(
+                "-fx-background-radius: 14;" +
+                        "-fx-border-radius: 14;" +
+                        "-fx-border-color: #E5E7EB;"
+        );
         // Load from DB
         try {
             DB_Methods db = new DB_Methods();
@@ -724,7 +819,9 @@ public class RoomTableScreen {
                 .mapToInt(Room::getCapacity)
                 .sum();
 
-        HBox infoBar = new HBox(20);
+        FlowPane infoBar = new FlowPane();
+        infoBar.setHgap(20);
+        infoBar.setVgap(20);
         infoBar.setPadding(new Insets(10));
 //
         VBox subjectsBox = new VBox(5);
@@ -760,7 +857,10 @@ public class RoomTableScreen {
         ScrollPane scroll = new ScrollPane(grid);
         scroll.setFitToWidth(true);
         scroll.setPrefHeight(80);
-        scroll.setStyle("-fx-background-color: transparent;");
+        scroll.setStyle(
+                "-fx-background: transparent;" +
+                        "-fx-background-color: transparent;"
+        );
 
         subjectsBox.getChildren().add(scroll);
 
@@ -783,7 +883,10 @@ public class RoomTableScreen {
                 super.updateItem(room, empty);
 
                 if (room != null && room.isSelected()) {
-                    setStyle("-fx-background-color  : #E8F0FE;");
+                    setStyle(
+                            "-fx-background-color: #E8F0FE;" +
+                                    "-fx-table-cell-border-color: transparent;"
+                    );
                 } else {
                     setStyle("");
                 }
@@ -796,8 +899,28 @@ public class RoomTableScreen {
                         System.out.println("Selected Room: " + selected.getRoomNo());
                     }
                 });
+
+                setOnMouseEntered(e -> {
+
+                    if (!isEmpty() && !getItem().isSelected()) {
+
+                        setStyle(
+                                "-fx-background-color: #F8FAFC;"
+                        );
+                    }
+                });
+
+                setOnMouseExited(e -> {
+
+                    if (!isEmpty() && !getItem().isSelected()) {
+
+                        setStyle("");
+                    }
+                });
+
             }
         });
+
 
         VBox linearCard = createArrangementCard(
                 linearBtn,
@@ -849,6 +972,7 @@ public class RoomTableScreen {
 
         HBox layout = new HBox(20, table, rightPanel);
         layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.TOP_LEFT);
 
         VBox vBox = new VBox(20);
         Label footer = new Label(
@@ -861,7 +985,7 @@ public class RoomTableScreen {
         );
 
         VBox subjectPriorityCard = new VBox(
-                14,
+                16,
                 subjectPriorityTitle,
                 subjectPriorityDesc,
                 subjectPriorityList,
@@ -885,6 +1009,7 @@ public class RoomTableScreen {
                 layout
         );
         vBox.setPadding(new Insets(20));
+        VBox.setMargin(actionButtons, new Insets(10, 0, 0, 0));
 
         return vBox;
     }
@@ -924,7 +1049,9 @@ public class RoomTableScreen {
 
         VBox card = new VBox(10);
         card.setPadding(new Insets(15));
+        card.setMinWidth(180);
         card.setPrefWidth(180);
+        card.setMaxWidth(220);
 
         card.getStyleClass().add("card");
 
@@ -994,7 +1121,7 @@ public class RoomTableScreen {
 
         card.setPadding(new Insets(18));
 
-        card.setPrefWidth(280);
+        card.setPrefWidth(240);
 
         card.setStyle(
                 "-fx-background-color: white;" +
@@ -1019,8 +1146,8 @@ public class RoomTableScreen {
                                 "-fx-effect: dropshadow(gaussian, rgba(37,99,235,0.15), 12, 0, 0, 4);"
                 );
 
-                card.setScaleX(1.02);
-                card.setScaleY(1.02);
+                card.setScaleX(1);
+                card.setScaleY(1);
 
             } else {
 
@@ -1040,6 +1167,11 @@ public class RoomTableScreen {
         radio.selectedProperty().addListener((obs, oldV, newV) -> {
             updateCardStyle.run();
         });
+
+        radio.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        radio.setStyle(
+                "-fx-padding: 0 0 8 0;"
+        );
 
         updateCardStyle.run();
 

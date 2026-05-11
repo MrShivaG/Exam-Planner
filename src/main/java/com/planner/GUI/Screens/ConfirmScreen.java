@@ -1,5 +1,6 @@
 package com.planner.GUI.Screens;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.planner.Arrangement.Arrange;
@@ -9,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -56,40 +58,41 @@ public class ConfirmScreen {
         info.add(new Label("Excel File:"), 0, 6);
         info.add(new Label(fileName), 1, 6);
 
-        VBox infoCard = new VBox(info);
+        Label infoTitle =
+                new Label("Arrangement Information");
+
+        infoTitle.setStyle(
+                "-fx-font-size: 18;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        VBox infoCard = new VBox(
+                15,
+                infoTitle,
+                info
+        );
         infoCard.getStyleClass().add("card");
 
-        VBox roomBox = new VBox(10);
+        VBox roomBox = new VBox(14);
 
-        int totalCapacity = 0;
+        Map<Integer, TextField> maleTeacherFields =
+                new HashMap<>();
 
-        for (Room room : selectedRooms) {
-            Label r = new Label(
-                    "Room " + room.getRoomNo() +
-                            " | Rows: " + room.getRows() +
-                            " | Columns: " + room.getColumns() +
-                            " | Capacity: " + room.getCapacity()
-            );
-            roomBox.getChildren().add(r);
-            totalCapacity += room.getCapacity();
-        }
+        Map<Integer, TextField> femaleTeacherFields =
+                new HashMap<>();
 
-        Label totalCap = new Label("Total Capacity: " + totalCapacity);
+        Label roomTitle =
+                new Label("Selected Examination Rooms");
 
-        roomBox.getChildren().add(totalCap);
-
-        VBox roomCard = new VBox(roomBox);
-        roomCard.getStyleClass().add("card");
-
-        VBox teacherBox = new VBox(10);
+        roomTitle.setStyle(
+                "-fx-font-size: 18;" +
+                        "-fx-font-weight: bold;"
+        );
 
         Button assignBtn =
                 new Button("Auto Assign Teachers");
 
         assignBtn.getStyleClass().add("primary-btn");
-
-        VBox assignedTeachersBox =
-                new VBox(10);
 
         assignBtn.setOnAction(e -> {
 
@@ -100,55 +103,28 @@ public class ConfirmScreen {
 
             if (assigned) {
 
-                assignedTeachersBox.getChildren().clear();
-
                 Map<Integer, List<Teacher>> data =
                         TeacherAssign.getRoomTeachers();
 
                 for (Integer roomNo : data.keySet()) {
 
-                    VBox card = new VBox(5);
+                    List<Teacher> teachers =
+                            data.get(roomNo);
 
-                    card.setPadding(new Insets(12));
+                    if (teachers.size() >= 2) {
 
-                    card.setStyle(
-                            "-fx-background-color: white;" +
-                                    "-fx-background-radius: 12;" +
-                                    "-fx-border-color: #E5E7EB;" +
-                                    "-fx-border-radius: 12;"
-                    );
-
-                    Label roomTitle =
-                            new Label("Room " + roomNo);
-
-                    roomTitle.setStyle(
-                            "-fx-font-size: 14;" +
-                                    "-fx-font-weight: bold;"
-                    );
-
-                    VBox teachersList =
-                            new VBox(4);
-
-                    for (Teacher t : data.get(roomNo)) {
-
-                        Label teacherLabel =
-                                new Label(
-                                        "• " + t.getName()
+                        maleTeacherFields
+                                .get(roomNo)
+                                .setText(
+                                        teachers.get(0).getName()
                                 );
 
-                        teachersList
-                                .getChildren()
-                                .add(teacherLabel);
+                        femaleTeacherFields
+                                .get(roomNo)
+                                .setText(
+                                        teachers.get(1).getName()
+                                );
                     }
-
-                    card.getChildren().addAll(
-                            roomTitle,
-                            teachersList
-                    );
-
-                    assignedTeachersBox
-                            .getChildren()
-                            .add(card);
                 }
 
                 Notification.message(
@@ -157,21 +133,173 @@ public class ConfirmScreen {
             }
         });
 
-        VBox teacherCard = new VBox(
-                15,
-                assignBtn,
-                assignedTeachersBox
+        HBox roomHeader = new HBox(
+                roomTitle,
+                assignBtn
         );
 
-        teacherCard.setPadding(new Insets(20));
+        roomHeader.setAlignment(Pos.CENTER);
 
-        teacherCard.getStyleClass().add("card");
+        HBox.setHgrow(roomTitle, javafx.scene.layout.Priority.ALWAYS);
+
+        VBox roomCard = new VBox(
+                15,
+                roomHeader,
+                roomBox
+        );
+        roomCard.setPadding(new Insets(20));
+        roomCard.getStyleClass().add("card");
+
+        int totalCapacity = 0;
+
+        for (Room room : selectedRooms) {
+
+            VBox roomItem = new VBox(8);
+
+            roomItem.setPadding(new Insets(16));
+
+            roomItem.setStyle(
+                    "-fx-background-color: white;" +
+                            "-fx-background-radius: 16;" +
+                            "-fx-border-color: #E5E7EB;" +
+                            "-fx-border-radius: 16;"
+            );
+
+            roomItem.setOnMouseEntered(e -> {
+
+                roomItem.setStyle(
+                        "-fx-background-color: #FAFAFA;" +
+                                "-fx-background-radius: 16;" +
+                                "-fx-border-color: #CBD5E1;" +
+                                "-fx-border-radius: 16;"
+                );
+            });
+
+            roomItem.setOnMouseExited(e -> {
+
+                roomItem.setStyle(
+                        "-fx-background-color: white;" +
+                                "-fx-background-radius: 16;" +
+                                "-fx-border-color: #E5E7EB;" +
+                                "-fx-border-radius: 16;"
+                );
+            });
+
+            Label roomName =
+                    new Label("Room " + room.getRoomNo());
+
+            roomName.setStyle(
+                    "-fx-font-size: 15;" +
+                            "-fx-font-weight: bold;"
+            );
+
+            Label roomInfo =
+                    new Label(
+                            "Rows: " + room.getRows() +
+                                    " • Columns: " + room.getColumns() +
+                                    " • Capacity: " + room.getCapacity()
+                    );
+
+            roomInfo.setStyle(
+                    "-fx-text-fill: #6B7280;" +
+                            "-fx-font-size: 12;"
+            );
+
+            Label maleLabel =
+                    new Label("Male Invigilator");
+
+            maleLabel.setStyle(
+                    "-fx-font-weight: bold;"
+            );
+
+            TextField maleField = new TextField();
+            maleField.setStyle(
+                    "-fx-background-radius: 10;" +
+                            "-fx-border-radius: 10;" +
+                            "-fx-padding: 10;" +
+                            "-fx-border-color: #D1D5DB;"
+            );
+            maleField.setPromptText(
+                    "Enter male teacher name"
+            );
+
+            Label femaleLabel =
+                    new Label("Female Invigilator");
+
+            femaleLabel.setStyle(
+                    "-fx-font-weight: bold;"
+            );
+
+            TextField femaleField = new TextField();
+            femaleField.setStyle(
+                    "-fx-background-radius: 10;" +
+                            "-fx-border-radius: 10;" +
+                            "-fx-padding: 10;" +
+                            "-fx-border-color: #D1D5DB;"
+            );
+
+            femaleField.setPromptText(
+                    "Enter female teacher name"
+            );
+
+            maleTeacherFields.put(
+                    room.getRoomNo(),
+                    maleField
+            );
+
+            femaleTeacherFields.put(
+                    room.getRoomNo(),
+                    femaleField
+            );
+
+            roomItem.getChildren().addAll(
+                    roomName,
+                    roomInfo,
+                    maleLabel,
+                    maleField,
+                    femaleLabel,
+                    femaleField
+            );
+
+            roomBox.getChildren().add(roomItem);
+
+            totalCapacity += room.getCapacity();
+        }
+
+        Label totalCap = new Label("Total Capacity: " + totalCapacity);
+        totalCap.setStyle(
+                "-fx-background-color: #EEF2FF;" +
+                        "-fx-text-fill: #3730A3;" +
+                        "-fx-padding: 8 14;" +
+                        "-fx-background-radius: 30;" +
+                        "-fx-font-weight: bold;"
+        );
+
+        roomBox.getChildren().add(totalCap);
+
+
+        Label teacherHint =
+                new Label(
+                        "You can manually edit assigned teacher names before generation."
+                );
+
+        teacherHint.setStyle(
+                "-fx-text-fill: #6B7280;" +
+                        "-fx-font-size: 11;"
+        );
+
+        roomBox.getChildren().add(teacherHint);
 
         Label students = new Label(
                 "Total Students: " + SharedData.totalStudentsLabel.getText()
         );
+        students.setStyle(
+                "-fx-font-size: 14;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
+        );
 
-        Button confirmBtn = new Button("Confirm & Generate");
+        Button confirmBtn = new Button("Generate Seating Arrangement");
         confirmBtn.getStyleClass().add("primary-btn");
 
         Button backBtn = new Button("Back");
@@ -185,6 +313,52 @@ public class ConfirmScreen {
                     .mapToInt(Room::getRoomNo)
                     .toArray();
 
+            TeacherAssign.getRoomTeachers().clear();
+
+            for (Room room : selectedRooms) {
+
+                String maleName =
+                        maleTeacherFields
+                                .get(room.getRoomNo())
+                                .getText()
+                                .trim();
+
+                String femaleName =
+                        femaleTeacherFields
+                                .get(room.getRoomNo())
+                                .getText()
+                                .trim();
+
+                List<Teacher> list =
+                        new ArrayList<>();
+
+                if (!maleName.isEmpty()) {
+
+                    list.add(
+                            new Teacher(
+                                    maleName,
+                                    "Male"
+                            )
+                    );
+                }
+
+                if (!femaleName.isEmpty()) {
+
+                    list.add(
+                            new Teacher(
+                                    femaleName,
+                                    "Female"
+                            )
+                    );
+                }
+
+                if (!list.isEmpty()) {
+
+                    TeacherAssign.getRoomTeachers()
+                            .put(room.getRoomNo(), list);
+                }
+            }
+
             try {
                 ArrayList<String> tables = arrange.arrange(
                         roomsArray,
@@ -197,10 +371,9 @@ public class ConfirmScreen {
                 );
 
                 System.out.println("Seating Generated Successfully!");
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Seating Generated Successfully!");
-                alert.showAndWait();
-
+                Notification.message(
+                        "Seating generated successfully!"
+                );
             } catch (Exception ex) {
                 Notification.message("Error generating seating");
             }
@@ -217,7 +390,6 @@ public class ConfirmScreen {
                 title,
                 infoCard,
                 roomCard,
-                teacherCard,
                 students,
                 buttons
         );

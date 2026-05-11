@@ -5,20 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="update screens">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/DateUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/ExamConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Teacher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Database/ArrangementsDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Database/ArrangementsDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Database/DB_Methods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Database/DB_Methods.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Database/database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Database/database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/ConfirmScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/ConfirmScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/RoomTableScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/RoomTableScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Merging main",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/java/project/Exam-Planner",
@@ -98,10 +86,9 @@
     </configuration>
     <configuration name="HomePage" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="$PROJECT_DIR$/../../../Program Files/Java/jdk-21.0.10" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.planner.GUI.HomePage" />
       <module name="Exam-Planner" />
-      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;D:\Java\openjfx-26_windows-x64_bin-sdk\javafx-sdk-26\lib&quot; --add-modules javafx.controls,javafx.fxml" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.planner.GUI.*" />
