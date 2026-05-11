@@ -28,7 +28,7 @@ import java.util.List;
 
 public class RoomTableScreen {
 
-    public static VBox roomTableScreen(HomePage app, ExamConfig config) {
+    public static ScrollPane roomTableScreen(HomePage app, ExamConfig config) {
 
         ObservableList<Room> selectedRooms = FXCollections.observableArrayList();
 
@@ -1011,7 +1011,11 @@ public class RoomTableScreen {
         vBox.setPadding(new Insets(20));
         VBox.setMargin(actionButtons, new Insets(10, 0, 0, 0));
 
-        return vBox;
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(vBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPannable(true);
+        return scrollPane;
     }
 
     private static int calculateRequiredSeats() {

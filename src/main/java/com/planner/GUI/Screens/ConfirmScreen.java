@@ -7,10 +7,7 @@ import com.planner.Arrangement.Arrange;
 import com.planner.GUI.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,7 +17,7 @@ import java.util.List;
 
 public class ConfirmScreen {
 
-    public static VBox show(
+    public static ScrollPane show(
             HomePage app,
             ExamConfig config,
             List<Room> selectedRooms,
@@ -394,7 +391,11 @@ public class ConfirmScreen {
                 buttons
         );
 
-        return main;
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(main);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPannable(true);
+        return scrollPane;
     }
 
 
