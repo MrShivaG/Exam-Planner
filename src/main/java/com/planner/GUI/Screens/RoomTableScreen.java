@@ -74,6 +74,8 @@ public class RoomTableScreen {
                 requiredSeats[0] = SharedData.totalStudents;
             }
 
+            System.out.println(requiredSeats[0]);
+
             int selectedCapacity = selectedRooms.stream()
                     .mapToInt(Room::getCapacity)
                     .sum();
@@ -81,6 +83,8 @@ public class RoomTableScreen {
             selectedCapacityLabel.setText(
                     selectedCapacity + " / " + requiredSeats[0]
             );
+
+            System.out.println(selectedCapacityLabel.getText());
 
 
             if (selectedCapacity >= requiredSeats[0]) {
@@ -1106,7 +1110,9 @@ public class RoomTableScreen {
 
         valueLabel.setWrapText(true);
         valueLabel.setMaxWidth(160);
-        valueLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold;");
+        valueLabel.setStyle("-fx-font-size: 20;"+
+                "-fx-font-weight: bold;"+
+                "-fx-text-fill: #111827");
         //valueLabel.setAlignment(Pos.CENTER_LEFT);
 
         card.getChildren().addAll(t, valueLabel);
