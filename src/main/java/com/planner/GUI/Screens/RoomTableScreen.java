@@ -74,8 +74,6 @@ public class RoomTableScreen {
                 requiredSeats[0] = SharedData.totalStudents;
             }
 
-            System.out.println(requiredSeats[0]);
-
             int selectedCapacity = selectedRooms.stream()
                     .mapToInt(Room::getCapacity)
                     .sum();
@@ -83,9 +81,6 @@ public class RoomTableScreen {
             selectedCapacityLabel.setText(
                     selectedCapacity + " / " + requiredSeats[0]
             );
-
-            System.out.println(selectedCapacityLabel.getText());
-
 
             if (selectedCapacity >= requiredSeats[0]) {
 
@@ -108,9 +103,15 @@ public class RoomTableScreen {
 
         };
 
-        linearBtn.setOnAction(e -> updateRequiredSeats.run());
-        alternateStrictBtn.setOnAction(e -> updateRequiredSeats.run());
-        alternateBalancedBtn.setOnAction(e -> updateRequiredSeats.run());
+        arrangementGroup.selectedToggleProperty().addListener(
+                (obs, oldToggle, newToggle) -> {
+
+                    updateRequiredSeats.run();
+                }
+        );
+//        linearBtn.setOnAction(e -> updateRequiredSeats.run());
+//        alternateStrictBtn.setOnAction(e -> updateRequiredSeats.run());
+//        alternateBalancedBtn.setOnAction(e -> updateRequiredSeats.run());
 
         updateRequiredSeats.run();
 
@@ -992,9 +993,9 @@ public class RoomTableScreen {
 
         arrangementTitle.setStyle(
                 "-fx-font-size: 18;" +
-                        "-fx-font-weight: bold;"
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #111827;"
         );
-
         FlowPane arrangementBox = new FlowPane();
 
         arrangementBox.setHgap(20);
@@ -1230,6 +1231,8 @@ public class RoomTableScreen {
         card.setOnMouseClicked(e -> {
 
             radio.setSelected(true);
+
+            radio.fire();
 
         });
 

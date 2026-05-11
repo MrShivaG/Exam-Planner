@@ -34,11 +34,11 @@ public class ConfirmScreen {
         info.setVgap(10);
         info.setHgap(20);
 
-        info.add(new Label("Arrangement Name:"), 0, 0);
-        info.add(new Label(config.getArrangementName()), 1, 0);
+//        info.add(new Label("Arrangement Name:"), 0, 0);
+//        info.add(new Label(config.getArrangementName()), 1, 0);
 
-        info.add(new Label("College:"), 0, 1);
-        info.add(new Label(config.getCollegeName()), 1, 1);
+//        info.add(new Label("College:"), 0, 1);
+//        info.add(new Label(config.getCollegeName()), 1, 1);
 
         info.add(new Label("Session:"), 0, 2);
         info.add(new Label(config.getSession()), 1, 2);
@@ -49,8 +49,8 @@ public class ConfirmScreen {
         info.add(new Label("Time:"), 0, 4);
         info.add(new Label(config.getExamTime()), 1, 4);
 
-        info.add(new Label("Subject:"), 0, 5);
-        info.add(new Label(config.getSubject()), 1, 5);
+//        info.add(new Label("Subject:"), 0, 5);
+//        info.add(new Label(config.getSubject()), 1, 5);
 
         info.add(new Label("Excel File:"), 0, 6);
         info.add(new Label(fileName), 1, 6);
