@@ -1,9 +1,8 @@
 package com.planner.GUI.Screens;
 
 import com.planner.Database.ArrangementsDB;
-import com.planner.GUI.ArrTableView;
-import com.planner.GUI.DateUtil;
-import com.planner.GUI.HomePage;
+import com.planner.Database.DB_Methods;
+import com.planner.GUI.*;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -13,48 +12,87 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
+import javax.sound.midi.ShortMessage;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class DashboardComponents {
+import static com.planner.GUI.HomePage.createTopBar;
 
-    public static HBox databox(String arr_table_name, String date, String capacity, String session, String student){
+public class DashboardComponents {
+    private static HomePage app = new HomePage();
+
+    public DashboardComponents(HomePage app) {
+        this.app = app;
+    }
+
+    public static HBox databox(String arr_group_name, String date, int capacity, String session, int student){
         //room no. box
-        VBox roomnobox = new VBox();
-        roomnobox.setPadding(new Insets(5,5,5,5));
-        roomnobox.getStyleClass().add("cardrow");
-        roomnobox.setAlignment(Pos.CENTER);
-        roomnobox.setStyle(
+        VBox sessionbox = new VBox();
+        sessionbox.setPadding(new Insets(5,5,5,5));
+        sessionbox.getStyleClass().add("cardrow");
+        sessionbox.setAlignment(Pos.CENTER);
+        sessionbox.setStyle(
                 "-fx-background-color: WHITE;" +
                         "-fx-background-radius: 10;" +
                         "-fx-border-color: #e0e0ec;" +
                         "-fx-border-radius: 10;" +
                         "-fx-border-width: 1;"
         );
-        Label roomnolable = new Label("Room No.");
-        roomnolable.setStyle(
+        Label sessionlable = new Label("Session");
+        sessionlable.setStyle(
                 "-fx-font-size: 16px;" +
                         "-fx-text-fill: #6B7280;"
         );
-        int lastDash = arr_table_name.lastIndexOf("_");
-        String roomNo = arr_table_name.substring(lastDash + 1);
 
-        Label roomnodata = new Label(roomNo);
-        roomnodata.setStyle(
+        Label sessiondata = new Label(session);
+        sessiondata.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
                         "-fx-font-size: 18px;" +
                         "-fx-font-weight: bold;"
         );
-        roomnobox.getChildren().addAll(roomnolable,roomnodata);
+        sessionbox.getChildren().addAll(sessionlable,sessiondata);
+
+        VBox groupnamebox = new VBox();
+        String[] parts = arr_group_name.split("_");
+        String groupname = parts[0];
+        String sem = parts[1];
+
+        Label gnamelable = new Label(groupname);
+        gnamelable.setStyle(
+                "-fx-text-fill: #1a1a2e;" +
+                        "-fx-font-size: 18px;" +
+                        "-fx-font-weight: 650;"
+        );
+
+        HBox sembox = new HBox();
+        Label semlable = new Label("SEM - ");
+        semlable.setStyle(
+                "-fx-font-size: 18px;" +
+                        "-fx-text-fill: #6B7280;"
+        );
+        Label semdata = new Label(sem);
+        semdata.setStyle(
+                "-fx-font-size: 18px;" +
+                        "-fx-text-fill: #6B7280;"
+        );
+
+        sembox.setPadding(new Insets(2, 0, 2, 0));
+        sembox.getChildren().addAll(semlable,semdata);
+        groupnamebox.getChildren().addAll(gnamelable,sembox);
 
         //Date and time
         VBox dateVbox = new VBox();
@@ -63,7 +101,7 @@ public class DashboardComponents {
         Label datelable = new Label("DATE - ");
         datelable.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
-                        "-fx-font-size: 14px;"
+                        "-fx-font-size: 15px;"
         );
         Label datedata = new Label(""+date);
         datedata.setStyle(
@@ -76,7 +114,7 @@ public class DashboardComponents {
         datebox.getChildren().addAll(datelable,datedata);
 
         String time = "10:00 - 01:00";
-        Label timelable = new Label("            10:00 - 01:00");
+        Label timelable = new Label(" TIME - 10:00 - 01:00");
         timelable.setStyle(
                 "-fx-font-size: 14px;" +
                         "-fx-text-fill: #6B7280;"
@@ -141,8 +179,43 @@ public class DashboardComponents {
                 "-fx-font-weight: bold;");
 
         arrButton.setOnAction(e ->{
-            Node node = ArrTableView.show(arr_table_name, roomNo, date);
-            HomePage.rightSide.setCenter(node);
+
+        });
+
+
+        Button deletearr = new Button();
+        Image deleteImg = new Image(DashboardComponents.class.getResourceAsStream("/delete.png"));
+
+        ImageView deleteIcon = new ImageView(deleteImg);
+        deleteIcon.setFitHeight(28);
+        deleteIcon.setFitWidth(20);
+
+        deletearr.setGraphic(deleteIcon);
+        deletearr.getStyleClass().add("deletearrbutton");
+
+        deletearr.setOnAction(e->{
+            try {
+                DB_Methods dbMethods = new DB_Methods();
+
+                boolean isConfirmed = Notification.confirm("Are you sure you want to delete the arrangement of ");
+                if (isConfirmed) {
+                    try {
+                        dbMethods.deleteArrRoom(arr_group_name);
+                        Notification.message("Arrangement of Room no successfully deleted.");
+                        DashboardScreen dashboardScreen = new DashboardScreen();
+                        app.switchScreen(createTopBar("Dashboard"), DashboardScreen.dashboardContent(app));
+
+
+
+                    } catch (SQLException ex) {
+                        Notification.message("An error occurred while deleting." + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
         });
 
 
@@ -161,7 +234,7 @@ public class DashboardComponents {
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        arrrowBox.getChildren().addAll(roomnobox,dateVbox,spacer,statusbox,capacitybox,arrButton);
+        arrrowBox.getChildren().addAll(sessionbox,groupnamebox,dateVbox,spacer,statusbox,capacitybox,arrButton,deletearr);
 
         return arrrowBox;
     }
@@ -222,8 +295,8 @@ public class DashboardComponents {
         HBox footer = new HBox(10);
         footer.setAlignment(Pos.CENTER_LEFT);
 
-        javafx.scene.shape.Circle dot = new javafx.scene.shape.Circle(5);
-        dot.setFill(javafx.scene.paint.Color.web(statusColor));
+        Circle dot = new Circle(5);
+        dot.setFill(Color.web(statusColor));
 
         Label subText = new Label(isConnected ? "System is synced" : "Connection failed");
         subText.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11;");

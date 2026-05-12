@@ -86,8 +86,6 @@
 }
 
 .deletebutton {
-    -fx-background-color: transparent;
-    -fx-text-fill: #7a7a9a;
     -fx-font-size: 22px;
     -fx-border-color: #e0e0ec;
     -fx-border-radius: 4;
@@ -96,10 +94,18 @@
     -fx-cursor: hand;
 }
 
-.deletebutton:hover {
-    -fx-background-color: #f70202;
-    -fx-text-fill: white;
+
+
+
+.deletearrbutton {
+    -fx-border-color: #e0e0ec;
+    -fx-border-radius: 4;
+    -fx-background-radius:4;
+    -fx-border-width: 1;
+
+    -fx-cursor: hand;
 }
+
 
 
 
@@ -273,25 +279,17 @@
     -fx-background-insets: 0;
 }
 
-/* Main Dialog Pane */
-.alert-dialog {
-    -fx-background-color: #ffffff;
-}
 
-/* Header Section (Top bar) */
-.alert-dialog .header-panel {
-    -fx-background-color: #2563EB; /* Purple color jo aapki image mein hai */
-}
 
 .alert-dialog .header-panel .label {
-    -fx-text-fill: white;
+
+
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
 /* Message Content area */
 .alert-dialog .content.label {
-    -fx-text-fill: #2c3e50;
     -fx-padding: 15px;
     -fx-font-size: 18px;
         -fx-font-weight: bold;

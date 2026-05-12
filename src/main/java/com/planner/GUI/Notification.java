@@ -15,7 +15,18 @@ public class Notification extends Application {
         alert.setHeaderText("Important Information");
         alert.setContentText(mess);
 
+        DialogPane dialogPane = alert.getDialogPane();
+
+        try {
+            String css = Notification.class.getResource("/app.css").toExternalForm();
+            dialogPane.getStylesheets().add(css);
+            dialogPane.getStyleClass().add("alert-dialog");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         alert.showAndWait();
+
+
         return alert;
     }
     public static boolean confirm(String mess) {
