@@ -94,12 +94,27 @@ public class DashboardScreen {
 
         if (isConnected) {
             try {
-                List<String[]> arrangement = dbMethods.fetch_Arr_data();
+                List<String[]> arrangement = dbMethods.fetch_groups_names();
+
                 for (String[] data : arrangement) {
-                    HBox card = databox(data[0], data[1], data[2], data[3], data[4]);
+                    List<String[]> arr_data = dbMethods.fetch_group_tables(data[0]);
+                    int totalCapacity = 0;
+                    int totalStudents = 0;
+
+                    for (String[] arrdata : arr_data) {
+                        if (arrdata[3] != null) totalCapacity += Integer.parseInt(arrdata[3]);
+                        if (arrdata[5] != null) totalStudents += Integer.parseInt(arrdata[5]);
+                    }
+
+                    String date = arr_data.get(0)[2];
+                    String session = arr_data.get(0)[4];
+
+                    HBox card = databox(data[0], date, totalCapacity, session, totalStudents);
                     cardsContainer.getChildren().add(card);
                 }
+
             } catch (Exception e) {
+                e.printStackTrace();
                 cardsContainer.getChildren().add(new Label("Data unavailable"));
             }
         }

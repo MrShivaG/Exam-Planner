@@ -69,6 +69,14 @@ public class ArrTableView {
         headerbox.setStyle("-fx-background-color: #F8F9FA;");
         headerbox.setPadding(new Insets(15, 40, 15, 40));
 
+        Label collegename = new Label("Sagar Institute of Science Technology and Research");
+        collegename.setFont(Font.font("Times New Roman", FontWeight.BOLD, 30));
+
+        HBox collegeNameBox  = new HBox();
+        collegeNameBox.setAlignment(Pos.CENTER);
+        collegeNameBox.getChildren().add(collegename);
+
+
         Label roomLabel = new Label("Room No: " + roomNo);
         roomLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
         HBox roomBox = new HBox(roomLabel);
@@ -122,7 +130,7 @@ public class ArrTableView {
         HBox headerrowbox = new HBox();
         headerrowbox.getChildren().addAll(headerleft, spacer, headerright);
 
-        headerbox.getChildren().addAll(roomBox, headerrowbox);
+        headerbox.getChildren().addAll(collegeNameBox, roomBox, headerrowbox);
 
 
         GridPane grid = buildGrid(data);

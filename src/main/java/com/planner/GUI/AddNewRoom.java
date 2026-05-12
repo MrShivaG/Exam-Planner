@@ -37,6 +37,7 @@ public class AddNewRoom extends Application {
     }
 
     public Stage newroom(){
+        Stage stage = new Stage();
         BorderPane roompane = new BorderPane();
         VBox headerbox = new VBox();
         headerbox.setPadding(new Insets(20));
@@ -127,10 +128,14 @@ public class AddNewRoom extends Application {
                 dbMethods = new DB_Methods();
                 dbMethods.insertData(roomno, rowno, columnno, true);
                 notificationlable.setText("Room Added Successfully!");
+                Notification.message("Room Added Successfully");
+                stage.hide();
+
             } catch (NumberFormatException ev) {
                 notificationlable.setText("Error: Please enter valid numbers.");
             } catch (SQLException ev) {
                 notificationlable.setText("Error: Room already exists .");
+
             }catch(Exception ev){
 
             }
@@ -163,7 +168,7 @@ public class AddNewRoom extends Application {
 
         roompane.setTop(headerbox);
         roompane.setCenter(contentPane);
-        Stage stage = new Stage();
+
         Scene scene = new Scene(roompane,400,400);
         stage.setScene(scene);
         return stage;
