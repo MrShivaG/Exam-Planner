@@ -52,7 +52,7 @@ public class DashboardComponents {
         roomnodata.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
                         "-fx-font-size: 18px;" +
-                        "-fx-font-weight: 650;"
+                        "-fx-font-weight: bold;"
         );
         roomnobox.getChildren().addAll(roomnolable,roomnodata);
 
@@ -69,7 +69,7 @@ public class DashboardComponents {
         datedata.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
                         "-fx-font-size: 18px;" +
-                        "-fx-font-weight: 650;"
+                        "-fx-font-weight: bold;"
         );
         datebox.setAlignment(Pos.CENTER);
         datebox.setPadding(new Insets(2, 0, 2, 0));
@@ -96,7 +96,7 @@ public class DashboardComponents {
         statuslable.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
                         "-fx-font-size: 18px;" +
-                        "-fx-font-weight: 650;" +
+                        "-fx-font-weight: bold;" +
                         "-fx-font-style: italic;"
         );
         if (examStatus.equals("Today")) {
@@ -131,7 +131,7 @@ public class DashboardComponents {
         capacitydata.setStyle(
                 "-fx-text-fill: #1a1a2e;" +
                         "-fx-font-size: 18px;" +
-                        "-fx-font-weight: 650;"
+                        "-fx-font-weight: bold;"
         );
         capacitybox.getChildren().addAll(capacitylable,capacitydata);
         //capacity end
