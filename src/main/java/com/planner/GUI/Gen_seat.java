@@ -173,9 +173,9 @@ body{
         return webView;
     }
 
-    private static void openHtmlInBrowser(
+    static void openHtmlInBrowser(
             String html
-) {
+    ) {
 
             try {
 
@@ -196,7 +196,7 @@ body{
             }
         }
 
-    private static String generateHtml(
+    static String generateHtml(
             String tableName,
             List<List<String>> data,
             ExamConfig config,
