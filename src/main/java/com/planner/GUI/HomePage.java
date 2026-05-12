@@ -18,6 +18,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import javafx.scene.Node;
 
+import static com.planner.GUI.Screens.TeacherScreen.teacherScreen;
+
+
 public class HomePage extends Application {
 
     private BorderPane root;
@@ -185,6 +188,19 @@ public class HomePage extends Application {
         return icon;
     }
 
+    private SVGPath getTeacherIcon() {
+
+        SVGPath icon = new SVGPath();
+
+        icon.setContent(
+                "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+        );
+
+        icon.setStyle("-fx-fill: #6B7280;");
+
+        return icon;
+    }
+
     private SVGPath getAboutIcon() {
         SVGPath icon = new SVGPath();
 
@@ -247,7 +263,11 @@ public class HomePage extends Application {
                     }
                 });
 
-        menu.getChildren().addAll(dashboard, arrangements, showRoomBtn);
+        Button teachers = createSidebarButton("Teachers", getTeacherIcon(), false,
+                () -> switchScreen(createTopBar("Teachers"), teacherScreen(this)));
+
+
+        menu.getChildren().addAll(dashboard, arrangements, showRoomBtn, teachers);
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
@@ -257,6 +277,10 @@ public class HomePage extends Application {
         bottom.setAlignment(Pos.BOTTOM_CENTER);
         bottom.setPadding(new Insets(0, 0, 30, 0));
 
+        Button confiiguration = createSidebarButton("Confiiguration", getAboutIcon() , false,
+                () -> switchScreen(createTopBar("Confiiguration"), newPane(this)));
+        confiiguration.setAlignment(Pos.CENTER);
+
         Button about = createSidebarButton("About", getAboutIcon() , false,
                 () -> switchScreen(createTopBar("About"), AboutScreen.about(this)));
         about.setAlignment(Pos.CENTER);
@@ -265,11 +289,22 @@ public class HomePage extends Application {
                 () -> switchScreen(createTopBar("Logout"), new Pane()));
         logout.setAlignment(Pos.CENTER);
 
-        bottom.getChildren().addAll(about, logout);
+        bottom.getChildren().addAll(confiiguration, about, logout);
 
         sidebar.getChildren().addAll(logoBox, menu,spacer, bottom);
 
         return sidebar;
+    }
+
+    private Node newPane(HomePage homePage) {
+
+        StackPane pane = new StackPane();
+
+        Label label = new Label("Coming Soon");
+
+        pane.getChildren().add(label);
+
+        return pane;
     }
 
     private Button createSidebarButton(String text, SVGPath icon, boolean active, Runnable action) {

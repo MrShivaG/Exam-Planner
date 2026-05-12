@@ -10,10 +10,12 @@ import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import java.util.List;
+
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 
 public class Gen_seat {
 
@@ -46,7 +48,7 @@ public class Gen_seat {
 
             List<Teacher> teachers = TeacherAssign.getRoomTeachers().get(roomNo);
 
-            VBox sheet =createExamSheet(tableName, data, config, teachers);
+            WebView sheet = createExamSheet(tableName, data, config, teachers);
 
             main.getChildren().add(sheet);
         }
@@ -94,146 +96,364 @@ public class Gen_seat {
         return scroll;
     }
 
-    private static VBox createExamSheet(
+
+    private static WebView createExamSheet(
             String tableName,
             List<List<String>> data,
             ExamConfig config,
             List<Teacher> teachers
-    ){
+    ) {
 
-        VBox sheet = new VBox(10);
-        sheet.setPadding(new Insets(20));
-        sheet.setStyle("-fx-background-color: white; -fx-border-color: black;");
+        String roomNo =
+                tableName.substring(
+                        tableName.lastIndexOf("_") + 1
+                );
 
-        String roomNo = tableName.substring(tableName.lastIndexOf("_") + 1);
+        StringBuilder grid = new StringBuilder();
 
+        grid.append("<table class='seat-table'>");
 
-        Label college = new Label(config.getCollegeName());
-        college.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-
-        Label exam = new Label("B. Tech. " + config.getSession() + " EXAMINATION");        exam.setStyle("-fx-font-size: 12px;");
-
-        Label room = new Label("Room No: " + roomNo);
-        Label dateLabel = new Label(
-                "Date: " + DateUtil.formatForUI(config.getDate())
-        );
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        HBox roomRow = new HBox(room, spacer, dateLabel);
-
-        VBox header = new VBox(5, college, exam, roomRow);
-        header.setAlignment(Pos.CENTER);
-
-
-        String branch1 = "";
-        String branch2 = "";
-
-        outer:
         for (List<String> row : data) {
-            for (String cell : row) {
-                if (cell != null && cell.length() >= 6) {
-                    String b = cell.substring(4, 6);
 
-                    if (branch1.isEmpty()) {
-                        branch1 = b;
-                    } else if (!b.equals(branch1)) {
-                        branch2 = b;
-                        break outer;
-                    }
+            grid.append("<tr>");
+
+            for (String value : row) {
+
+                if (value == null ||
+                        value.equalsIgnoreCase("null")) {
+
+                    value = "";
                 }
+
+                grid.append("<td>");
+                grid.append(value);
+                grid.append("</td>");
+            }
+
+            grid.append("</tr>");
+        }
+
+        grid.append("</table>");
+
+        String teacher1 = "";
+        String teacher2 = "";
+
+        if (teachers != null) {
+
+            if (teachers.size() > 0) {
+                teacher1 = teachers.get(0).getName();
+            }
+
+            if (teachers.size() > 1) {
+                teacher2 = teachers.get(1).getName();
             }
         }
 
-        Label branch = new Label("Branch: " + branch1 + "  " + branch2);
-        Label subject = new Label("Subject: " + config.getSubject());
+        String seatingTable = grid.toString();
 
-        VBox infoBox = new VBox(5, branch, subject);
+        String html = """
+<!DOCTYPE html>
+<html>
+<head>
 
+<style>
 
-        Label time = new Label("Time: " + config.getExamTime());
+body{
+    font-family:'Times New Roman';
+    background:white;
+    padding:20px;
+}
 
-        GridPane grid = new GridPane();
-        grid.setHgap(2);
-        grid.setVgap(2);
-        grid.setAlignment(Pos.CENTER);
+.page{
+    width:900px;
+    margin:auto;
+    color:black;
+}
 
-        int rows = data.size();
-        int cols = data.get(0).size();
+.header{
+    text-align:center;
+    margin-bottom:10px;
+}
 
-        int totalStudents = 0;
+.header h2{
+    margin:0;
+    font-size:28px;
+    font-weight:bold;
+}
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+.header h3{
+    margin:5px 0;
+    font-size:22px;
+}
 
-                String value = data.get(i).get(j);
+.header p{
+    margin:2px 0;
+    font-size:18px;
+}
 
-                Label cell = new Label(value);
-                cell.setMinSize(100, 30);
-                cell.setAlignment(Pos.CENTER);
-                cell.setStyle("-fx-border-color: black;");
+.room-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
+}
 
-                if (value != null && !value.equalsIgnoreCase("null")) {
-                    totalStudents++;
-                }
-                grid.add(cell, j, i);
-            }
-        }
+.info-section{
+    margin-top:20px;
+    font-size:18px;
+    line-height:1.8;
+}
 
+.time{
+    margin-top:10px;
+    font-size:20px;
+    font-weight:bold;
+}
 
-        GridPane summary = new GridPane();
-        summary.setHgap(5);
-        summary.setVgap(5);
-        summary.setStyle("-fx-border-color: black;");
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
 
-        summary.add(new Label("Paper Code"), 0, 0);
-        summary.add(new Label("From"), 1, 0);
-        summary.add(new Label("To"), 2, 0);
-        summary.add(new Label("Total"), 3, 0);
+td, th{
+    border:1px solid black;
+    padding:10px;
+    text-align:center;
+    font-size:18px;
+}
 
-        summary.add(new Label(branch1), 0, 1);
-        summary.add(new Label("----"), 1, 1);
-        summary.add(new Label("----"), 2, 1);
-        summary.add(new Label(String.valueOf(totalStudents / 2)), 3, 1);
+.summary-table td,
+.summary-table th{
+    padding:8px;
+}
 
-        summary.add(new Label(branch2), 0, 2);
-        summary.add(new Label("----"), 1, 2);
-        summary.add(new Label("----"), 2, 2);
-        summary.add(new Label(String.valueOf(totalStudents / 2)), 3, 2);
+.inv-table td{
+    height:40px;
+}
 
-        summary.add(new Label("Total"), 2, 3);
-        summary.add(new Label(String.valueOf(totalStudents)), 3, 3);
+.footer{
+    margin-top:40px;
+    display:flex;
+    justify-content:space-between;
+    font-size:20px;
+    font-style:italic;
+}
 
-        GridPane invigilator = new GridPane();
-        invigilator.setHgap(10);
-        invigilator.setVgap(5);
+.bold{
+    font-weight:bold;
+}
 
-        invigilator.add(new Label("S.No"), 0, 0);
-        invigilator.add(new Label("Name of Invigilators"), 1, 0);
-        invigilator.add(new Label("Designation"), 2, 0);
-        invigilator.add(new Label("Signature"), 3, 0);
+</style>
 
-// Teacher 1
-        invigilator.add(new Label("1"), 0, 1);
-        invigilator.add(new Label(
-                (teachers != null && teachers.size() > 0)
-                        ? teachers.get(0).getName()
-                        : ""
-        ), 1, 1);
+</head>
 
-// Teacher 2
-        invigilator.add(new Label("2"), 0, 2);
-        invigilator.add(new Label(
-                (teachers != null && teachers.size() > 1)
-                        ? teachers.get(1).getName()
-                        : ""
-        ), 1, 2);
+<body>
 
-        sheet.getChildren().addAll(header, infoBox, time, grid, summary, invigilator);
+<div class='page'>
 
-        return sheet;
+<div class='header'>
+
+<h2>
+SAGAR INSTITUTE OF SCIENCE,
+TECHNOLOGY & RESEARCH BHOPAL
+</h2>
+
+<h3>
+B.Tech %s Examination
+(Seating Plan)
+</h3>
+
+<p>
+""" + config.getSession() + """
+</p>
+
+</div>
+
+<div class='room-row'>
+
+<div>
+Room No : """ + roomNo + """
+</div>
+
+<div>
+Date : """ + config.getDate() + """
+</div>
+
+</div>
+
+<div class='info-section'>
+
+<div>
+Branch : CS
+&nbsp;&nbsp;&nbsp;&nbsp;
+Subject : Data Analytics
+</div>
+
+<div>
+Branch : CE
+&nbsp;&nbsp;&nbsp;&nbsp;
+Subject : CP&M
+</div>
+
+<div class='time'>
+
+Time :
+""" + config.getExamTime() + """
+
+</div>
+
+</div>
+
+""" + seatingTable + """
+
+<table class='summary-table'>
+
+<tr>
+<th>Paper Code</th>
+<th>From</th>
+<th>To</th>
+<th>Total</th>
+</tr>
+
+<tr>
+<td>CS101(A)</td>
+<td>0537CS241051</td>
+<td>0537CS241061</td>
+<td>10</td>
+</tr>
+
+<tr>
+<td>CE101(B)</td>
+<td>0537CE241009</td>
+<td>0537CE241011</td>
+<td>2</td>
+</tr>
+
+<tr>
+<th colspan='3'>
+Total
+</th>
+
+<th>
+52
+</th>
+
+</tr>
+
+</table>
+
+<table>
+
+<tr>
+
+<th>S.No.</th>
+
+<th>
+No. of Present Student
+</th>
+
+<th>
+No. of Absent Student
+</th>
+
+<th>Total</th>
+
+</tr>
+
+<tr>
+<td>1</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+
+</table>
+
+<table class='inv-table'>
+
+<tr>
+
+<th>S.No</th>
+
+<th>
+Name of Invigilators
+</th>
+
+<th>Designation</th>
+
+<th>Branch</th>
+
+<th>Signature</th>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>
+""" + teacher1 + """
+</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>
+""" + teacher2 + """
+</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+</table>
+
+<div class='footer'>
+
+<div>
+(Exam Supdt.)
+</div>
+
+<div>
+(Observer)
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
+""".formatted(config.getSession());
+
+        WebView webView = new WebView();
+
+        webView.setPrefWidth(850);
+        webView.setPrefHeight(1200);
+
+        WebEngine engine = webView.getEngine();
+
+        engine.loadContent(html);
+
+        return webView;
     }
+
+
 };
 
 
