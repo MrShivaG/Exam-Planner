@@ -72,20 +72,22 @@ public class Gen_seat {
 
 body{
     font-family:'Times New Roman';
-    background:white;
+   
     margin:0;
-    padding:20px;
+  
+      background:#808080;
+                        
+   padding:20px;
 }
 
-.page-break{
-    page-break-after:always;
-}
+
 
 </style>
 
 </head>
 
 <body>
+
 """);
 
                 for (String tableName : tableNames) {
@@ -123,6 +125,7 @@ body{
                 }
 
                 fullHtml.append("""
+
 </body>
 </html>
 """);
@@ -153,9 +156,15 @@ body{
 
         WebView webView = new WebView();
 
-        webView.setPrefWidth(850);
-        webView.setPrefHeight(1200);
-        webView.setZoom(0.75);
+        webView.setPrefWidth(794);
+        webView.setPrefHeight(1123);
+
+        webView.setMinWidth(794);
+        webView.setMinHeight(1123);
+
+        webView.setMaxWidth(794);
+        webView.setMaxHeight(1123);
+        webView.setZoom(0.92);
 
         WebEngine engine = webView.getEngine();
 
@@ -246,68 +255,109 @@ body{
                 
                 <style>
                 
+                *{
+                    box-sizing:border-box;
+                }
+                
                 @page{
                     size:A4 portrait;
                     margin:8mm;
                 }
                 
-                html,body{
-                     margin:0;
-                     padding:0;
-                     font-family:'Times New Roman';
-                     background:white;
-                 }
-               
-               
-                .page{
-                     width:210mm;
-                     min-height:297mm;
-                     margin:20px auto;
-                     padding:10mm;
-                     box-sizing:border-box;
-                     background:white;
-                 }
+                body{
                 
-                .header{
-                    text-align:center;
-                    margin-bottom:10px;
-                }
-                
-                .header h2{
                     margin:0;
-                    font-size:28px;
-                    font-weight:bold;
+                    padding:0;
+                
+                    background:#808080;
+                
+                    font-family:'Times New Roman';
                 }
                 
-                .header h3{
-                    margin:5px 0;
-                    font-size:22px;
-                }
+                .page{
                 
-                .header p{
-                    margin:2px 0;
-                    font-size:18px;
+                       width:190mm;
+                
+                       min-height:277mm;
+                
+                       margin:0 auto;
+                
+                       padding:6mm;
+                
+                       box-sizing:border-box;
+                
+                       background:white;
+                
+                       overflow:hidden;
+                   }
+                 
+                .page:not(:last-child){
+                    page-break-after:always;
+                }
+
+                .content{
+                
+                     flex:1;
+                }
+                 
+                .header{
+                       text-align:center;
+                       margin-bottom:6px;
+                   }
+                
+                   .header h2{
+                       margin:0;
+                       font-size:18px;
+                       font-weight:bold;
+                   }
+                
+                   .header h3{
+                       margin:2px 0;
+                       font-size:14px;
+                   }
+                
+                   .header p{
+                       margin:0;
+                       font-size:11px;
+                   }
+                
+                h1,h2,h3,h4,h5{
+                
+                    margin:2px;
+                
+                    padding:0;
                 }
                 
                 .room-row{
-                    display:flex;
-                    justify-content:space-between;
-                    margin-top:20px;
-                    font-size:20px;
-                    font-weight:bold;
-                }
                 
-                .info-section{
-                    margin-top:20px;
-                    font-size:18px;
-                    line-height:1.8;
-                }
+                      display:flex;
                 
-                .time{
-                    margin-top:10px;
-                    font-size:20px;
-                    font-weight:bold;
-                }
+                      justify-content:space-between;
+                
+                      margin-top:8px;
+                
+                      font-size:12px;
+                
+                      font-weight:bold;
+                  }
+                
+                  .info-section{
+                
+                      margin-top:8px;
+                
+                      font-size:11px;
+                
+                      line-height:1.3;
+                  }
+                
+                  .time{
+                
+                      margin-top:4px;
+                
+                      font-size:12px;
+                
+                      font-weight:bold;
+                  }
                 
                 table, tr, td {
                     page-break-inside: avoid !important;
@@ -316,7 +366,7 @@ body{
                 table{
                     width:100%;
                     border-collapse:collapse;
-                    margin-top:20px;
+               
                     table-layout:fixed;
                     page-break-inside:auto;
                 }
@@ -325,55 +375,103 @@ body{
                     page-break-inside:avoid;
                 }
                 
-                td, th{
-                    border:1px solid black;
-                    padding:10px;
-                    text-align:center;
-                    font-size:18px;
-                }
+              
                 
                 .seat-table{
-                    width:100%;
-                    border-collapse:collapse;
-                    table-layout:fixed;
+                
+                      width:100%;
+                
+                      border-collapse:collapse;
+                
+                      table-layout:fixed;
                 }
                 
                 .seat-table td{
                 
-                    border:1px solid black;
+                      border:1px solid black;
                 
-                    text-align:center;
+                      text-align:center;
                 
-                    padding:4px;
+                      padding:1px;
                 
-                    font-size:12px;
+                      font-size:8px;
                 
-                    font-weight:bold;
+                      font-weight:bold;
                 
-                    height:32px;
-                
-                    white-space:nowrap;
-                
-                    overflow:hidden;
-                
-                    text-overflow:ellipsis;
+                      white-space:nowrap;
                 }
+                  
+                  
+                .summary-table{
                 
-                .summary-table td,
-                .summary-table th{
-                    padding:8px;
-                }
+                     width:100%;
                 
+                     border-collapse:collapse;
+                
+                     margin-top:12px;
+                 }
+                
+                 .summary-table th,
+                 .summary-table td{
+                
+                     border:1px solid black;
+                
+                     padding:4px;
+                
+                     text-align:center;
+                
+                     font-size:10px;
+                 }
+                 
+                 .teacher-table{
+                
+                     width:100%;
+                
+                     border-collapse:collapse;
+                
+                     margin-top:10px;
+                
+                     table-layout:fixed;
+                 }
+                
+                 .teacher-table td,
+                 .teacher-table th{
+                
+                     border:1px solid black;
+                
+                     padding:4px;
+                
+                     font-size:10px;
+                
+                     word-break:break-word;
+                 }
+                 
                 .inv-table td{
                     height:40px;
                 }
                 
                 .footer{
-                    margin-top:40px;
-                    display:flex;
-                    justify-content:space-between;
-                    font-size:20px;
-                    font-style:italic;
+                
+                            margin-top:10px;
+                
+                            display:flex;
+                
+                            justify-content:space-between;
+                
+                            font-size:11px;
+                
+                            font-style:italic;
+                        }
+                    
+                .footer-section{
+                
+                    position:absolute;
+                
+                    bottom:20px;
+                
+                    left:18px;
+                
+                    right:18px;
                 }
                 
                 .bold{
