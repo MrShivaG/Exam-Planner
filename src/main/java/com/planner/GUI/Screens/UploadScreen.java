@@ -36,18 +36,80 @@ public class UploadScreen {
         );
 
 
-        Label session = new Label("Enter Session");
-        session.getStyleClass().add("form-label");
+//        TextField month = new TextField();
+//        month.setPromptText("June");
+//        month.getStyleClass().add("input-field");
 
-        TextField textField = new TextField();
-        textField.setPromptText("2025-26");
-        textField.getStyleClass().add("input-field");
+        Label session = new Label("Enter Session");
+
+        session.setStyle("""
+        -fx-font-size: 15px;
+        -fx-font-weight: 700;
+        -fx-text-fill: #111827;
+        """);
+
+        ComboBox<String> month = new ComboBox<>();
+
+        month.getItems().addAll("June", "Dec");
+
+        month.setPromptText("Month");
+
+        month.setPrefWidth(120);
+
+        month.getStyleClass().add("curator-combo");
+
+//        month.lookup(".list-cell").setStyle("""
+//        -fx-text-fill: #111827;
+//        """);
+
+        ComboBox<String> year = new ComboBox<>();
+
+        int currentYear1 = java.time.Year.now().getValue() % 100;
+
+        for (int i = currentYear1 - 3; i <= 99; i++) {
+
+            year.getItems().add(String.format("%02d", i));
+        }
+        for (int i = 0; i < currentYear1 -3; i++) {
+
+            year.getItems().add(
+                    String.format("%02d", i)
+            );
+        }
+
+        int currentYear2 = java.time.Year.now().getValue() % 100;
+
+        year.setValue(String.format("%02d", currentYear2));
+
+        year.setPromptText("Year");
+
+        year.setEditable(true);
+
+        year.setPrefWidth(120);
+
+        year.getStyleClass().add("curator-combo");
+
+//        year.lookup(".list-cell").setStyle("""
+//        -fx-text-fill: #111827;
+//        """);
+
+        HBox hBox = new HBox(15);
+
+        hBox.setAlignment(Pos.CENTER_LEFT);
+
+        hBox.getChildren().addAll(month, year);
+//        TextField year = new TextField();
+//        year.setPromptText("26");
+//        year.getStyleClass().add("input-field");
 
         Label label1 = new Label("Enter Date");
         label1.getStyleClass().add("form-label");
 
         DatePicker datePicker = new DatePicker();
         datePicker.setPromptText("Select Date");
+        datePicker.setMaxWidth(135);
+        datePicker.setPrefHeight(42);
+        datePicker.getStyleClass().add("curator-combo");
 
         datePicker.setValue(LocalDate.now());
 
@@ -78,8 +140,6 @@ public class UploadScreen {
             }
         });
 
-
-
         Label label2 = new Label("Arrangement Name");
         label2.getStyleClass().add("form-label");
 
@@ -96,11 +156,108 @@ public class UploadScreen {
 
 
         Label timeLabel = new Label("Exam Time");
-        timeLabel.getStyleClass().add("form-label");
 
-        TextField timeField = new TextField();
-        timeField.setPromptText("10:00 - 01:00");
-        timeField.getStyleClass().add("input-field");
+        timeLabel.setStyle("""
+        -fx-font-size: 15px;
+        -fx-font-weight: 700;
+        -fx-text-fill: #111827;
+        """);
+
+        Spinner<Integer> startinghour =
+                new Spinner<>(0, 23, 10);
+
+        Spinner<Integer> startingmin =
+                new Spinner<>(0, 59, 0);
+
+        Spinner<Integer> durationhour =
+                new Spinner<>(0, 12, 3);
+
+        Spinner<Integer> durationmin =
+                new Spinner<>(0, 59, 0);
+
+        startinghour.getStyleClass().add("curator-spinner");
+
+        startingmin.getStyleClass().add("curator-spinner");
+
+        durationhour.getStyleClass().add("curator-spinner");
+
+        durationmin.getStyleClass().add("curator-spinner");
+
+        startinghour.setPrefHeight(42);
+        startingmin.setPrefHeight(42);
+        durationhour.setPrefHeight(42);
+        durationmin.setPrefHeight(42);
+        startinghour.setMaxWidth(100);
+        startingmin.setMaxWidth(100);
+        durationhour.setMaxWidth(100);
+        durationmin.setMaxWidth(100);
+
+        VBox startHourBox = new VBox(5);
+
+        Label sh = new Label("Start Hour");
+
+        sh.setStyle("""
+        -fx-font-size: 12px;
+        -fx-text-fill: #6B7280;
+        -fx-font-weight: 600;
+        """);
+
+        startHourBox.getChildren().addAll(sh, startinghour);
+
+
+        VBox startMinBox = new VBox(5);
+
+        Label sm = new Label("Start Minute");
+
+        sh.setStyle("""
+        -fx-font-size: 12px;
+        -fx-text-fill: #6B7280;
+        -fx-font-weight: 600;
+        """);
+
+        startMinBox.getChildren().addAll(sm, startingmin);
+
+
+        VBox durationHourBox = new VBox(5);
+
+        Label dh = new Label("Duration Hour");
+
+        sh.setStyle("""
+        -fx-font-size: 12px;
+        -fx-text-fill: #6B7280;
+        -fx-font-weight: 600;
+        """);
+
+        durationHourBox.getChildren().addAll(dh, durationhour);
+
+
+        VBox durationMinBox = new VBox(5);
+
+        Label dm = new Label("Duration Minute");
+
+        sh.setStyle("""
+        -fx-font-size: 12px;
+        -fx-text-fill: #6B7280;
+        -fx-font-weight: 600;
+        """);
+
+        durationMinBox.getChildren().addAll(dm, durationmin);
+
+        HBox hBox1 = new HBox(15);
+
+        hBox1.setAlignment(Pos.CENTER_LEFT);
+
+        hBox1.getChildren().addAll(
+                startHourBox,
+                startMinBox,
+                durationHourBox,
+                durationMinBox
+        );
+
+//        TextField timeField = new TextField();
+//        timeField.setPromptText("10:00 - 01:00");
+//        timeField.getStyleClass().add("input-field");
+
 
 
         Label subjectLabel = new Label("Subject");
@@ -121,13 +278,13 @@ public class UploadScreen {
         //  gridPane.add(collegeField, 1, 1);
 
         gridPane.add(session, 0, 2);
-        gridPane.add(textField, 1, 2);
+        gridPane.add(hBox, 1, 2);
 
         gridPane.add(label1, 0, 3);
         gridPane.add(datePicker, 1, 3);
 
         gridPane.add(timeLabel, 0, 4);
-        gridPane.add(timeField, 1, 4);
+        gridPane.add(hBox1, 1, 4);
 
         // gridPane.add(subjectLabel, 0, 5);
         // gridPane.add(subjectField, 1, 5);
@@ -145,7 +302,8 @@ public class UploadScreen {
         Runnable validate = () -> {
             boolean valid =
                     selectedFile != null &&
-                            !textField.getText().isEmpty() &&
+                            !month.getValue().isEmpty() &&
+                            !year.getValue().isEmpty() &&
                             datePicker.getValue() != null ;
 
             next.setDisable(!valid);
@@ -154,7 +312,8 @@ public class UploadScreen {
 //        &&
 //        !textField2.getText().isEmpty();
 
-        textField.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
+        month.itemsProperty().addListener((obs, oldVal, newVal) -> validate.run());
+        year.itemsProperty().addListener((obs, oldVal, newVal) -> validate.run());
         datePicker.valueProperty().addListener((obs, oldVal, newVal) -> validate.run());
         //  textField2.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
         next.setOnAction(e -> {
@@ -167,14 +326,16 @@ public class UploadScreen {
             }
             config.setArrangementName(textField2.getText());
             config.setCollegeName(collegeField.getText());
-            config.setExamTime(timeField.getText());
-            config.setSession(textField.getText());
+         //   config.setExamTime(timeField.getText());
+            config.setSession(month.getValue());
+            config.setSession(year.getValue());
             config.setSubject(subjectField.getText());
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             config.setDate(datePicker.getValue());
 
-            String sessions = textField.getText();
+            String monthh = month.getValue();
+            String yearr = year.getValue();
             LocalDate selectedDate = datePicker.getValue();
 
             if (selectedDate == null) {
@@ -187,7 +348,8 @@ public class UploadScreen {
             //   ||name.isEmpty()
 
             if (selectedFile == null ||
-                    sessions.isEmpty() ||
+                    monthh.isEmpty() ||
+                    yearr.isEmpty() ||
                     datePicker.getValue() == null
             ) {
 

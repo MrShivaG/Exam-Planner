@@ -307,3 +307,72 @@
 .alert-dialog .button:hover {
     -fx-background-color: #6a1b9a;
 }
+
+.curator-combo .text {
+    -fx-fill: #6B7280;
+}
+
+.curator-combo .list-cell {
+    -fx-text-fill: #111827;
+    -fx-background-color: white;
+}
+
+.curator-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.curator-combo .arrow {
+    -fx-background-color: #6B7280;
+}
+
+.curator-combo > .list-cell {
+    -fx-text-fill: #111827;
+    -fx-font-weight: 500;
+}
+
+.curator-combo {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-font-size: 14px;
+    -fx-padding: 4 8 4 8;
+}
+
+.curator-combo .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #111827;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+
+.curator-spinner {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-font-size: 14px;
+}
+
+.curator-spinner .increment-arrow-button,
+.curator-spinner .decrement-arrow-button {
+
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #E5E7EB;
+}
+
+.curator-spinner .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: #111827;
+}
