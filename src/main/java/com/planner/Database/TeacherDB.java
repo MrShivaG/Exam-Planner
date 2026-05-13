@@ -28,14 +28,17 @@ public class TeacherDB {
             while (rs.next()) {
                 teachers.add(
                         new Teacher(
-                                rs.getInt("id"),        // id fix
+
                                 rs.getString("name"),
-                                rs.getString("gender"),
-                                rs.getString("branch") != null ? rs.getString("branch") : "",
-                                rs.getString("phone")  != null ? rs.getString("phone")  : "",
-                                rs.getString("email")  != null ? rs.getString("email")  : ""
+                                rs.getString("gender")
                         )
                 );
+
+//rs.getInt("id"),
+//                                rs.getString("branch") != null ? rs.getString("branch") : "",
+//                                rs.getString("phone")  != null ? rs.getString("phone")  : "",
+//                                rs.getString("email")  != null ? rs.getString("email")  : ""
+
             }
 
         } catch (Exception e) {
