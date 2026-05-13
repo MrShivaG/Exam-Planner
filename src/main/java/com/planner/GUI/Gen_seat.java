@@ -14,7 +14,9 @@ import javafx.scene.layout.*;
 import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.scene.web.WebEngine;
 
@@ -50,10 +52,10 @@ public class Gen_seat {
 
             List<Teacher> teachers = TeacherAssign.getRoomTeachers().get(roomNo);
 
-
-            WebView sheet = createExamSheet(tableName, data, config, teachers);
-
-            main.getChildren().add(sheet);
+//
+//            WebView sheet = createExamSheet(tableName, enrolls, config, teachers, rowsRoom, rangeRaw);
+//
+//            main.getChildren().add(sheet);
 
         }
 
@@ -110,13 +112,23 @@ body{
                                     .getRoomTeachers()
                                     .get(roomNo);
 
-                    String html = generateHtml(
-                            tableName,
-                            data,
-                            config,
-                            teachers
-                    );
+                    List<String> enrolls = data.stream()
+                            .map(r -> r.size() > 1 ? r.get(1) : "")
+                            .collect(Collectors.toList());
 
+                    int rowsRoom = 6;
+
+                    List<List<String>> rangeRaw = new ArrayList<>();
+
+                    String html = generateHtml(
+                            String.valueOf(roomNo),
+                            tableName,
+                            enrolls,
+                            config,
+                            teachers,
+                            rowsRoom,
+                            rangeRaw
+                    );
                     fullHtml.append(html);
 
                     fullHtml.append("""
@@ -142,33 +154,33 @@ body{
 
     private static WebView createExamSheet(
             String tableName,
-            List<List<String>> data,
+            List<String> enrolls,        // ✅ updated
             ExamConfig config,
-            List<Teacher> teachers
+            List<Teacher> teachers,
+            int rowsRoom,                // ✅ updated
+            List<List<String>> rangeRaw  // ✅ updated
     ) {
+        String roomNo = tableName.substring(tableName.lastIndexOf("_") + 1);
 
         String html = generateHtml(
+                roomNo,
                 tableName,
-                data,
+                enrolls,
                 config,
-                teachers
+                teachers,
+                rowsRoom,
+                rangeRaw
         );
 
         WebView webView = new WebView();
-
         webView.setPrefWidth(794);
         webView.setPrefHeight(1123);
-
         webView.setMinWidth(794);
         webView.setMinHeight(1123);
-
         webView.setMaxWidth(794);
         webView.setMaxHeight(1123);
         webView.setZoom(0.92);
-
-        WebEngine engine = webView.getEngine();
-
-        engine.loadContent(html);
+        webView.getEngine().loadContent(html);
 
         return webView;
     }
@@ -194,16 +206,10 @@ body{
             return main;
         }
 
-        WebView webView =
-                createExamSheet(
-                        tableName,
-                        data,
-                        config,
-                        null
-                );
-
-        main.getChildren()
-                .add(webView);
+//        WebView sheet = createExamSheet(tableName, enrolls, config, teachers, rowsRoom, rangeRaw);
+//
+//        main.getChildren()
+//                .add(sheet);
 
         return main;
     }
@@ -232,32 +238,46 @@ body{
         }
 
     public static String generateHtml(
+            String roomNo,
             String tableName,
-            List<List<String>> data,
+            List<String> enrolls,
             ExamConfig config,
-            List<Teacher> teachers
+            List<Teacher> teachers,
+            int rowsRoom,
+            List<List<String>> rangeRaw
     ) {
 
-        String roomNo = tableName.substring(
-                tableName.lastIndexOf("_") + 1
-        );
+        System.out.println("=== DEBUG ===");
+        System.out.println("TableName: " + tableName);
+        System.out.println("Date: " + config.getDate());
+        System.out.println("Session: " + config.getSession());
+        System.out.println("Semester: " + config.getSemester());
+        System.out.println("ExamTime: " + config.getExamTime());
+        //System.out.println("Data rows: " + data.size());
+        System.out.println("Teachers: " + teachers);
+        System.out.println("=============");
 
-        // Seating table — CS bold italic, CE normal
+        int totalStudents = enrolls.size();
+        int cols = (rowsRoom > 0) ? (int) Math.ceil((double) totalStudents / rowsRoom) : 6;
+
         StringBuilder grid = new StringBuilder();
         grid.append("<table class='seat-table'>");
 
-        for (List<String> row : data) {
+        int idx = 0;
+        for (int r = 0; r < rowsRoom; r++) {
             grid.append("<tr>");
-            for (String value : row) {
-                if (value == null || value.equalsIgnoreCase("null")) {
-                    value = "";
-                }
-                // CS wale enrollment bold italic
-                boolean isCS = value.toUpperCase().contains("CS");
-                if (isCS) {
-                    grid.append("<td><i><b>").append(value).append("</b></i></td>");
+            for (int c = 0; c < cols; c++) {
+                if (idx < enrolls.size()) {
+                    String enroll = enrolls.get(idx++);
+                    if (enroll == null || enroll.equalsIgnoreCase("null")) enroll = "";
+                    boolean isCS = enroll.toUpperCase().contains("CS");
+                    if (isCS) {
+                        grid.append("<td><i><b>").append(enroll).append("</b></i></td>");
+                    } else {
+                        grid.append("<td>").append(enroll).append("</td>");
+                    }
                 } else {
-                    grid.append("<td>").append(value).append("</td>");
+                    grid.append("<td></td>");
                 }
             }
             grid.append("</tr>");
@@ -279,9 +299,31 @@ body{
             examTime = "";
         }
 
-        // Session — %s bug fix
-        String session = config.getSession();
-        if (session == null) session = "";
+        String semester = config.getSemester();
+        if (semester == null) semester = "";
+
+        StringBuilder rangeHtml = new StringBuilder();
+        rangeHtml.append("""
+    <table class='summary-table'>
+        <tr>
+            <th>Paper Code</th>
+            <th>Roll No. From</th>
+            <th>Roll No. To</th>
+            <th>Total</th>
+        </tr>
+    """);
+
+        if (rangeRaw != null) {
+            for (List<String> rd : rangeRaw) {
+                rangeHtml.append("<tr>")
+                        .append("<td>").append(rd.size() > 1 ? rd.get(1) : "").append("</td>")  // PaperCode
+                        .append("<td>").append(rd.size() > 2 ? rd.get(2) : "").append("</td>")  // RangeFrom
+                        .append("<td>").append(rd.size() > 3 ? rd.get(3) : "").append("</td>")  // RangeTo
+                        .append("<td>").append(rd.size() > 4 ? rd.get(4) : "").append("</td>")  // Total
+                        .append("</tr>");
+            }
+        }
+        rangeHtml.append("</table>");
 
         String html = """
         <!DOCTYPE html>
@@ -299,7 +341,7 @@ body{
         .room-date-row { display:flex; justify-content:space-between; align-items:flex-start; margin-top:6px; font-size:12px; }
         .room-name { font-style:italic; font-size:13px; text-align:left; text-decoration:underline; }
         .date-right { font-style:italic; font-size:11px; text-align:right; }
-        .session-line { text-align:center; font-size:11px; margin-top:2px; }
+        .semester-line { text-align:center; font-size:11px; margin-top:2px; }
         .info-section { margin-top:6px; font-size:11px; line-height:1.5; }
         .time-line { margin-top:3px; font-size:11px; font-style:italic; }
         table { width:100%; border-collapse:collapse; table-layout:fixed; }
@@ -321,11 +363,11 @@ body{
         <div class='header'>
             <h2>SAGAR INSTITUTE OF SCIENCE, TECHNOLOGY &amp; RESEARCH BHOPAL (SISTec-R)</h2>
             <h3>B. Tech\s\s
-        """ + session + """
-        \s\sEXAMINATION (Seating Plan)</h3>
+        """ + semester + """
+        \s\sSEM EXAMINATION (Seating Plan)</h3>
         </div>
-        <div class='session-line'>
-        """ + session + """
+        <div class='semester-line'>
+        """ + semester + """
         </div>
         <div class='room-date-row'>
             <div class='room-name'>Room No:\s
@@ -342,20 +384,21 @@ body{
         """ + examTime + """
         </div>
         </div>
-        """ + seatingTable + """
-        <table class='summary-table'>
-            <tr>
-                <th>Paper Code</th>
-                <th colspan='2'>Roll No.</th>
-                <th>Total</th>
-            </tr>
-            <tr>
-                <td></td>
-                <th>From</th>
-                <th>To</th>
-                <td></td>
-            </tr>
-        </table>
+        """ + seatingTable + rangeHtml.toString() + """
+                <table class='summary-table'>
+                             <tr>
+                                 <th>Paper Code</th>
+                                 <th colspan='2'>Roll No.</th>
+                                 <th>Total</th>
+                             </tr>
+                             <tr>
+                                 <td></td>
+                                 <th>From</th>
+                                 <th>To</th>
+                                 <td></td>
+                             </tr>
+                         </table>
+                         
         <table class='present-table'>
             <tr>
                 <th>S.No.</th>

@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Group_Gen_seat {
 
@@ -35,21 +36,36 @@ public class Group_Gen_seat {
             }
 
             for (String[] row : arrData) {
-
-                String tableName = row[0].trim(); // arr_table_name
+                String tableName  = row[0].trim();
+                String roomNO     = row[1].trim();
+                String rangeTableName = row[6] != null ? row[6].trim() : "";  // ADD
+                int rowsRoom = 6; // default
+                try { rowsRoom = Integer.parseInt(row[7].trim()); } catch (Exception ignored) {} // ADD
 
                 // Teachers fetch
                 List<Teacher> teachers = null;
                 try {
-                    int roomNo = Integer.parseInt(row[1].trim());
+                    int roomNo = Integer.parseInt(roomNO);
                     teachers = TeacherAssign.getRoomTeachers().get(roomNo);
                 } catch (Exception ignored) {}
 
-                // Preview WebView banana
+                // Data fetch
                 List<List<String>> data = ArrangementsDB.fetcharrData(tableName);
                 if (data == null || data.isEmpty()) continue;
 
-                String html = Gen_seat.generateHtml(tableName, data, config, teachers);
+                // Sirf Enroll_no nikalo — column index 1
+                List<String> enrolls = data.stream()
+                        .map(r -> r.size() > 1 ? r.get(1) : "")
+                        .collect(Collectors.toList());
+
+                // Range table fetch
+                List<List<String>> rangeRaw = new ArrayList<>();
+                if (!rangeTableName.isEmpty()) {
+                    List<List<String>> fetched = ArrangementsDB.fetcharrData(rangeTableName);
+                    if (fetched != null) rangeRaw = fetched;
+                }
+
+                String html = Gen_seat.generateHtml(roomNO, tableName, enrolls, config, teachers, rowsRoom, rangeRaw);
                 javafx.scene.web.WebView webView = new javafx.scene.web.WebView();
                 webView.setPrefWidth(794);
                 webView.setPrefHeight(1123);
@@ -98,19 +114,35 @@ body { margin:0; padding:0; background:#808080; }
 
         for (String[] row : arrData) {
 
-            String tableName = row[0].trim();
+            String tableName      = row[0].trim();
+            String roomNo         = row[1].trim();
+            String rangeTableName = row[6] != null ? row[6].trim() : "";
+            int rowsRoom = 6;
+            try { rowsRoom = Integer.parseInt(row[7].trim()); } catch (Exception ignored) {}
 
             // Teachers fetch
             List<Teacher> teachers = null;
             try {
-                int roomNo = Integer.parseInt(row[1].trim());
+                int roomNoInt = Integer.parseInt(roomNo);
                 teachers = TeacherAssign.getRoomTeachers().get(roomNo);
             } catch (Exception ignored) {}
 
             List<List<String>> data = ArrangementsDB.fetcharrData(tableName);
             if (data == null || data.isEmpty()) continue;
 
-            String html = Gen_seat.generateHtml(tableName, data, config, teachers);
+            // Sirf Enroll_no
+            List<String> enrolls = data.stream()
+                    .map(r -> r.size() > 1 ? r.get(1) : "")
+                    .collect(Collectors.toList());
+
+            // Range table
+            List<List<String>> rangeRaw = new ArrayList<>();
+            if (!rangeTableName.isEmpty()) {
+                List<List<String>> fetched = ArrangementsDB.fetcharrData(rangeTableName);
+                if (fetched != null) rangeRaw = fetched;
+            }
+
+            String html = Gen_seat.generateHtml(roomNo, tableName, enrolls, config, teachers, rowsRoom, rangeRaw);
             fullHtml.append(html);
             fullHtml.append("<div style='page-break-after:always'></div>\n");
         }

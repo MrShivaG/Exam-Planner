@@ -1,6 +1,7 @@
 package com.planner.GUI.Screens;
 
 import com.planner.ExcelM.ExcelWork;
+import com.planner.ExcelM.ExcelWorkV2;
 import com.planner.GUI.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -199,14 +200,37 @@ public class UploadScreen {
         VBox dhBox = timeSpinnerBox("Dur Hr",    durationhour);
         VBox dmBox = timeSpinnerBox("Dur Min",   durationmin);
 
+
+        TextField arrangementField = new TextField();
+        arrangementField.setPromptText("e.g. End Semester Exam");
+        arrangementField.setPrefHeight(42);
+        arrangementField.setStyle(comboStyle());
+
+        ComboBox<String> semesterBox = new ComboBox<>();
+        semesterBox.getItems().addAll("I","II","III","IV","V","VI","VII","VIII");
+        semesterBox.setPromptText("Select Semester");
+        semesterBox.setPrefWidth(160);
+        semesterBox.setPrefHeight(42);
+        semesterBox.setStyle(comboStyle());
+        semesterBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Select Semester" : item);
+                setStyle("-fx-text-fill: #111827; -fx-background-color: white;");
+            }
+        });
+
+
         HBox timeRow = new HBox(10, shBox, smBox, dhBox, dmBox);
         timeRow.setAlignment(Pos.CENTER_LEFT);
 
-        // Add all field groups
         formFields.getChildren().addAll(
-                fieldGroup2("Session",   sessionRow),
-                fieldGroup2("Exam Date", datePicker),
-                fieldGroup2("Exam Time", timeRow)
+                fieldGroup2("Arrangement Name", arrangementField),
+                fieldGroup2("Semester",         semesterBox),
+                fieldGroup2("Session",          sessionRow),
+                fieldGroup2("Exam Date",        datePicker),
+                fieldGroup2("Exam Time",        timeRow)
         );
 
         // Next button
@@ -242,11 +266,12 @@ public class UploadScreen {
         // Validation
         Runnable validate = () -> {
             boolean valid = selectedFile != null
-                    && month.getValue() != null
-                    && !month.getValue().isEmpty()
-                    && year.getValue() != null
-                    && !year.getValue().isEmpty()
+                    && !arrangementField.getText().trim().isEmpty()
+                    && month.getValue() != null && !month.getValue().isEmpty()
+                    && year.getValue() != null && !year.getValue().isEmpty()
+                    && semesterBox.getValue() != null
                     && datePicker.getValue() != null;
+
             next.setDisable(!valid);
             next.setStyle(valid ? activeBtnStyle() : disabledBtnStyle());
         };
@@ -254,26 +279,31 @@ public class UploadScreen {
         month.valueProperty().addListener((obs, o, n) -> validate.run());
         year.valueProperty().addListener((obs, o, n)  -> validate.run());
         datePicker.valueProperty().addListener((obs, o, n) -> validate.run());
+        semesterBox.valueProperty().addListener((obs, o, n) -> validate.run());
+        arrangementField.textProperty().addListener((obs, o, n) -> validate.run());
 
         next.setOnAction(e -> {
             ExamConfig config = new ExamConfig();
             if (selectedFile != null) {
                 config.setFileName(selectedFile.getName());
                 config.setFilePath(selectedFile.getAbsolutePath());
+                config.setArrangementName(arrangementField.getText().trim());
+                config.setSemester(semesterBox.getValue());
+                config.setSession(month.getValue() + "_" + year.getValue());
             }
 
-            // Exam time build karo
             String examTime = String.format("%02d:%02d", startinghour.getValue(), startingmin.getValue())
                     + " - "
                     + String.format("%02d:%02d",
                     (startinghour.getValue() + durationhour.getValue()) % 24,
                     (startingmin.getValue()  + durationmin.getValue())  % 60);
             config.setExamTime(examTime);
-            config.setSession(month.getValue() + "-" + year.getValue());
+            config.setSession(month.getValue() + "_" + year.getValue());
             config.setDate(datePicker.getValue());
 
-            ExcelWork excelWork = new ExcelWork();
-            ArrayList<String> result = excelWork.fatchExcel(selectedFile.getAbsolutePath());
+         //   ExcelWork excelWork = new ExcelWork();
+            ExcelWorkV2 excelWorkV2 = new ExcelWorkV2();
+            ArrayList<String> result = excelWorkV2.fatchExcel(selectedFile.getAbsolutePath());
             SharedData.totalStudents = Integer.parseInt(result.get(0));
             SharedData.totalStudentsLabel.setText(String.valueOf(SharedData.totalStudents));
             SharedData.subjects = result.subList(1, result.size());

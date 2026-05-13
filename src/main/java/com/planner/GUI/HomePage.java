@@ -139,7 +139,7 @@ public class HomePage extends Application {
         avatar.setFill(Color.LIGHTGRAY);
 
 // RIGHT SECTION (IMPORTANT SPACING)
-        HBox right = new HBox(12, search, bell, user, avatar);
+        HBox right = new HBox(12, user, avatar);//search, bell,
         right.setAlignment(Pos.CENTER_RIGHT);
 
         topBar.getChildren().addAll(title, spacer, right);

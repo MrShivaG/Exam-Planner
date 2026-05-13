@@ -7,18 +7,19 @@ import java.util.List;
 public class DateUtil {
 
     private static final DateTimeFormatter UI_FORMAT =
+
             DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     private static final DateTimeFormatter DB_FORMAT =
             DateTimeFormatter.ofPattern("dd_MM_yyyy");
 
-    // For UI display
     public static String formatForUI(LocalDate date) {
+        if (date == null) return "";  // ← add karo
         return date.format(UI_FORMAT);
     }
 
-    // For DB / table names
     public static String formatForDB(LocalDate date) {
+        if (date == null) return "";  // ← add karo
         return date.format(DB_FORMAT);
     }
 

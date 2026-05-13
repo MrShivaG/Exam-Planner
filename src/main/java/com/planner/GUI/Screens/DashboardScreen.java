@@ -98,6 +98,9 @@ public class DashboardScreen {
 
                 for (String[] data : arrangement) {
                     List<String[]> arr_data = dbMethods.fetch_group_tables(data[0]);
+
+                    if(arr_data == null || arr_data.isEmpty())  continue;
+
                     int totalCapacity = 0;
                     int totalStudents = 0;
 

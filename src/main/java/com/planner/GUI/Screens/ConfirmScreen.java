@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.planner.Arrangement.Arrange;
+import com.planner.Arrangement.ArrangeV2;
 import com.planner.GUI.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +23,7 @@ public class ConfirmScreen {
             ExamConfig config,
             List<Room> selectedRooms,
             String fileName
-    ){
+    ) {
         VBox main = new VBox(20);
         main.setPadding(new Insets(20));
         main.setStyle("-fx-background-color: #F8F9FA;");
@@ -39,6 +40,9 @@ public class ConfirmScreen {
 
 //        info.add(new Label("College:"), 0, 1);
 //        info.add(new Label(config.getCollegeName()), 1, 1);
+
+        info.add(new Label("Semester:"), 0, 1);
+        info.add(new Label(config.getSemester()), 1, 1);
 
         info.add(new Label("Session:"), 0, 2);
         info.add(new Label(config.getSession()), 1, 2);
@@ -304,8 +308,17 @@ public class ConfirmScreen {
 
         confirmBtn.setOnAction(e -> {
 
-            // ← Yeh 2 lines add karo sabse pehle
-            Arrange arrange = new Arrange();
+
+            System.out.println("=== DEBUG ===");
+            System.out.println("Date: " + config.getDate());
+            System.out.println("Session: " + config.getSession());
+            System.out.println("Semester: " + config.getSemester());
+            System.out.println("ExamTime: " + config.getExamTime());
+            System.out.println("=============");
+
+           // Arrange arrange = new Arrange();
+            ArrangeV2 arrangeV2 = new ArrangeV2();
+
             int[] roomsArray = selectedRooms.stream()
                     .mapToInt(Room::getRoomNo)
                     .toArray();
@@ -340,19 +353,24 @@ public class ConfirmScreen {
             }
 
             try {
-                ArrayList<String> tables = arrange.arrange(
+                 String grpname = arrangeV2.arrange(
                         roomsArray,
                         DateUtil.formatForDB(config.getDate()),
-                        config.getSession()
+                        config.getArrangementName(),
+                        config.getSemester(),
+                        config.getSession(),
+                        "SISTecR"
                 );
 
                 app.switchCenter(
-                        Gen_seat.showTablesScreen(tables, config)
+                        Group_Gen_seat.showGroup(grpname, config)
                 );
 
                 Notification.message("Seating generated successfully!");
 
             } catch (Exception ex) {
+                System.out.println(ex.toString());
+                ex.printStackTrace();
                 Notification.message("Error generating seating");
             }
         });

@@ -193,14 +193,15 @@ public class DashboardComponents {
                 List<String[]> arrData = db.fetch_group_tables(arr_group_name);
 
                 if (arrData == null || arrData.isEmpty()) {
-                    Notification.message("Koi data nahi mila.");
+                    Notification.message("No arrangement data found.");
                     return;
                 }
 
                 String[] first = arrData.get(0);
 
                 ExamConfig examConfig = new ExamConfig();
-                examConfig.setSession(first[4]);      // arr_session
+                examConfig.setSession(first[4]);
+                examConfig.setSemester(first[4]);
                 examConfig.setArrangementName(arr_group_name);
                 examConfig.setExamTime("10:00 - 01:00");
 

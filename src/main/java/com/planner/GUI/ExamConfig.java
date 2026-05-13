@@ -8,6 +8,7 @@ public class ExamConfig {
     private String filePath;
     private String arrangementName;
     private String collegeName;
+    private String semester;
     private String examTime;
     private String session;
     private String subject;
@@ -36,6 +37,9 @@ public class ExamConfig {
 
     public String getCollegeName() { return collegeName; }
     public void setCollegeName(String collegeName) { this.collegeName = collegeName; }
+
+    public String getSemester() { return semester; }
+    public void setSemester(String semester) { this.semester = semester; }
 
     public String getExamTime() {
         return examTime;
