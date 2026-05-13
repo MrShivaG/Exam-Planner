@@ -1,6 +1,7 @@
 package com.planner.GUI;
 
 import com.planner.Database.DB_Methods;
+import com.planner.GUI.Screens.DashboardComponents;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,6 +27,11 @@ public class RoomScreen extends Application {
     static int totalrooms;
     static int totalstudentcapacity;
     static DB_Methods dbMethods;
+    private static HomePage app = new HomePage();
+
+    public RoomScreen(HomePage app) {
+        this.app = app;
+    }
 
     static {
         try {
@@ -33,8 +41,6 @@ public class RoomScreen extends Application {
         }
     }
 
-    public RoomScreen() throws SQLException {
-    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -325,7 +331,14 @@ public class RoomScreen extends Application {
 
         });
 
-        Button dashBtn = new Button("\uD83D\uDDD1");
+        Button dashBtn = new Button();
+        Image deleteImg = new Image(DashboardComponents.class.getResourceAsStream("/delete.png"));
+
+        ImageView deleteIcon = new ImageView(deleteImg);
+        deleteIcon.setFitHeight(20);
+        deleteIcon.setFitWidth(18);
+
+        dashBtn.setGraphic(deleteIcon);
         dashBtn.getStyleClass().add("deletebutton");
         dashBtn.setOnAction(e -> {
 
@@ -336,6 +349,7 @@ public class RoomScreen extends Application {
                 try {
                     dbMethods.deleteRoom(roomNo);
                     Notification.message("Room " + roomNo + " successfully deleted.");
+                    app.switchScreen(createTopBar("Show Room"), RoomScreen.room(app));
 
                 } catch (SQLException ex) {
                     Notification.message("An error occurred while deleting." + ex.getMessage());

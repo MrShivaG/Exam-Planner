@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="updated">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/ExcelM/Students.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/planner/ExcelM/~$Students.xlsx" afterDir="false" />
+    <list default="true" id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="updated ui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Arrangement/ArrangeV2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Arrangement/ArrangeV2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/DashboardComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/DashboardComponents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/app.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +34,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/MrShivaG/Exam-Planner.git&quot;,
-    &quot;accountId&quot;: &quot;80ba1788-9f5d-496e-bdc5-4508ecabe6e7&quot;
+    &quot;accountId&quot;: &quot;09c1e5e4-c205-412c-813c-c6051bed399f&quot;
   }
 }</component>
   <component name="McpProjectServerCommands">
@@ -55,50 +52,90 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.AddNewRoom.executor": "Run",
-    "Application.AzureTest.executor": "Run",
     "Application.Dashboard.executor": "Run",
     "Application.DashboardContent.executor": "Run",
     "Application.EditRoom.executor": "Run",
-    "Application.ExcelWorkV2.executor": "Run",
     "Application.HomePage.executor": "Run",
-    "Application.Main.executor": "Run",
     "Application.RoomScreen.executor": "Run",
     "Application.SeatingPrintApp.executor": "Run",
     "Application.UpdateRoom.executor": "Run",
     "Application.database.executor": "Run",
-    "Application.tempp.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/java/project/Exam-Planner",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.40804598",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.Main">
-    <configuration name="AzureTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="jbr-21" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="com.planner.Database.AzureTest" />
+  <component name="RunManager" selected="Application.HomePage">
+    <configuration name="AddNewRoom" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.AddNewRoom" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HomePage" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/Program Files/Java/jdk-21.0.10" />
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.HomePage" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;D:\Java\openjfx-26_windows-x64_bin-sdk\javafx-sdk-26\lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.web" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RoomScreen" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.RoomScreen" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SeatingPrintApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.SeatingPrintApp" />
+      <module name="Exam-Planner" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\HP\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\HP\.m2\repository\org\openjfx\javafx-base\21 --add-modules javafx.controls,javafx.fxml" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.planner.GUI.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="database" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.planner.Database.database" />
       <module name="Exam-Planner" />
       <extension name="coverage">
         <pattern>
@@ -110,73 +147,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ExcelWorkV2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.planner.ExcelM.ExcelWorkV2" />
-      <module name="Exam-Planner" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.planner.ExcelM.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.planner.Main" />
-      <module name="Exam-Planner" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.planner.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="RoomScreen" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.planner.GUI.RoomScreen" />
-      <module name="Exam-Planner" />
-      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\shiva\Downloads\JavaFX\openjfx-26_windows-x64_bin-sdk\javafx-sdk-26\lib&quot; --add-modules javafx.controls,javafx.fxml" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.planner.GUI.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="tempp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.planner.tempp" />
-      <module name="Exam-Planner" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.planner.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
-      <item itemvalue="Application.ExcelWorkV2" />
-      <item itemvalue="Application.tempp" />
-      <item itemvalue="Application.AzureTest" />
-      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.SeatingPrintApp" />
+      <item itemvalue="Application.database" />
+      <item itemvalue="Application.AddNewRoom" />
+      <item itemvalue="Application.HomePage" />
       <item itemvalue="Application.RoomScreen" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.ExcelWorkV2" />
-        <item itemvalue="Application.tempp" />
+        <item itemvalue="Application.HomePage" />
         <item itemvalue="Application.RoomScreen" />
-        <item itemvalue="Application.AzureTest" />
+        <item itemvalue="Application.SeatingPrintApp" />
+        <item itemvalue="Application.database" />
+        <item itemvalue="Application.AddNewRoom" />
       </list>
     </recent_temporary>
   </component>
@@ -187,16 +171,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1776098895074</updated>
-      <workItem from="1777907588250" duration="1074000" />
-      <workItem from="1778085147048" duration="6451000" />
-      <workItem from="1778143439585" duration="1658000" />
-      <workItem from="1778182597000" duration="695000" />
-      <workItem from="1778218096902" duration="1326000" />
-      <workItem from="1778260273464" duration="2440000" />
-      <workItem from="1778349191842" duration="1719000" />
-      <workItem from="1778425773778" duration="5573000" />
-      <workItem from="1778520127699" duration="3371000" />
-      <workItem from="1778563563210" duration="14187000" />
     </task>
     <task id="LOCAL-00001" summary="add update method">
       <option name="closed" value="true" />
@@ -438,31 +412,34 @@
       <option name="project" value="LOCAL" />
       <updated>1777872003438</updated>
     </task>
-    <task id="LOCAL-00031" summary="updated and solved some issues">
+    <task id="LOCAL-00031" summary="update">
       <option name="closed" value="true" />
-      <created>1777895353998</created>
+      <created>1778490803819</created>
       <option name="number" value="00031" />
       <option name="presentableId" value="LOCAL-00031" />
       <option name="project" value="LOCAL" />
-      <updated>1777895353998</updated>
+      <updated>1778490803820</updated>
     </task>
-    <task id="LOCAL-00032" summary="updated">
+    <task id="LOCAL-00032" summary="updated colors">
       <option name="closed" value="true" />
-      <created>1778483011347</created>
+      <created>1778492413495</created>
       <option name="number" value="00032" />
       <option name="presentableId" value="LOCAL-00032" />
       <option name="project" value="LOCAL" />
-      <updated>1778483011347</updated>
+      <updated>1778492413495</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="updated ui">
+      <option name="closed" value="true" />
+      <created>1778573218547</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1778573218547</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="create updateroom class" />
-    <MESSAGE value="updated updateroom" />
     <MESSAGE value="updated ArrangementsDB" />
     <MESSAGE value="updated DB_methods" />
     <MESSAGE value="updated addnewroom" />
@@ -474,6 +451,7 @@
     <MESSAGE value="updated app" />
     <MESSAGE value="updated pom.xml" />
     <MESSAGE value="updated database" />
+    <MESSAGE value="updated" />
     <MESSAGE value="updated pom" />
     <MESSAGE value="updated DB method" />
     <MESSAGE value="updated add new room" />
@@ -484,9 +462,10 @@
     <MESSAGE value="updated screen" />
     <MESSAGE value="update arrtableview" />
     <MESSAGE value="update screens" />
-    <MESSAGE value="updated and solved some issues" />
-    <MESSAGE value="updated" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated" />
+    <MESSAGE value="update" />
+    <MESSAGE value="updated colors" />
+    <MESSAGE value="updated ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated ui" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

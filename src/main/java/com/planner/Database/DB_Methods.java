@@ -142,4 +142,55 @@ public class DB_Methods {
 
         return list;
     }
+
+    public void deleteArrRoom(String arr_table_name) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("delete from arrangementDB where arr_table_name = ?");
+        ps.setString(1, arr_table_name);
+        ps.executeUpdate();
+    }
+
+    public void deleteArrangementGroup(String arr_group_name) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("delete from arrgroups where GRP_names = ?");
+        ps.setString(1, arr_group_name);
+        ps.executeUpdate();
+    }
+
+    public void deleteArrangementtable(String arr_table_name) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("delete from "+arr_table_name);
+        ps.setString(1, arr_table_name);
+        ps.executeUpdate();
+    }
+
+    public List<String[]> fetch_groups_names() throws SQLException {
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM arrgroups");
+        ResultSet rs = ps.executeQuery();
+        List<String[]> arr_group_names = new ArrayList<>();
+        while (rs.next()) {
+            String arr_groups = rs.getString("GRP_names");
+            arr_group_names.add(new String[]{arr_groups});
+        }
+        return arr_group_names;
+    }
+
+
+    public List<String[]> fetch_group_tables(String arr_group_name) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("select * from "+arr_group_name);
+        ResultSet rs = ps.executeQuery();
+        List<String[]> arrangement = new ArrayList<>();
+        while (rs.next()) {
+            String arr_table_name = rs.getString("arr_table_name");
+            String room_no = rs.getString("room_no");
+            String  arr_session = rs.getString("arr_session");
+            String  arr_date = rs.getString("arr_date");
+            String  capacity = rs.getString("capacity");
+            String  students = rs.getString("student");
+            arrangement.add(new String[]{arr_table_name,room_no, arr_date, capacity, arr_session,students});
+        }
+        return arrangement;
+    }
+
+
+
+
+
 }
