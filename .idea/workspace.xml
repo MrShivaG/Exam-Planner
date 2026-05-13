@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="updated ui">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/CardComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/CardComponent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Gen_seat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/ConfirmScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/ConfirmScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/UploadScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/planner/GUI/Screens/UploadScreen.java" afterDir="false" />
-    </list>
+    <list default="true" id="f6615b92-c802-413b-afd0-3b6f81909344" name="Changes" comment="updated ui" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
