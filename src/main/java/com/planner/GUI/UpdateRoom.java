@@ -59,8 +59,9 @@ public class UpdateRoom extends Application {
         contentPane.setAlignment(Pos.CENTER);
 
         int[] arr = dbMethods.fetchRowColumn(roomno);
-
-
+        int temp = arr[0];
+        arr[0] = arr[1];
+        arr[1] = temp;
 
 
         Label rowlable = new Label("Rows");

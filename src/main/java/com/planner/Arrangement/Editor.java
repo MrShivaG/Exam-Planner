@@ -27,11 +27,7 @@ public class Editor {
     database DB = new database();
     Connection conn1;
     {
-        try {
-            conn = arrangementsDB.connection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        conn1 = DB.connection();
     }
 
     public Map<String,Integer> filterbackStudents(String grpname) throws SQLException {
@@ -55,24 +51,62 @@ public class Editor {
     }
 
 
-    public void updateSeating(String[] SubCode,String grpname) throws SQLException {
+    public void updateSeating(List<String> SubCode,String grpname) throws Exception {
         ArrayList<NewStudents> newStudents=new ArrayList<>();
         FatchStudentsV2 FSV2=new FatchStudentsV2();
         newStudents = FSV2.fatchStudent();
 
+//        ArrayList<Student> students=new ArrayList<>();
+//        for(NewStudents s:newStudents){
+//            students.addAll(s.getStudents());
+//        }
         ArrayList<String> rooms=new ArrayList<>();
-        rooms = fetch_group_tables(grpname);
-        for(String t:rooms){
-            ArrayList<Integer> seats=new ArrayList<>();
-            PreparedStatement ps =conn.prepareStatement("SELECT id FROM "+t+"Where Enroll_no='null'");
-            ResultSet rs=ps.executeQuery();
-            while(rs.next()){
-                seats.add(rs.getInt("id"));
-            }
 
+        rooms = fetch_group_tables(grpname);
+        SeatAllocator seatAllocator=new SeatAllocator();
+        while(newStudents.size()>0){
+            for(String t:rooms){
+                PreparedStatement ps003 =conn1.prepareStatement("SELECT rows_room FROM "+grpname+" WHERE arr_table_name=?");
+
+                ps003.setString(1,t);
+                ResultSet rs003 = ps003.executeQuery();
+                int r=0;
+                while(rs003.next()){
+                    r = rs003.getInt("rows_room");
+                }
+                Map<Integer, String> map =SeatAllocator.getBestSeats(conn,t, r,SubCode);
+                for(Map.Entry<Integer, String> e:map.entrySet()){
+                    for(int i=0;i<newStudents.size();i++){
+                        if(newStudents.get(i).Students.get(0).SubCode==e.getValue()){
+                            PreparedStatement ps002 = conn.prepareStatement("UPDATE "+t+" SET Enroll_no=?, SubCde=?,Branch=? WHERE ID=?");
+                            ps002.setString(1, newStudents.get(i).Students.getFirst().Enroll_no);
+                            ps002.setString(2, newStudents.get(i).Students.getFirst().SubCode);
+                            ps002.setString(3, newStudents.get(i).Students.getFirst().branch);
+                            ps002.setInt(4, e.getKey());
+                            ps002.executeUpdate();
+                            newStudents.get(i).Students.removeFirst();
+                            if (newStudents.get(i).Students.size()==0){
+                                newStudents.remove(i);
+                            }
+                            if (newStudents.size()==0){
+                                break;
+                            }
+
+                        }
+                    }
+                }
+            }
+        ArrayList<Student> students=new ArrayList<>();
+        for(NewStudents s:newStudents){
+            students.addAll(s.getStudents());
+        }
+            System.out.println(students);
         }
 
 
+    }
+    public boolean AddnewStudents(Connection con,String[] SubCode,String table) throws SQLException {
+        return true;
     }
     public ArrayList<String> fetch_group_tables(String arr_group_name) throws SQLException {
         PreparedStatement ps = conn1.prepareStatement("select * from "+arr_group_name);
