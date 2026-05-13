@@ -10,7 +10,7 @@ import com.planner.Database.database;
 public class ArrangeV2 {
     FatchStudents fatchstudents =new FatchStudents();
 
-    public ArrayList<String> arrange(int[] classroomsArray ,String Date, String ArrName, String Sem,String Session11, String ORGID) throws Exception {
+    public String arrange(int[] classroomsArray ,String Date, String ArrName, String Sem,String Session11, String ORGID) throws Exception {
 
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
@@ -92,7 +92,7 @@ public class ArrangeV2 {
 //                            break;
 //                        }
                         System.out.println("nnnnul");
-                        ps.setString(1, "ull");
+                        ps.setString(1, "Null");
                         ps.setString(2, "Null");
                         ps.setString(3, "Null");
                         System.out.println(ps.toString());
@@ -131,7 +131,7 @@ public class ArrangeV2 {
             }
 
         }
-        return ReturnStatement;
+        return grpname;
 
     }
 }
