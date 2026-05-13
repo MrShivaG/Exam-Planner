@@ -1001,11 +1001,11 @@ public class RoomTableScreen {
         arrangementBox.setHgap(20);
         arrangementBox.setVgap(20);
 
-        arrangementBox.getChildren().addAll(
-                linearCard,
-                strictCard,
-                balancedCard
-        );
+//        arrangementBox.getChildren().addAll(
+//                linearCard,
+//                strictCard,
+//                balancedCard
+//        );
 
         VBox arrangementSection = new VBox(
                 15,

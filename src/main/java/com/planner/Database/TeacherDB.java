@@ -26,18 +26,16 @@ public class TeacherDB {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-
                 teachers.add(
                         new Teacher(
+                                rs.getInt("id"),        // id fix
                                 rs.getString("name"),
-                                rs.getString("gender")
+                                rs.getString("gender"),
+                                rs.getString("branch") != null ? rs.getString("branch") : "",
+                                rs.getString("phone")  != null ? rs.getString("phone")  : "",
+                                rs.getString("email")  != null ? rs.getString("email")  : ""
                         )
                 );
-                // rs.getInt("id"),
-                //   rs.getString("branch"),
-                //                                rs.getString("phone"),
-                //                                rs.getString("email")
-                //
             }
 
         } catch (Exception e) {

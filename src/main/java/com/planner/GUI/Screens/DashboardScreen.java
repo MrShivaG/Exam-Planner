@@ -109,7 +109,7 @@ public class DashboardScreen {
                     String date = arr_data.get(0)[2];
                     String session = arr_data.get(0)[4];
 
-                    HBox card = databox(data[0], date, totalCapacity, session, totalStudents);
+                    HBox card = databox(app, data[0], date, totalCapacity, session, totalStudents);
                     cardsContainer.getChildren().add(card);
                 }
 

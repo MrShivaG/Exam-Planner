@@ -1,16 +1,14 @@
 package com.planner.GUI;
 
 import com.planner.Database.ArrangementsDB;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.planner.Database.DB_Methods;
+import com.planner.GUI.Screens.TeacherAssign;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Group_Gen_seat {
 
@@ -18,196 +16,106 @@ public class Group_Gen_seat {
             String groupName,
             ExamConfig config
     ) {
-
-        VBox mainContainer = new VBox(30);
+        VBox mainContainer = new VBox(20);
 
         Button printAll = new Button("Print All");
+        printAll.getStyleClass().add("primary-btn");
+        mainContainer.getChildren().add(printAll);
 
-        printAll.setOnAction(e ->
+        // Bahar declare — lambda aur loop dono use karein
+        List<String[]> arrData = new ArrayList<>();
 
-        {
+        try {
+            DB_Methods db = new DB_Methods();
+            arrData = db.fetch_group_tables(groupName);
 
-            String html =
-                    generateGroupHtml(
-                            groupName,
-                            config
-                    );
+            if (arrData == null || arrData.isEmpty()) {
+                System.out.println("No data: " + groupName);
+                return new ScrollPane(new VBox());
+            }
 
+            for (String[] row : arrData) {
+
+                String tableName = row[0].trim(); // arr_table_name
+
+                // Teachers fetch
+                List<Teacher> teachers = null;
+                try {
+                    int roomNo = Integer.parseInt(row[1].trim());
+                    teachers = TeacherAssign.getRoomTeachers().get(roomNo);
+                } catch (Exception ignored) {}
+
+                // Preview WebView banana
+                List<List<String>> data = ArrangementsDB.fetcharrData(tableName);
+                if (data == null || data.isEmpty()) continue;
+
+                String html = Gen_seat.generateHtml(tableName, data, config, teachers);
+                javafx.scene.web.WebView webView = new javafx.scene.web.WebView();
+                webView.setPrefWidth(794);
+                webView.setPrefHeight(1123);
+                webView.setMinWidth(794);  webView.setMinHeight(1123);
+                webView.setMaxWidth(794);  webView.setMaxHeight(1123);
+                webView.setZoom(0.92);
+                webView.getEngine().loadContent(html);
+
+                mainContainer.getChildren().add(new VBox(webView));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Final copy for lambda
+        final List<String[]> finalArrData = arrData;
+
+        printAll.setOnAction(e -> {
+            String html = generateGroupHtml(groupName, finalArrData, config);
             Gen_seat.openHtmlInBrowser(html);
         });
 
-        try {
-
-            Connection con =
-                    ArrangementsDB.connection();
-
-            PreparedStatement ps =
-                    con.prepareStatement(
-                            "SELECT arrangement_name FROM arrangements_group WHERE group_name = ?"
-                    );
-
-            ps.setString(1, groupName);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                String arrangementName =
-                        rs.getString("arrangement_name");
-
-                List<String> tables =
-                        fetchArrangementTables(arrangementName);
-
-                ScrollPane pane =
-                        Gen_seat.showTablesScreen(
-                                tables,
-                                config
-                        );
-
-                mainContainer.getChildren().add(printAll);
-
-                mainContainer.getChildren().add(pane);
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-
-        ScrollPane scrollPane =
-                new ScrollPane(mainContainer);
-
+        ScrollPane scrollPane = new ScrollPane(mainContainer);
         scrollPane.setFitToWidth(true);
-
         return scrollPane;
-    }
-
-    private static List<String> fetchArrangementTables(
-            String arrangementName
-    ) {
-
-        List<String> tables =
-                new ArrayList<>();
-
-        try {
-
-            Connection con =
-                    ArrangementsDB.connection();
-
-            PreparedStatement ps =
-                    con.prepareStatement(
-                            "SELECT table_name FROM arrangementdb WHERE arrangement_name = ?"
-                    );
-
-            ps.setString(1, arrangementName);
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                tables.add(
-                        rs.getString("table_name")
-                );
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-
-        return tables;
     }
 
     private static String generateGroupHtml(
             String groupName,
+            List<String[]> arrData,
             ExamConfig config
     ) {
+        if (arrData == null || arrData.isEmpty()) return "";
 
-        StringBuilder fullHtml =
-                new StringBuilder();
-
+        StringBuilder fullHtml = new StringBuilder();
         fullHtml.append("""
-                    <html>
-                
-                    <head>
-                
-                    <style>
-                
-                    body{
-                        background:#808080;
-                        font-family:'Times New Roman';
-                    }
-                
-                    .page-break{
-                        page-break-after:always;
-                    }
-                
-                    </style>
-                
-                    </head>
-                
-                    <body>
-                """);
+<html>
+<head>
+<style>
+body { margin:0; padding:0; background:#808080; }
+</style>
+</head>
+<body>
+""");
 
-        try {
+        for (String[] row : arrData) {
 
-            Connection con =
-                    ArrangementsDB.connection();
+            String tableName = row[0].trim();
 
-            PreparedStatement ps =
-                    con.prepareStatement(
-                            "SELECT arrangement_name FROM arrangements_group WHERE group_name = ?"
-                    );
+            // Teachers fetch
+            List<Teacher> teachers = null;
+            try {
+                int roomNo = Integer.parseInt(row[1].trim());
+                teachers = TeacherAssign.getRoomTeachers().get(roomNo);
+            } catch (Exception ignored) {}
 
-            ps.setString(1, groupName);
+            List<List<String>> data = ArrangementsDB.fetcharrData(tableName);
+            if (data == null || data.isEmpty()) continue;
 
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                String arrangementName =
-                        rs.getString("arrangement_name");
-
-                List<String> tables =
-                        fetchArrangementTables(
-                                arrangementName
-                        );
-
-                for (String table : tables) {
-
-                    List<List<String>> data =
-                            ArrangementsDB
-                                    .fetcharrData(table);
-
-                    String html =
-                            Gen_seat.generateHtml(
-                                    table,
-                                    data,
-                                    config,
-                                    null
-                            );
-
-                    fullHtml.append(html);
-
-                    fullHtml.append("""
-                                <div class='page-break'></div>
-                            """);
-                }
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
+            String html = Gen_seat.generateHtml(tableName, data, config, teachers);
+            fullHtml.append(html);
+            fullHtml.append("<div style='page-break-after:always'></div>\n");
         }
 
-        fullHtml.append("""
-                    </body>
-                    </html>
-                """);
-
+        fullHtml.append("</body></html>");
         return fullHtml.toString();
-
     }
-
-
 }

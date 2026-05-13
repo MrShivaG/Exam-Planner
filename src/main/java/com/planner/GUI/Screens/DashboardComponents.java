@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static com.planner.GUI.HomePage.createTopBar;
 
@@ -39,8 +41,14 @@ public class DashboardComponents {
         this.app = app;
     }
 
-    public static HBox databox(String arr_group_name, String date, int capacity, String session, int student){
-        //room no. box
+    public static HBox databox(
+            HomePage app,           // ADD THIS
+            String arr_group_name,
+            String date,
+            int capacity,
+            String session,
+            int student
+    ) {        //room no. box
         VBox sessionbox = new VBox();
         sessionbox.setPadding(new Insets(5,5,5,5));
         sessionbox.getStyleClass().add("cardrow");
@@ -178,8 +186,41 @@ public class DashboardComponents {
         arrButton.setStyle("-fx-font-size: 18px;" +
                 "-fx-font-weight: bold;");
 
-        arrButton.setOnAction(e ->{
+        arrButton.setOnAction(e -> {
 
+            try {
+                DB_Methods db = new DB_Methods();
+                List<String[]> arrData = db.fetch_group_tables(arr_group_name);
+
+                if (arrData == null || arrData.isEmpty()) {
+                    Notification.message("Koi data nahi mila.");
+                    return;
+                }
+
+                String[] first = arrData.get(0);
+
+                ExamConfig examConfig = new ExamConfig();
+                examConfig.setSession(first[4]);      // arr_session
+                examConfig.setArrangementName(arr_group_name);
+                examConfig.setExamTime("10:00 - 01:00");
+
+                try {
+                    examConfig.setDate(DateUtil.parse(first[2])); // arr_date
+                } catch (Exception ex) {
+                    examConfig.setDate(java.time.LocalDate.now());
+                }
+
+                ScrollPane pane = Group_Gen_seat.showGroup(arr_group_name, examConfig);
+
+                app.switchScreen(
+                        HomePage.createTopBar(arr_group_name),
+                        pane
+                );
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                Notification.message("Error: " + ex.getMessage());
+            }
         });
 
 

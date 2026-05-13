@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class database {
 
-    private static final String URL = "jdbc:mysql://10.51.136.20:3306/examplanner";
+    private static final String URL = "jdbc:mysql://localhost:3306/examplanner";
     //10.225.181.20
-    private static final String USERNAME = "remote";
+    private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 
     //main method
