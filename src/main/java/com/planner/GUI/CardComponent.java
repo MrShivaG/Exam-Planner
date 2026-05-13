@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -17,10 +18,12 @@ public class CardComponent {
 
         StackPane card = new StackPane();
         card.setPrefSize(300, 400);
-        card.setMaxSize(300, 400);
+
+        card.setMaxHeight(Double.MAX_VALUE);
         card.getStyleClass().add("card");
 
         VBox content = new VBox(50);
+        VBox.setVgrow(content, Priority.ALWAYS);
         content.setPadding(new Insets(15));
         content.setAlignment(Pos.CENTER);
 

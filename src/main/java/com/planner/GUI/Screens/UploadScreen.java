@@ -13,6 +13,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.planner.GUI.Screens.RoomTableScreen.roomTableScreen;
 
@@ -23,349 +24,255 @@ public class UploadScreen {
     public static BorderPane dataScreen(HomePage app) {
 
         BorderPane layout = new BorderPane();
+        layout.setStyle("-fx-background-color: #F9FAFB;");
 
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(50);
+        // ── MAIN SCROLL WRAPPER ─────────────────────────────
+        ScrollPane mainScroll = new ScrollPane();
+        mainScroll.setFitToWidth(true);
+        mainScroll.setStyle("""
+        -fx-background-color: #F9FAFB;
+        -fx-background: #F9FAFB;
+        """);
 
+        VBox pageRoot = new VBox(0);
+        pageRoot.setStyle("-fx-background-color: #F9FAFB;");
+
+        // ── PAGE HEADER ─────────────────────────────────────
+        VBox pageHeader = new VBox(4);
+        pageHeader.setPadding(new Insets(32, 40, 20, 40));
+
+        Label pageTitle = new Label("New Exam Arrangement");
+        pageTitle.setStyle("""
+        -fx-font-size: 24px;
+        -fx-font-weight: 800;
+        -fx-text-fill: #111827;
+        """);
+
+        Label pageSub = new Label("Upload student data and configure exam settings");
+        pageSub.setStyle("""
+        -fx-font-size: 13px;
+        -fx-text-fill: #6B7280;
+        """);
+
+        pageHeader.getChildren().addAll(pageTitle, pageSub);
+
+        // ── TWO COLUMN LAYOUT ───────────────────────────────
+        HBox twoCol = new HBox(24);
+        twoCol.setPadding(new Insets(0, 40, 32, 40));
+        twoCol.setAlignment(Pos.TOP_CENTER);
+
+        // ── LEFT — Upload Card ──────────────────────────────
         StackPane card = CardComponent.createCard(
                 "Upload File",
                 "Drag & Drop your File",
                 "/upload.png",
                 () -> openFileChooser(app)
         );
+        card.setPrefSize(280, 380);
+        card.setMaxSize(280, 380);
+        card.setMinHeight(Region.USE_COMPUTED_SIZE);
+        card.setMaxHeight(Double.MAX_VALUE);
+        card.setPrefWidth(280);
+        card.setMaxWidth(280);
 
 
-//        TextField month = new TextField();
-//        month.setPromptText("June");
-//        month.getStyleClass().add("input-field");
+        // ── RIGHT — Form Card ───────────────────────────────
+        VBox formCard = new VBox(0);
+        formCard.setStyle("""
+        -fx-background-color: white;
+        -fx-background-radius: 16;
+        -fx-border-color: #E5E7EB;
+        -fx-border-radius: 16;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 3);
+        """);
+        formCard.setPrefWidth(440);
+        formCard.setMaxWidth(440);
+        formCard.setMinHeight(380);
+        formCard.setMaxWidth(380);
 
-        Label session = new Label("Enter Session");
+        // Form header
+        VBox formHeader = new VBox(4);
+        formHeader.setPadding(new Insets(24, 28, 20, 28));
+        formHeader.setStyle("""
+        -fx-border-color: transparent transparent #F3F4F6 transparent;
+        -fx-border-width: 1;
+        """);
 
-        session.setStyle("""
-        -fx-font-size: 15px;
-        -fx-font-weight: 700;
+        Label formTitle = new Label("Exam Configuration");
+        formTitle.setStyle("""
+        -fx-font-size: 16px;
+        -fx-font-weight: 800;
         -fx-text-fill: #111827;
         """);
 
+        Label formSub = new Label("Fill in the details for this exam session");
+        formSub.setStyle("""
+        -fx-font-size: 11px;
+        -fx-text-fill: #9CA3AF;
+        """);
+
+        formHeader.getChildren().addAll(formTitle, formSub);
+
+        // Form fields
+        VBox formFields = new VBox(20);
+        formFields.setPadding(new Insets(24, 28, 28, 28));
+
+        // Session row
         ComboBox<String> month = new ComboBox<>();
-
         month.getItems().addAll("June", "Dec");
-
         month.setPromptText("Month");
-
-        month.setPrefWidth(120);
-
-        month.getStyleClass().add("curator-combo");
-
-//        month.lookup(".list-cell").setStyle("""
-//        -fx-text-fill: #111827;
-//        """);
-
-        ComboBox<String> year = new ComboBox<>();
-
-        int currentYear1 = java.time.Year.now().getValue() % 100;
-
-        for (int i = currentYear1 - 3; i <= 99; i++) {
-
-            year.getItems().add(String.format("%02d", i));
-        }
-        for (int i = 0; i < currentYear1 -3; i++) {
-
-            year.getItems().add(
-                    String.format("%02d", i)
-            );
-        }
-
-        int currentYear2 = java.time.Year.now().getValue() % 100;
-
-        year.setValue(String.format("%02d", currentYear2));
-
-        year.setPromptText("Year");
-
-        year.setEditable(true);
-
-        year.setPrefWidth(120);
-
-        year.getStyleClass().add("curator-combo");
-
-//        year.lookup(".list-cell").setStyle("""
-//        -fx-text-fill: #111827;
-//        """);
-
-        HBox hBox = new HBox(15);
-
-        hBox.setAlignment(Pos.CENTER_LEFT);
-
-        hBox.getChildren().addAll(month, year);
-//        TextField year = new TextField();
-//        year.setPromptText("26");
-//        year.getStyleClass().add("input-field");
-
-        Label label1 = new Label("Enter Date");
-        label1.getStyleClass().add("form-label");
-
-        DatePicker datePicker = new DatePicker();
-        datePicker.setPromptText("Select Date");
-        datePicker.setMaxWidth(135);
-        datePicker.setPrefHeight(42);
-        datePicker.getStyleClass().add("curator-combo");
-
-        datePicker.setValue(LocalDate.now());
-
-        datePicker.setConverter(new StringConverter<LocalDate>() {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+        month.setPrefWidth(160);
+        month.setPrefHeight(42);
+        month.setStyle(comboStyle());
+        month.setStyle(comboStyle() + "-fx-background-color: white;");
+        month.setButtonCell(new ListCell<>() {
             @Override
-            public String toString(LocalDate date) {
-                return (date != null) ? formatter.format(date) : "";
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                return (string != null && !string.isEmpty())
-                        ? LocalDate.parse(string, formatter)
-                        : null;
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "Month" : item);
+                setStyle("-fx-text-fill: #111827; -fx-background-color: white;");
             }
         });
 
+        ComboBox<String> year = new ComboBox<>();
+        int currentYear1 = java.time.Year.now().getValue() % 100;
+        for (int i = currentYear1 - 3; i <= 99; i++) {
+            year.getItems().add(String.format("%02d", i));
+        }
+        for (int i = 0; i < currentYear1 - 3; i++) {
+            year.getItems().add(String.format("%02d", i));
+        }
+        year.setValue(String.format("%02d", currentYear1));
+        year.setPromptText("Year");
+        year.setEditable(true);
+        year.setPrefWidth(120);
+        year.setPrefHeight(42);
+        year.setStyle(comboStyle());
+
+        HBox sessionRow = new HBox(10, month, year);
+        sessionRow.setAlignment(Pos.CENTER_LEFT);
+
+        // Date picker
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPromptText("Select Date");
+        datePicker.setMaxWidth(Double.MAX_VALUE);
+        datePicker.setPrefHeight(42);
+        datePicker.setMaxWidth(180);
+        datePicker.setPrefWidth(180);
+        datePicker.setStyle(comboStyle());
+        datePicker.setValue(LocalDate.now());
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            @Override public String toString(LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+            @Override public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty())
+                        ? LocalDate.parse(string, formatter) : null;
+            }
+        });
         datePicker.setDayCellFactory(dp -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate item, boolean empty) {
+            @Override public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item.isBefore(LocalDate.now())) {
                     setDisable(true);
-                    setStyle("-fx-background-color: #f0f0f0;");
+                    setStyle("-fx-background-color: #F3F4F6;");
                 }
             }
         });
 
-        Label label2 = new Label("Arrangement Name");
-        label2.getStyleClass().add("form-label");
+        // Time spinners
+        Spinner<Integer> startinghour = new Spinner<>(0, 23, 10);
+        Spinner<Integer> startingmin  = new Spinner<>(0, 59, 0);
+        Spinner<Integer> durationhour = new Spinner<>(0, 12, 3);
+        Spinner<Integer> durationmin  = new Spinner<>(0, 59, 0);
 
-        TextField textField2 = new TextField();
-        textField2.setPromptText("i.e. Exam Arrangement");
-        textField2.getStyleClass().add("input-field");
+        for (Spinner<Integer> sp : List.of(startinghour, startingmin, durationhour, durationmin)) {
+            sp.setPrefHeight(38);
+            sp.setPrefWidth(80);
+            sp.setMaxWidth(80);
+            sp.setStyle(spinnerStyle());
+        }
 
-        Label collegeLabel = new Label("College Name");
-        collegeLabel.getStyleClass().add("form-label");
+        VBox shBox = timeSpinnerBox("Start Hr",  startinghour);
+        VBox smBox = timeSpinnerBox("Start Min", startingmin);
+        VBox dhBox = timeSpinnerBox("Dur Hr",    durationhour);
+        VBox dmBox = timeSpinnerBox("Dur Min",   durationmin);
 
-        TextField collegeField = new TextField();
-        collegeField.setPromptText("SISTec-R");
-        collegeField.getStyleClass().add("input-field");
+        HBox timeRow = new HBox(10, shBox, smBox, dhBox, dmBox);
+        timeRow.setAlignment(Pos.CENTER_LEFT);
 
-
-        Label timeLabel = new Label("Exam Time");
-
-        timeLabel.setStyle("""
-        -fx-font-size: 15px;
-        -fx-font-weight: 700;
-        -fx-text-fill: #111827;
-        """);
-
-        Spinner<Integer> startinghour =
-                new Spinner<>(0, 23, 10);
-
-        Spinner<Integer> startingmin =
-                new Spinner<>(0, 59, 0);
-
-        Spinner<Integer> durationhour =
-                new Spinner<>(0, 12, 3);
-
-        Spinner<Integer> durationmin =
-                new Spinner<>(0, 59, 0);
-
-        startinghour.getStyleClass().add("curator-spinner");
-
-        startingmin.getStyleClass().add("curator-spinner");
-
-        durationhour.getStyleClass().add("curator-spinner");
-
-        durationmin.getStyleClass().add("curator-spinner");
-
-        startinghour.setPrefHeight(42);
-        startingmin.setPrefHeight(42);
-        durationhour.setPrefHeight(42);
-        durationmin.setPrefHeight(42);
-        startinghour.setMaxWidth(100);
-        startingmin.setMaxWidth(100);
-        durationhour.setMaxWidth(100);
-        durationmin.setMaxWidth(100);
-
-        VBox startHourBox = new VBox(5);
-
-        Label sh = new Label("Start Hour");
-
-        sh.setStyle("""
-        -fx-font-size: 12px;
-        -fx-text-fill: #6B7280;
-        -fx-font-weight: 600;
-        """);
-
-        startHourBox.getChildren().addAll(sh, startinghour);
-
-
-        VBox startMinBox = new VBox(5);
-
-        Label sm = new Label("Start Minute");
-
-        sh.setStyle("""
-        -fx-font-size: 12px;
-        -fx-text-fill: #6B7280;
-        -fx-font-weight: 600;
-        """);
-
-        startMinBox.getChildren().addAll(sm, startingmin);
-
-
-        VBox durationHourBox = new VBox(5);
-
-        Label dh = new Label("Duration Hour");
-
-        sh.setStyle("""
-        -fx-font-size: 12px;
-        -fx-text-fill: #6B7280;
-        -fx-font-weight: 600;
-        """);
-
-        durationHourBox.getChildren().addAll(dh, durationhour);
-
-
-        VBox durationMinBox = new VBox(5);
-
-        Label dm = new Label("Duration Minute");
-
-        sh.setStyle("""
-        -fx-font-size: 12px;
-        -fx-text-fill: #6B7280;
-        -fx-font-weight: 600;
-        """);
-
-        durationMinBox.getChildren().addAll(dm, durationmin);
-
-        HBox hBox1 = new HBox(15);
-
-        hBox1.setAlignment(Pos.CENTER_LEFT);
-
-        hBox1.getChildren().addAll(
-                startHourBox,
-                startMinBox,
-                durationHourBox,
-                durationMinBox
+        // Add all field groups
+        formFields.getChildren().addAll(
+                fieldGroup2("Session",   sessionRow),
+                fieldGroup2("Exam Date", datePicker),
+                fieldGroup2("Exam Time", timeRow)
         );
 
-//        TextField timeField = new TextField();
-//        timeField.setPromptText("10:00 - 01:00");
-//        timeField.getStyleClass().add("input-field");
-
-
-
-        Label subjectLabel = new Label("Subject");
-        subjectLabel.getStyleClass().add("form-label");
-
-        TextField subjectField = new TextField();
-        subjectField.setPromptText("CS-401");
-        subjectField.getStyleClass().add("input-field");
-
-        GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER_LEFT);
-        gridPane.setHgap(15);
-        gridPane.setVgap(18);
-        //  gridPane.add(label2, 0, 0);
-        //  gridPane.add(textField2, 1, 0);
-
-        //   gridPane.add(collegeLabel, 0, 1);
-        //  gridPane.add(collegeField, 1, 1);
-
-        gridPane.add(session, 0, 2);
-        gridPane.add(hBox, 1, 2);
-
-        gridPane.add(label1, 0, 3);
-        gridPane.add(datePicker, 1, 3);
-
-        gridPane.add(timeLabel, 0, 4);
-        gridPane.add(hBox1, 1, 4);
-
-        // gridPane.add(subjectLabel, 0, 5);
-        // gridPane.add(subjectField, 1, 5);
-
-        ColumnConstraints col1 = new ColumnConstraints();
-        col1.setMinWidth(150);
-
-        ColumnConstraints col2 = new ColumnConstraints();
-        col2.setMinWidth(250);
-
-        gridPane.getColumnConstraints().addAll(col1, col2);
-
-        Button next = new Button("Next ≫ ");
+        // Next button
+        Button next = new Button("Continue to Room Selection  →");
         next.setDisable(true);
-        Runnable validate = () -> {
-            boolean valid =
-                    selectedFile != null &&
-                            !month.getValue().isEmpty() &&
-                            !year.getValue().isEmpty() &&
-                            datePicker.getValue() != null ;
+        next.setPrefHeight(44);
+        next.setPrefWidth(260);
+        next.setMaxWidth(260);
+        next.setStyle("""
+        -fx-background-color: #0056D2;
+        -fx-text-fill: white;
+        -fx-font-weight: 800;
+        -fx-font-size: 14px;
+        -fx-background-radius: 10;
+        -fx-cursor: hand;
+        """);
+        next.setOnMouseEntered(e -> next.setStyle("""
+        -fx-background-color: #003FA3;
+        -fx-text-fill: white;
+        -fx-font-weight: 800;
+        -fx-font-size: 14px;
+        -fx-background-radius: 10;
+        -fx-cursor: hand;
+        """));
+        next.setOnMouseExited(e -> next.setStyle(
+                next.isDisable() ? disabledBtnStyle() : activeBtnStyle()
+        ));
 
+        VBox btnBox = new VBox(next);
+        btnBox.setPadding(new Insets(0, 28, 24, 28));
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+        // Validation
+        Runnable validate = () -> {
+            boolean valid = selectedFile != null
+                    && month.getValue() != null
+                    && !month.getValue().isEmpty()
+                    && year.getValue() != null
+                    && !year.getValue().isEmpty()
+                    && datePicker.getValue() != null;
             next.setDisable(!valid);
+            next.setStyle(valid ? activeBtnStyle() : disabledBtnStyle());
         };
 
-//        &&
-//        !textField2.getText().isEmpty();
+        month.valueProperty().addListener((obs, o, n) -> validate.run());
+        year.valueProperty().addListener((obs, o, n)  -> validate.run());
+        datePicker.valueProperty().addListener((obs, o, n) -> validate.run());
 
-        month.itemsProperty().addListener((obs, oldVal, newVal) -> validate.run());
-        year.itemsProperty().addListener((obs, oldVal, newVal) -> validate.run());
-        datePicker.valueProperty().addListener((obs, oldVal, newVal) -> validate.run());
-        //  textField2.textProperty().addListener((obs, oldVal, newVal) -> validate.run());
         next.setOnAction(e -> {
-
             ExamConfig config = new ExamConfig();
-
             if (selectedFile != null) {
                 config.setFileName(selectedFile.getName());
                 config.setFilePath(selectedFile.getAbsolutePath());
             }
-            config.setArrangementName(textField2.getText());
-            config.setCollegeName(collegeField.getText());
-         //   config.setExamTime(timeField.getText());
-            config.setSession(month.getValue());
-            config.setSession(year.getValue());
-            config.setSubject(subjectField.getText());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            // Exam time build karo
+            String examTime = String.format("%02d:%02d", startinghour.getValue(), startingmin.getValue())
+                    + " - "
+                    + String.format("%02d:%02d",
+                    (startinghour.getValue() + durationhour.getValue()) % 24,
+                    (startingmin.getValue()  + durationmin.getValue())  % 60);
+            config.setExamTime(examTime);
+            config.setSession(month.getValue() + "-" + year.getValue());
             config.setDate(datePicker.getValue());
 
-            String monthh = month.getValue();
-            String yearr = year.getValue();
-            LocalDate selectedDate = datePicker.getValue();
-
-            if (selectedDate == null) {
-                Notification.message("Please select a date!");
-                return;
-            }
-
-            String name = textField2.getText();
-
-            //   ||name.isEmpty()
-
-            if (selectedFile == null ||
-                    monthh.isEmpty() ||
-                    yearr.isEmpty() ||
-                    datePicker.getValue() == null
-            ) {
-
-                System.out.println("All Entries Not Filled!");
-
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Incomplete Data");
-                alert.setContentText("Please fill all fields and upload file.");
-                alert.showAndWait();
-
-                return;
-            }
-
-
             ExcelWork excelWork = new ExcelWork();
-
             ArrayList<String> result = excelWork.fatchExcel(selectedFile.getAbsolutePath());
             SharedData.totalStudents = Integer.parseInt(result.get(0));
             SharedData.totalStudentsLabel.setText(String.valueOf(SharedData.totalStudents));
@@ -373,22 +280,92 @@ public class UploadScreen {
 
             app.switchCenter(roomTableScreen(app, config));
         });
-        next.getStyleClass().add("primary-btn");
 
-        VBox mainForm = new VBox(20, gridPane);
-        mainForm.getStyleClass().add("card");
-        mainForm.setPadding(new Insets(20));
-        mainForm.getChildren().add(next);
+        formCard.getChildren().addAll(formHeader, formFields, btnBox);
 
-        grid.add(card, 0, 0);
-        grid.add(mainForm, 1, 0);
-        //  grid.add(next, 2, 1);
-        grid.setMaxWidth(1000);
+        twoCol.getChildren().addAll(card, formCard);
 
-        layout.setLeft(grid);
-        layout.setMaxWidth(800);
-        layout.setPadding(new Insets(0, 0, 0, 100));
+        HBox.setHgrow(card, Priority.NEVER);
+        card.setMaxHeight(Double.MAX_VALUE);
+
+        twoCol.setMaxWidth(820);
+
+        pageRoot.getChildren().addAll(pageHeader, twoCol);
+        pageRoot.setAlignment(Pos.CENTER);
+        mainScroll.setContent(pageRoot);
+        layout.setCenter(mainScroll);
+
         return layout;
+    }
+
+// ── HELPER METHODS ──────────────────────────────────────
+
+    private static VBox fieldGroup2(String label, javafx.scene.Node field) {
+        VBox group = new VBox(6);
+        Label lbl = new Label(label);
+        lbl.setStyle("""
+        -fx-font-size: 12px;
+        -fx-font-weight: 700;
+        -fx-text-fill: #374151;
+        """);
+        group.getChildren().addAll(lbl, field);
+        return group;
+    }
+
+    private static VBox timeSpinnerBox(String label, Spinner<Integer> spinner) {
+        VBox box = new VBox(6);
+        Label lbl = new Label(label);
+        lbl.setStyle("""
+        -fx-font-size: 11px;
+        -fx-font-weight: 700;
+        -fx-text-fill: #6B7280;
+        """);
+        box.getChildren().addAll(lbl, spinner);
+        VBox.setVgrow(spinner, Priority.ALWAYS);
+        return box;
+    }
+
+    private static String comboStyle() {
+        return """
+        -fx-background-color: white;
+        -fx-border-color: #E5E7EB;
+        -fx-border-radius: 10;
+        -fx-background-radius: 10;
+        -fx-padding: 4 8 4 8;
+        -fx-font-size: 13px;
+        -fx-text-fill: #111827;
+        """;
+    }
+
+    private static String spinnerStyle() {
+        return """
+        -fx-background-color: white;
+        -fx-border-color: #E5E7EB;
+        -fx-border-radius: 10;
+        -fx-background-radius: 10;
+        -fx-font-size: 13px;
+        """;
+    }
+
+    private static String activeBtnStyle() {
+        return """
+        -fx-background-color: #0056D2;
+        -fx-text-fill: white;
+        -fx-font-weight: 800;
+        -fx-font-size: 14px;
+        -fx-background-radius: 10;
+        -fx-cursor: hand;
+        """;
+    }
+
+    private static String disabledBtnStyle() {
+        return """
+        -fx-background-color: #D1D5DB;
+        -fx-text-fill: #9CA3AF;
+        -fx-font-weight: 800;
+        -fx-font-size: 14px;
+        -fx-background-radius: 10;
+        """;
     }
 
     public static void openFileChooser(HomePage app) {

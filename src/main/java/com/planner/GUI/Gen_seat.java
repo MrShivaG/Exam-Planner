@@ -511,7 +511,7 @@ body{
                 </div>
                 
                 <div>
-                Date : """ + config.getDate() + """
+                Date : """ + DateUtil.formatForUI(config.getDate()) + """
                 </div>
                 
                 </div>

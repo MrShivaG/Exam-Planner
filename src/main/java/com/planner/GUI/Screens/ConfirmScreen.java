@@ -304,8 +304,8 @@ public class ConfirmScreen {
 
         confirmBtn.setOnAction(e -> {
 
+            // ← Yeh 2 lines add karo sabse pehle
             Arrange arrange = new Arrange();
-
             int[] roomsArray = selectedRooms.stream()
                     .mapToInt(Room::getRoomNo)
                     .toArray();
@@ -314,46 +314,29 @@ public class ConfirmScreen {
 
             for (Room room : selectedRooms) {
 
-                String maleName =
-                        maleTeacherFields
-                                .get(room.getRoomNo())
-                                .getText()
-                                .trim();
+                String maleName = maleTeacherFields
+                        .get(room.getRoomNo())
+                        .getText()
+                        .trim();
 
-                String femaleName =
-                        femaleTeacherFields
-                                .get(room.getRoomNo())
-                                .getText()
-                                .trim();
+                String femaleName = femaleTeacherFields
+                        .get(room.getRoomNo())
+                        .getText()
+                        .trim();
 
-                List<Teacher> list =
-                        new ArrayList<>();
+                List<Teacher> list = new ArrayList<>();
 
                 if (!maleName.isEmpty()) {
-
-                    list.add(
-                            new Teacher(
-                                    maleName,
-                                    "Male"
-                            )
-                    );
+                    list.add(new Teacher(maleName, "Male"));
                 }
 
                 if (!femaleName.isEmpty()) {
-
-                    list.add(
-                            new Teacher(
-                                    femaleName,
-                                    "Female"
-                            )
-                    );
+                    list.add(new Teacher(femaleName, "Female"));
                 }
 
-                if (!list.isEmpty()) {
-
-                    TeacherAssign.getRoomTeachers()
-                            .put(room.getRoomNo(), list);
-                }
+                // ← Yahi fix hai — empty list ho toh bhi room add karo
+                TeacherAssign.getRoomTeachers()
+                        .put(room.getRoomNo(), list);
             }
 
             try {
@@ -362,22 +345,16 @@ public class ConfirmScreen {
                         DateUtil.formatForDB(config.getDate()),
                         config.getSession()
                 );
-//90000
+
                 app.switchCenter(
                         Gen_seat.showTablesScreen(tables, config)
                 );
 
-                System.out.println("Seating Generated Successfully!");
-                Notification.message(
-                        "Seating generated successfully!"
-                );
+                Notification.message("Seating generated successfully!");
+
             } catch (Exception ex) {
                 Notification.message("Error generating seating");
             }
-        });
-
-        backBtn.setOnAction(e -> {
-            app.switchCenter(RoomTableScreen.roomTableScreen(app, config));
         });
 
         HBox buttons = new HBox(10, backBtn, confirmBtn);
