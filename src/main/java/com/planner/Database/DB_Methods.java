@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+
 
 public class DB_Methods {
     static database databaseobj = new database();
@@ -184,13 +187,125 @@ public class DB_Methods {
             String  arr_date = rs.getString("arr_date");
             String  capacity = rs.getString("capacity");
             String  students = rs.getString("student");
-            arrangement.add(new String[]{arr_table_name,room_no, arr_date, capacity, arr_session,students});
+            String range_table = rs.getString("range_table");
+            String rows_room   = rs.getString("rows_room");
+            String faculty1 = null;
+            String faculty = null;
+            try {
+                faculty1 = rs.getString("faculty_male");
+            } catch (SQLException e) {
+                try {
+                    faculty1 = rs.getString("faculty1");
+                } catch (SQLException ignored) {}
+            }
+            try {
+                faculty = rs.getString("faculty_female");
+            } catch (SQLException e) {
+                try {
+                    faculty = rs.getString("faculty");
+                } catch (SQLException ignored) {}
+            }
+            arrangement.add(new String[]{arr_table_name,room_no, arr_date, capacity, arr_session,students,  range_table, rows_room, faculty1, faculty });
         }
         return arrangement;
     }
 
+    public List<String[]> fetchRgpvSubjects() throws SQLException {
+        PreparedStatement ps = con.prepareStatement(
+                "SELECT subject_code, subject_name FROM rgpv_subjects ORDER BY subject_code"
+        );
+        ResultSet rs = ps.executeQuery();
+        List<String[]> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(new String[]{
+                    rs.getString("subject_code"),
+                    rs.getString("subject_name")
+            });
+        }
+        return list;
+    }
 
+    public String[] fetchDateAndSession(String tableName) {
+        String[] result = new String[2]; // [date, session]
+        try {
+            List<String> groups = new ArrayList<>();
+            try (PreparedStatement ps = con.prepareStatement("SELECT * FROM arrgroups")) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        groups.add(rs.getString(1));
+                    }
+                }
+            }
+            for (String grp : groups) {
+                String query = "SELECT arr_date, arr_session FROM `" + grp + "` WHERE arr_table_name = ?";
+                try (PreparedStatement ps = con.prepareStatement(query)) {
+                    ps.setString(1, tableName);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            result[0] = rs.getString("arr_date");
+                            result[1] = rs.getString("arr_session");
+                            return result;
+                        }
+                    }
+                } catch (SQLException ignored) {
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching date/session for " + tableName + ": " + e.getMessage());
+        }
+        return null;
+    }
 
-
+    public static Set<String> fetchBusyTeachers(String date, String session) {
+        Set<String> busy = new HashSet<>();
+        if (con == null || date == null || session == null) return busy;
+        try {
+            List<String> groups = new ArrayList<>();
+            try (PreparedStatement ps = con.prepareStatement("SELECT * FROM arrgroups")) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        groups.add(rs.getString("GRP_names"));
+                    }
+                }
+            }
+            for (String grp : groups) {
+                String query = "SELECT * FROM `" + grp + "` WHERE arr_date = ? AND arr_session = ?";
+                try (PreparedStatement ps = con.prepareStatement(query)) {
+                    ps.setString(1, date);
+                    ps.setString(2, session);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            String f1 = null;
+                            try {
+                                f1 = rs.getString("faculty_male");
+                            } catch (SQLException e) {
+                                try {
+                                    f1 = rs.getString("faculty1");
+                                } catch (SQLException ignored) {}
+                            }
+                            String f = null;
+                            try {
+                                f = rs.getString("faculty_female");
+                            } catch (SQLException e) {
+                                try {
+                                    f = rs.getString("faculty");
+                                } catch (SQLException ignored) {}
+                            }
+                            if (f1 != null && !f1.trim().isEmpty() && !f1.equalsIgnoreCase("null")) {
+                                busy.add(f1.trim());
+                            }
+                            if (f != null && !f.trim().isEmpty() && !f.equalsIgnoreCase("null")) {
+                                busy.add(f.trim());
+                            }
+                        }
+                    }
+                } catch (SQLException ignored) {
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching busy teachers: " + e.getMessage());
+        }
+        return busy;
+    }
 
 }
