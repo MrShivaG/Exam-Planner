@@ -17,7 +17,7 @@ public class TeacherAssign {
         return roomTeachers;
     }
 
-    public static boolean autoAssignTeachers(List<Room> selectedRooms) {
+    public static boolean autoAssignTeachers(List<Room> selectedRooms, String date, String session) {
 
         try {
 
@@ -29,16 +29,33 @@ public class TeacherAssign {
             List<Teacher> femaleList =
                     db.getTeachersByGender("Female");
 
-            Collections.shuffle(maleList);
-            Collections.shuffle(femaleList);
+            // Filter out busy teachers
+            Set<String> busyTeachers = DB_Methods.fetchBusyTeachers(date, session);
+
+            List<Teacher> availableMale = new ArrayList<>();
+            for (Teacher t : maleList) {
+                if (t.getName() != null && !busyTeachers.contains(t.getName().trim())) {
+                    availableMale.add(t);
+                }
+            }
+
+            List<Teacher> availableFemale = new ArrayList<>();
+            for (Teacher t : femaleList) {
+                if (t.getName() != null && !busyTeachers.contains(t.getName().trim())) {
+                    availableFemale.add(t);
+                }
+            }
+
+            Collections.shuffle(availableMale);
+            Collections.shuffle(availableFemale);
 
             roomTeachers.clear();
 
-            if (maleList.size() < selectedRooms.size()
-                    || femaleList.size() < selectedRooms.size()) {
+            if (availableMale.size() < selectedRooms.size()
+                    || availableFemale.size() < selectedRooms.size()) {
 
                 Notification.message(
-                        "Not enough teachers available."
+                        "Not enough available teachers for this Date & Session."
                 );
 
                 return false;
@@ -50,8 +67,8 @@ public class TeacherAssign {
 
                 Room room = selectedRooms.get(i);
 
-                Teacher male = maleList.get(i);
-                Teacher female = femaleList.get(i);
+                Teacher male = availableMale.get(i);
+                Teacher female = availableFemale.get(i);
 
                 List<Teacher> list = new ArrayList<>();
 

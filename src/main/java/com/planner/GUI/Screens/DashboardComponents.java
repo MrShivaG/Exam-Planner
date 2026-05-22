@@ -15,10 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
@@ -76,8 +73,8 @@ public class DashboardComponents {
 
         VBox groupnamebox = new VBox();
         String[] parts = arr_group_name.split("_");
-        String groupname = parts[0];
-        String sem = parts[1];
+        String groupname = parts.length > 1 ? parts[1] : parts[0];
+        String sem = parts.length > 2 ? parts[2] : "";
 
         Label gnamelable = new Label(groupname);
         gnamelable.setStyle(
@@ -200,8 +197,17 @@ public class DashboardComponents {
                 String[] first = arrData.get(0);
 
                 ExamConfig examConfig = new ExamConfig();
-                examConfig.setSession(first[4]);
-                examConfig.setSemester(first[4]);
+                String[] groupParts = arr_group_name.split("_");
+                if (groupParts.length >= 5) {
+                    examConfig.setSemester(groupParts[groupParts.length - 3]);
+                    examConfig.setSession(groupParts[groupParts.length - 2] + "_" + groupParts[groupParts.length - 1]);
+                } else if (groupParts.length == 4) {
+                    examConfig.setSemester(groupParts[groupParts.length - 2]);
+                    examConfig.setSession(groupParts[groupParts.length - 1]);
+                } else {
+                    examConfig.setSemester("");
+                    examConfig.setSession(first[4]);
+                }
                 examConfig.setArrangementName(arr_group_name);
                 examConfig.setExamTime("10:00 - 01:00");
 
@@ -211,7 +217,7 @@ public class DashboardComponents {
                     examConfig.setDate(java.time.LocalDate.now());
                 }
 
-                ScrollPane pane = Group_Gen_seat.showGroup(arr_group_name, examConfig);
+                BorderPane pane = Group_Gen_seat.showGroup(arr_group_name, examConfig);
 
                 app.switchScreen(
                         HomePage.createTopBar(arr_group_name),

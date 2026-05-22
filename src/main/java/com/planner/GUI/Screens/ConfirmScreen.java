@@ -15,6 +15,10 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import com.planner.Database.DB_Methods;
+
 
 public class ConfirmScreen {
 
@@ -99,7 +103,9 @@ public class ConfirmScreen {
 
             boolean assigned =
                     TeacherAssign.autoAssignTeachers(
-                            selectedRooms
+                            selectedRooms,
+                            DateUtil.formatForDB(config.getDate()),
+                            config.getSession()
                     );
 
             if (assigned) {
@@ -308,6 +314,54 @@ public class ConfirmScreen {
 
         confirmBtn.setOnAction(e -> {
 
+            // Fetch busy teachers from DB for the current date & session
+            String dbDate = DateUtil.formatForDB(config.getDate());
+            String session = config.getSession();
+            Set<String> busyTeachers = DB_Methods.fetchBusyTeachers(dbDate, session);
+            Set<String> busyTeachersLower = new HashSet<>();
+            for (String bt : busyTeachers) {
+                busyTeachersLower.add(bt.toLowerCase().trim());
+            }
+
+            // Validate self-conflicts and database conflicts
+            Map<String, String> currentScreenTeachers = new HashMap<>(); // nameLower -> description of room
+
+            for (Room room : selectedRooms) {
+                String maleName = maleTeacherFields.get(room.getRoomNo()).getText().trim();
+                String femaleName = femaleTeacherFields.get(room.getRoomNo()).getText().trim();
+
+                // Validate male teacher
+                if (!maleName.isEmpty() && !maleName.equalsIgnoreCase("null")) {
+                    String maleLower = maleName.toLowerCase();
+                    if (currentScreenTeachers.containsKey(maleLower)) {
+                        Notification.message("Conflict: Teacher '" + maleName + "' is assigned to multiple rooms: " +
+                                currentScreenTeachers.get(maleLower) + " and Room " + room.getRoomNo());
+                        return;
+                    }
+                    if (busyTeachersLower.contains(maleLower)) {
+                        Notification.message("Conflict: Teacher '" + maleName + "' is already assigned to a duty in another arrangement on " +
+                                DateUtil.formatForUI(config.getDate()) + " (" + session + ")");
+                        return;
+                    }
+                    currentScreenTeachers.put(maleLower, "Room " + room.getRoomNo());
+                }
+
+                // Validate female teacher
+                if (!femaleName.isEmpty() && !femaleName.equalsIgnoreCase("null")) {
+                    String femaleLower = femaleName.toLowerCase();
+                    if (currentScreenTeachers.containsKey(femaleLower)) {
+                        Notification.message("Conflict: Teacher '" + femaleName + "' is assigned to multiple rooms: " +
+                                currentScreenTeachers.get(femaleLower) + " and Room " + room.getRoomNo());
+                        return;
+                    }
+                    if (busyTeachersLower.contains(femaleLower)) {
+                        Notification.message("Conflict: Teacher '" + femaleName + "' is already assigned to a duty in another arrangement on " +
+                                DateUtil.formatForUI(config.getDate()) + " (" + session + ")");
+                        return;
+                    }
+                    currentScreenTeachers.put(femaleLower, "Room " + room.getRoomNo());
+                }
+            }
 
             System.out.println("=== DEBUG ===");
             System.out.println("Date: " + config.getDate());
@@ -316,7 +370,7 @@ public class ConfirmScreen {
             System.out.println("ExamTime: " + config.getExamTime());
             System.out.println("=============");
 
-           // Arrange arrange = new Arrange();
+            // Arrange arrange = new Arrange();
             ArrangeV2 arrangeV2 = new ArrangeV2();
 
             int[] roomsArray = selectedRooms.stream()
@@ -353,7 +407,7 @@ public class ConfirmScreen {
             }
 
             try {
-                 String grpname = arrangeV2.arrange(
+                String grpname = arrangeV2.arrange(
                         roomsArray,
                         DateUtil.formatForDB(config.getDate()),
                         config.getArrangementName(),

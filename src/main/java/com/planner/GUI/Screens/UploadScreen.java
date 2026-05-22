@@ -425,4 +425,13 @@ public class UploadScreen {
     }
 
 
+    public static File chooseExcelFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Excel File");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Excel Files", "*.xlsx")
+        );
+        return fileChooser.showOpenDialog(null);
+    }
+
 }
