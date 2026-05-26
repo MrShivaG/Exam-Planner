@@ -37,7 +37,7 @@ public class ArrangeV2 {
         DB_Methods db = new DB_Methods();
         int currentClassIndex = 0;
         String grpname =ORGID+"_"+ArrName+"_"+Sem+"_"+Session11;
-        String grpquery ="CREATE TABLE "+grpname+" (arr_table_name varchar(50), range_table varchar(50),room_no varchar(20), arr_date varchar(50), arr_session varchar(10), capacity int(20), student int(20), faculty1 varchar(30), faculty varchar(30), rows_room varchar(10))";
+        String grpquery ="CREATE TABLE "+grpname+" (arr_table_name varchar(50), range_table varchar(50),room_no varchar(20), arr_date varchar(50), arr_session varchar(10), capacity int(20), student int(20), faculty_male varchar(100), faculty_female varchar(100), rows_room varchar(10))";
         //arr_table_name varchar(100), range_table varchar(50), arr_date varchar(100), arr_session varchar(50), capacity int(50), student int(50)
         PreparedStatement ps002 = conn1.prepareStatement(grpquery);
         ps002.executeUpdate();
@@ -108,7 +108,19 @@ public class ArrangeV2 {
             }
             int totalCap = RC[0]*RC[1];
             ReturnStatement.add(Date+"_"+classes.get(currentClassIndex));
-            PreparedStatement ps11 = conn1.prepareStatement("Insert into "+grpname+" values (?,?,?,?,?,?,?,NULL,NULL,?)");
+            String faculty1 = null;
+            String faculty2 = null;
+            java.util.List<com.planner.GUI.Teacher> teachers = com.planner.GUI.Screens.TeacherAssign.getRoomTeachers().get(classes.get(currentClassIndex));
+            if (teachers != null) {
+                if (teachers.size() > 0 && teachers.get(0) != null) {
+                    faculty1 = teachers.get(0).getName();
+                }
+                if (teachers.size() > 1 && teachers.get(1) != null) {
+                    faculty2 = teachers.get(1).getName();
+                }
+            }
+
+            PreparedStatement ps11 = conn1.prepareStatement("Insert into "+grpname+" values (?,?,?,?,?,?,?,?,?,?)");
             ps11.setString(1, Table_name);
             ps11.setString(2, Table_name+"_Range");
             ps11.setString(3, String.valueOf(classes.get(currentClassIndex)));
@@ -116,7 +128,9 @@ public class ArrangeV2 {
             ps11.setString(5, Session11);
             ps11.setString(6, String.valueOf(totalCap));
             ps11.setString(7, String.valueOf(totalstu));
-            ps11.setString(8, String.valueOf(RC[1]));
+            ps11.setString(8, faculty1);
+            ps11.setString(9, faculty2);
+            ps11.setString(10, String.valueOf(RC[1]));
             ps11.executeUpdate();
 
             currentClassIndex++;
