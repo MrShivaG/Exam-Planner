@@ -11,7 +11,7 @@ public class ArrangeV2 {
     FatchStudents fatchstudents =new FatchStudents();
 
     public String arrange(int[] classroomsArray ,String Date, String ArrName, String Sem,String Session11, String ORGID) throws Exception {
-
+     boolean RangT =true;
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
         boolean SetNull = true;
@@ -43,7 +43,6 @@ public class ArrangeV2 {
         ps002.executeUpdate();
         PreparedStatement ps003 = conn1.prepareStatement("INSERT INTO arrgroups value('"+grpname+"')");
         ps003.executeUpdate();
-        RangeGenerator rangeGenerator = new RangeGenerator();
         while(true){
 
             String Table_name = ORGID+"_GRP_"+classes.get(currentClassIndex)+"_"+ArrName+"_"+ Session11+"_"+Sem;
@@ -134,7 +133,13 @@ public class ArrangeV2 {
             ps11.executeUpdate();
 
             currentClassIndex++;
-            rangeGenerator.generateRangeTable(conn,Table_name,Table_name+"_Range");
+            if (RangT==true){
+                EnrollmentRangeBuilder builder = new EnrollmentRangeBuilder();
+                builder.buildRanges(conn,Table_name,Table_name+"_Range");
+            } else if (RangT==false) {
+                RangeGenerator rangeGenerator = new RangeGenerator();
+                rangeGenerator.generateRangeTable(conn,Table_name,Table_name+"_Range");
+            }
 
             if (studentsV2.isEmpty()){
                 System.out.println("No students Left 3");
