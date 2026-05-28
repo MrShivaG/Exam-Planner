@@ -31,6 +31,10 @@ public class NewStudents {
         Students.sort(Comparator.comparing(Student::getEnroll));
     }
     public ArrayList<Student> getStudents() {return Students;}
+    public void removeone(){Students.remove(0);}
     public String getSub_Code() {return this.Sub_Code;}
     public int getLength(){return Students.size();}
+   // private ArrayList<Student> students = new ArrayList<>();
+    public void setStudents(ArrayList<Student> students){this.Students = students;}
 }
+

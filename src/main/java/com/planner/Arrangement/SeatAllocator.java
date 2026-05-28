@@ -176,9 +176,9 @@ public class SeatAllocator {
         if (s == null)
             return false;
 
-        if (s.status != null &&
-                s.status.equalsIgnoreCase("back"))
-            return true;
+//        if (s.status != null &&
+//                s.status.equalsIgnoreCase("back"))
+//            return true;
 
         if (s.enroll == null)
             return true;

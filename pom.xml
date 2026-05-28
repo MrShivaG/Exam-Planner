@@ -18,6 +18,7 @@
     <dependencies>
 
         <!-- MySQL -->
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -47,7 +48,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
-            <version>21.0.6</version>
+            <version>26</version>
         </dependency>
 
         <dependency>
@@ -55,6 +56,19 @@
             <artifactId>javafx-controls</artifactId>
             <version>21.0.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>26</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-fxml</artifactId>-->
+<!--            <version>26</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>

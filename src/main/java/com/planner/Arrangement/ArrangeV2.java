@@ -130,7 +130,7 @@ public class ArrangeV2 {
             ps11.setString(7, String.valueOf(totalstu));
             ps11.setString(8, faculty1);
             ps11.setString(9, faculty2);
-            ps11.setString(10, String.valueOf(RC[1]));
+            ps11.setString(10, String.valueOf(RC[0]));
             ps11.executeUpdate();
 
             currentClassIndex++;

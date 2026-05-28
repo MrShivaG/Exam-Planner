@@ -8,7 +8,7 @@ import static com.planner.Database.DB_Methods.con;
 
 public class ArrangementsDB {
 
-    private static final String URL = "jdbc:mysql://10.51.136.20:3306/arrangements";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/arrangements";
     //10.225.181.20 shiva
     //10.51.136.20 jay
 

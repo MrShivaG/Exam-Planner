@@ -72,6 +72,7 @@ public class ExcelWorkV2 {
     public static void main(String[] args) {
         ExcelWorkV2 excelWork = new ExcelWorkV2();
         String path = "C:\\Playground\\float.xlsx";
+        String path2 = "C:\\Users\\shiva\\Documents\\java-projects\\Exam-Planner\\src\\main\\java\\com\\planner\\ExcelM\\Students.xlsx";
         ArrayList<String> result = excelWork.fatchExcel(path);
         result.forEach(System.out::println);
 

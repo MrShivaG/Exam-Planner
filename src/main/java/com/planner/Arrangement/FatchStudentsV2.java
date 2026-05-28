@@ -15,7 +15,7 @@ public class FatchStudentsV2 {
         int Sub_Count;
         conn = database.connection();
         ArrayList<String> result = new ArrayList<>();
-        PreparedStatement ps4 =conn.prepareStatement("SELECT DISTINCT Sub_code from rawdata");
+        PreparedStatement ps4 =conn.prepareStatement("SELECT DISTINCT Sub_code from rawdata2");
         ResultSet rs2 = ps4.executeQuery();
         while (rs2.next()) {
             result.add(rs2.getString("Sub_code"));
