@@ -10,8 +10,19 @@ import com.planner.Database.database;
 public class ArrangeV2 {
     FatchStudents fatchstudents =new FatchStudents();
 
-    public String arrange(int[] classroomsArray ,String Date, String ArrName, String Sem,String Session11, String ORGID) throws Exception {
-     boolean RangT =true;
+    public String arrange(
+            int[] classroomsArray ,
+            ArrayList<String> SubCode,
+            String Date,
+            String ArrName,
+            String Sem,
+            String Session11,
+            String ORGID,
+            String ClgName,
+            String Programe,
+            String Time,
+            Boolean RangT
+    ) throws Exception {
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
         boolean SetNull = true;
@@ -19,7 +30,6 @@ public class ArrangeV2 {
         database Database = new database();
         Connection conn1 = Database.connection();
 
-        ArrayList<String> ReturnStatement = new ArrayList<>();
 
         ArrayList<Students> students = fatchstudents.fatchStudent();
         int length = fatchstudents.getlength();
@@ -37,11 +47,18 @@ public class ArrangeV2 {
         DB_Methods db = new DB_Methods();
         int currentClassIndex = 0;
         String grpname =ORGID+"_"+ArrName+"_"+Sem+"_"+Session11;
-        String grpquery ="CREATE TABLE "+grpname+" (arr_table_name varchar(50), range_table varchar(50),room_no varchar(20), arr_date varchar(50), arr_session varchar(10), capacity int(20), student int(20), faculty_male varchar(100), faculty_female varchar(100), rows_room varchar(10))";
+        String grpquery ="CREATE TABLE "+grpname+" (arr_table_name varchar(50),room_no varchar(20), capacity int(20), student int(20), faculty1 varchar(100), faculty2 varchar(100), rows_room varchar(10))";
         //arr_table_name varchar(100), range_table varchar(50), arr_date varchar(100), arr_session varchar(50), capacity int(50), student int(50)
         PreparedStatement ps002 = conn1.prepareStatement(grpquery);
         ps002.executeUpdate();
-        PreparedStatement ps003 = conn1.prepareStatement("INSERT INTO arrgroups value('"+grpname+"')");
+        PreparedStatement ps003 = conn1.prepareStatement("INSERT INTO arrgroups value(?,?,?,?,?,?,?)");
+        ps003.setString(1, grpname);
+        ps003.setString(2, ClgName);
+        ps003.setString(3, Programe);
+        ps003.setString(4, Time);
+        ps003.setString(5, Session11);
+        ps003.setString(6,grpname+"_Rang");
+        ps003.setString(7,Date);
         ps003.executeUpdate();
         while(true){
 
@@ -106,39 +123,25 @@ public class ArrangeV2 {
                 //ps.executeUpdate();
             }
             int totalCap = RC[0]*RC[1];
-            ReturnStatement.add(Date+"_"+classes.get(currentClassIndex));
-            String faculty1 = null;
-            String faculty2 = null;
-            java.util.List<com.planner.GUI.Teacher> teachers = com.planner.GUI.Screens.TeacherAssign.getRoomTeachers().get(classes.get(currentClassIndex));
-            if (teachers != null) {
-                if (teachers.size() > 0 && teachers.get(0) != null) {
-                    faculty1 = teachers.get(0).getName();
-                }
-                if (teachers.size() > 1 && teachers.get(1) != null) {
-                    faculty2 = teachers.get(1).getName();
-                }
-            }
 
-            PreparedStatement ps11 = conn1.prepareStatement("Insert into "+grpname+" values (?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement ps11 = conn1.prepareStatement("Insert into "+grpname+" values (?,?,?,?,NULL,NULL,?)");
             ps11.setString(1, Table_name);
-            ps11.setString(2, Table_name+"_Range");
-            ps11.setString(3, String.valueOf(classes.get(currentClassIndex)));
-            ps11.setString(4, Date);
-            ps11.setString(5, Session11);
-            ps11.setString(6, String.valueOf(totalCap));
-            ps11.setString(7, String.valueOf(totalstu));
-            ps11.setString(8, faculty1);
-            ps11.setString(9, faculty2);
-            ps11.setString(10, String.valueOf(RC[0]));
+//            ps11.setString(2, Table_name+"_Range");
+            ps11.setString(2, String.valueOf(classes.get(currentClassIndex)));
+//            ps11.setString(4, Date);
+//            ps11.setString(5, Session11);
+            ps11.setString(3, String.valueOf(totalCap));
+            ps11.setString(4, String.valueOf(totalstu));
+            ps11.setString(5, String.valueOf(RC[0]));
             ps11.executeUpdate();
 
             currentClassIndex++;
             if (RangT==true){
                 EnrollmentRangeBuilder builder = new EnrollmentRangeBuilder();
-                builder.buildRanges(conn,Table_name,Table_name+"_Range");
+                builder.buildRanges(conn,Table_name, grpname+"_Rang");
             } else if (RangT==false) {
                 RangeGenerator rangeGenerator = new RangeGenerator();
-                rangeGenerator.generateRangeTable(conn,Table_name,Table_name+"_Range");
+                rangeGenerator.generateRangeTable(conn,Table_name,grpname+"_Range");
             }
 
             if (studentsV2.isEmpty()){
