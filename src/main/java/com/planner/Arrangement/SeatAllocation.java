@@ -6,24 +6,6 @@ import java.sql.*;
 import java.util.*;
 
 public class SeatAllocation {
-
-    /**
-     * Returns a list of SubCodes from subCodes[] that can be assigned
-     * to the given seatNumber without conflicting with adjacent seats.
-     *
-     * Adjacency rules (no same SubCode allowed):
-     *   seatNumber - 1    → left seat  (same row only)
-     *   seatNumber + 1    → right seat (same row only)
-     *   seatNumber - rows → seat directly in front
-     *   seatNumber + rows → seat directly behind
-     *
-     * @param connection  Active MySQL JDBC connection
-     * @param tableName   Name of the exam seating table
-     * @param rows        Number of seats per row (columns in classroom)
-     * @param subCodes    List of SubCodes to evaluate for this seat
-     * @param seatNumber  The seat (Id) being evaluated — 1-based
-     * @return            List of SubCodes safe to place at seatNumber
-     */
     public static List<String> seatAllocation(
             Connection connection,
             String tableName,
@@ -106,19 +88,6 @@ public class SeatAllocation {
 
         return allowed;
     }
-
-
-    /**
-     * Bulk allocation: returns a map of { seatNumber → [allowedSubCodes] }
-     * for every seat from 1 to totalSeats.
-     *
-     * @param connection  Active MySQL JDBC connection
-     * @param tableName   Name of the exam seating table
-     * @param rows        Number of seats per row
-     * @param subCodes    List of all SubCodes to evaluate
-     * @param totalSeats  Total number of seats in the room
-     * @return            Map of seatNumber to list of allowed SubCodes
-     */
     public static Map<Integer, List<String>> allocateAllSeats(
             Connection connection,
             String tableName,
@@ -143,10 +112,7 @@ public class SeatAllocation {
     // ── Demo / quick test ────────────────────────────────────────────────────
     public static void main(String[] args) throws SQLException {
 
-        // ── DB credentials ───────────────────────────────────────────────────
-//        String url      = "jdbc:mysql://localhost:3306/exam_db";
-//        String user     = "root";
-//        String password = "yourpassword";
+
         ArrangementsDB db = new ArrangementsDB();
         Connection con = db.connection();
 
