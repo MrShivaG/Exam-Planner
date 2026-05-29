@@ -22,11 +22,12 @@ public class ArrangeV2 {
             String ClgName,
             String Programe,
             String Time,
-            Boolean RangT
+            Boolean RangL,
+            Boolean Alt,
+            Boolean AltL
     ) throws Exception {
         ArrangementsDB arrangementsDB = new ArrangementsDB();
         Connection conn = arrangementsDB.connection();
-        boolean SetNull = true;
 
         database Database = new database();
         Connection conn1 = Database.connection();
@@ -137,10 +138,10 @@ public class ArrangeV2 {
             ps11.executeUpdate();
 
             currentClassIndex++;
-            if (RangT==true){
+            if (RangL==true){
                 EnrollmentRangeBuilder builder = new EnrollmentRangeBuilder();
                 builder.buildRanges(conn,Table_name, grpname+"_Rang");
-            } else if (RangT==false) {
+            } else if (RangL==false) {
                 RangeGenerator rangeGenerator = new RangeGenerator();
                 rangeGenerator.generateRangeTable(conn,Table_name,grpname+"_Range");
             }
