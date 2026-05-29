@@ -13,6 +13,7 @@ public class ExamConfig {
     private String session;
     private String subject;
     private LocalDate date;
+    private String degree;
 
     public String getFileName() {
         return fileName;
@@ -32,7 +33,11 @@ public class ExamConfig {
         return arrangementName;
     }
     public void setArrangementName(String arrangementName) {
-        this.arrangementName = arrangementName;
+        if (arrangementName != null) {
+            this.arrangementName = arrangementName.trim().replaceAll("[^a-zA-Z0-9_]", "_");
+        } else {
+            this.arrangementName = "";
+        }
     }
 
     public String getCollegeName() { return collegeName; }
@@ -54,7 +59,11 @@ public class ExamConfig {
     }
 
     public void setSession(String session) {
-        this.session = session;
+        if (session != null) {
+            this.session = session.trim().replaceAll("[^a-zA-Z0-9_]", "_");
+        } else {
+            this.session = "";
+        }
     }
 
     public String getSubject() {
@@ -72,4 +81,21 @@ public class ExamConfig {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
 }
+
+
+
+
+
+
+
+
+
