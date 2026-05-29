@@ -9,8 +9,10 @@ import com.planner.GUI.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -79,6 +81,10 @@ public class ConfirmScreen {
         infoCard.getStyleClass().add("card");
 
         VBox roomBox = new VBox(14);
+        FlowPane roomFlow = new FlowPane();
+        roomFlow.setHgap(24);
+        roomFlow.setVgap(16);
+        roomFlow.setAlignment(Pos.TOP_LEFT);
 
         Map<Integer, TextField> maleTeacherFields =
                 new HashMap<>();
@@ -140,14 +146,16 @@ public class ConfirmScreen {
             }
         });
 
+        Region headerSpacer = new Region();
+        HBox.setHgrow(headerSpacer, javafx.scene.layout.Priority.ALWAYS);
+
         HBox roomHeader = new HBox(
                 roomTitle,
+                headerSpacer,
                 assignBtn
         );
 
-        roomHeader.setAlignment(Pos.CENTER);
-
-        HBox.setHgrow(roomTitle, javafx.scene.layout.Priority.ALWAYS);
+        roomHeader.setAlignment(Pos.CENTER_LEFT);
 
         VBox roomCard = new VBox(
                 15,
@@ -161,34 +169,34 @@ public class ConfirmScreen {
 
         for (Room room : selectedRooms) {
 
-            VBox roomItem = new VBox(8);
-
+            VBox roomItem = new VBox(10);
             roomItem.setPadding(new Insets(16));
+            roomItem.setPrefWidth(230);
+            roomItem.setMinWidth(230);
+            roomItem.setMaxWidth(230);
 
             roomItem.setStyle(
                     "-fx-background-color: white;" +
-                            "-fx-background-radius: 16;" +
+                            "-fx-background-radius: 12;" +
                             "-fx-border-color: #E5E7EB;" +
-                            "-fx-border-radius: 16;"
+                            "-fx-border-radius: 12;"
             );
 
             roomItem.setOnMouseEntered(e -> {
-
                 roomItem.setStyle(
                         "-fx-background-color: #FAFAFA;" +
-                                "-fx-background-radius: 16;" +
+                                "-fx-background-radius: 12;" +
                                 "-fx-border-color: #CBD5E1;" +
-                                "-fx-border-radius: 16;"
+                                "-fx-border-radius: 12;"
                 );
             });
 
             roomItem.setOnMouseExited(e -> {
-
                 roomItem.setStyle(
                         "-fx-background-color: white;" +
-                                "-fx-background-radius: 16;" +
+                                "-fx-background-radius: 12;" +
                                 "-fx-border-color: #E5E7EB;" +
-                                "-fx-border-radius: 16;"
+                                "-fx-border-radius: 12;"
                 );
             });
 
@@ -197,54 +205,46 @@ public class ConfirmScreen {
 
             roomName.setStyle(
                     "-fx-font-size: 15;" +
-                            "-fx-font-weight: bold;"
+                            "-fx-font-weight: bold;" +
+                            "-fx-text-fill: #111827;"
             );
 
             Label roomInfo =
                     new Label(
                             "Rows: " + room.getRows() +
-                                    " • Columns: " + room.getColumns() +
-                                    " • Capacity: " + room.getCapacity()
+                                    " • Cols: " + room.getColumns() +
+                                    " • Cap: " + room.getCapacity()
                     );
 
             roomInfo.setStyle(
                     "-fx-text-fill: #6B7280;" +
-                            "-fx-font-size: 12;"
+                            "-fx-font-size: 11;"
             );
 
             Label maleLabel =
                     new Label("Male Invigilator");
-
             maleLabel.setStyle(
-                    "-fx-font-weight: bold;"
+                    "-fx-font-size: 11px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-text-fill: #374151;"
             );
 
             TextField maleField = new TextField();
-            maleField.setStyle(
-                    "-fx-background-radius: 10;" +
-                            "-fx-border-radius: 10;" +
-                            "-fx-padding: 10;" +
-                            "-fx-border-color: #D1D5DB;"
-            );
+            maleField.getStyleClass().add("input-field");
             maleField.setPromptText(
                     "Enter male teacher name"
             );
 
             Label femaleLabel =
                     new Label("Female Invigilator");
-
             femaleLabel.setStyle(
-                    "-fx-font-weight: bold;"
+                    "-fx-font-size: 11px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-text-fill: #374151;"
             );
 
             TextField femaleField = new TextField();
-            femaleField.setStyle(
-                    "-fx-background-radius: 10;" +
-                            "-fx-border-radius: 10;" +
-                            "-fx-padding: 10;" +
-                            "-fx-border-color: #D1D5DB;"
-            );
-
+            femaleField.getStyleClass().add("input-field");
             femaleField.setPromptText(
                     "Enter female teacher name"
             );
@@ -259,16 +259,17 @@ public class ConfirmScreen {
                     femaleField
             );
 
+            VBox maleGroup = new VBox(4, maleLabel, maleField);
+            VBox femaleGroup = new VBox(4, femaleLabel, femaleField);
+
             roomItem.getChildren().addAll(
                     roomName,
                     roomInfo,
-                    maleLabel,
-                    maleField,
-                    femaleLabel,
-                    femaleField
+                    maleGroup,
+                    femaleGroup
             );
 
-            roomBox.getChildren().add(roomItem);
+            roomFlow.getChildren().add(roomItem);
 
             totalCapacity += room.getCapacity();
         }
@@ -282,7 +283,7 @@ public class ConfirmScreen {
                         "-fx-font-weight: bold;"
         );
 
-        roomBox.getChildren().add(totalCap);
+        roomBox.getChildren().addAll(roomFlow, totalCap);
 
 
         Label teacherHint =
@@ -310,7 +311,10 @@ public class ConfirmScreen {
         confirmBtn.getStyleClass().add("primary-btn");
 
         Button backBtn = new Button("Back");
-        backBtn.getStyleClass().add("primary-btn");
+        backBtn.getStyleClass().add("secondary-btn");
+        backBtn.setOnAction(e -> {
+            app.switchCenter(RoomTableScreen.roomTableScreen(app, config));
+        });
 
         confirmBtn.setOnAction(e -> {
 
@@ -407,17 +411,29 @@ public class ConfirmScreen {
             }
 
             try {
+                String orgId = getCollegeAbbreviation(config.getCollegeName());
                 String grpname = arrangeV2.arrange(
                         roomsArray,
+                        new ArrayList<>(SharedData.prioritizedSubjects),
+                        new ArrayList<>(),
+
                         DateUtil.formatForDB(config.getDate()),
                         config.getArrangementName(),
                         config.getSemester(),
                         config.getSession(),
-                        "SISTecR"
+                        orgId,
+                        config.getCollegeName(),
+                        config.getDegree(),
+                        config.getExamTime(),
+
+                        true,
+                        true,
+                        false
+
                 );
 
                 app.switchCenter(
-                        Group_Gen_seat.showGroup(grpname, config)
+                        Group_Gen_seat.showGroup(grpname, config, false)
                 );
 
                 Notification.message("Seating generated successfully!");
@@ -447,5 +463,16 @@ public class ConfirmScreen {
         return scrollPane;
     }
 
+    public static String getCollegeAbbreviation(String collegeName) {
+        if (collegeName == null) return "SISTecR";
+        if (collegeName.contains("SISTec-R MBA") || collegeName.contains("SISTec-R_MBA") || collegeName.contains("SISTec-R(MBA)")) return "SISTecRMBA";
+        if (collegeName.contains("SISTec-R") || collegeName.contains("SISTecR")) return "SISTecR";
+        if (collegeName.contains("SISTec-E") || collegeName.contains("SISTecE")) return "SISTecE";
+        if (collegeName.contains("SIPTec-R") || collegeName.contains("SIPTecR")) return "SIPTecR";
+        if (collegeName.contains("SIPTec")) return "SIPTec";
+        if (collegeName.contains("SISTec MBA") || collegeName.contains("SISTec_MBA") || collegeName.contains("SISTec(MBA)")) return "SISTecMBA";
+        if (collegeName.contains("SISTec")) return "SISTec";
+        return "SISTecR";
+    }
 
 }
