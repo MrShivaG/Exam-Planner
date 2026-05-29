@@ -58,8 +58,8 @@ public class ArrangeV2 {
         ps003.setString(2, ClgName);
         ps003.setString(3, Programe);
         ps003.setString(4, Time);
-        ps003.setString(5, Session11);
-        ps003.setString(6,grpname+"_Rang");
+        ps003.setString(6, Session11);
+        ps003.setString(5,grpname+"_Rang");
         ps003.setString(7,Date);
         ps003.executeUpdate();
         while(true){
@@ -137,10 +137,10 @@ public class ArrangeV2 {
             ps11.setString(5, String.valueOf(RC[0]));
             ps11.executeUpdate();
 
-            currentClassIndex++;
+
             if (RangL==true){
                 EnrollmentRangeBuilder builder = new EnrollmentRangeBuilder();
-                builder.buildRanges(conn,Table_name, grpname+"_Rang");
+                builder.buildRanges(conn,Table_name, grpname+"_Rang", String.valueOf(classes.get(currentClassIndex)),Table_name);
             } else if (RangL==false) {
                 RangeGenerator rangeGenerator = new RangeGenerator();
                 rangeGenerator.generateRangeTable(conn,Table_name,grpname+"_Range");
@@ -151,8 +151,12 @@ public class ArrangeV2 {
                 break;
             }
             if(classesLength==currentClassIndex+1){
+                System.out.println("index/length: "+currentClassIndex+"/"+classesLength);
+
+
                 break;
             }
+            currentClassIndex++;
 
         }
         return grpname;

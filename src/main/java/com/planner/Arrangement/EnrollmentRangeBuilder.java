@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.*;
 
 public class EnrollmentRangeBuilder {
-    public static void buildRanges(Connection conn, String sourceTable, String rangeTable)
+    public static void buildRanges(Connection conn, String sourceTable, String rangeTable,String RoomNo, String ArrName)
             throws SQLException {
 
         // ── 1. Create range table if it doesn't exist ──────────────────────────
@@ -16,7 +16,8 @@ public class EnrollmentRangeBuilder {
                 + "  RangeFrom VARCHAR(20) NULL,"
                 + "  RangeTo   VARCHAR(20) NULL,"
                 + "  Total     INT         NOT NULL,"
-                + "  RoomNo    VARCHAR(20) NULL"
+                + "  RoomNo    VARCHAR(20) NULL,"
+                +"Arr_name Varchar(70) NULL"
                 + ")";
         try (Statement st = conn.createStatement()) {
             st.executeUpdate(createSQL);
@@ -50,7 +51,7 @@ public class EnrollmentRangeBuilder {
 
         // ── 3. Insert each group as one range row ───────────────────────────────
         String insertSQL = "INSERT INTO `" + rangeTable + "` "
-                + "(SubCode, RangeFrom, RangeTo, Total, RoomNo) VALUES (?, ?, ?, ?, ?)";
+                + "(SubCode, RangeFrom, RangeTo, Total, RoomNo, Arr_name) VALUES (?, ?, ?, ?, ?,?)";
 
 
         try (PreparedStatement ps = conn.prepareStatement(insertSQL)) {
@@ -78,6 +79,7 @@ public class EnrollmentRangeBuilder {
                 ps.setString(1, subCode);
                 ps.setString(2, rangeFrom);
 
+
                 if (rangeTo == null) {
                     ps.setNull(3, Types.VARCHAR);
                 } else {
@@ -85,7 +87,9 @@ public class EnrollmentRangeBuilder {
                 }
 
                 ps.setInt(4, total);
-                ps.setString(5, "Null");
+                ps.setString(5, RoomNo);
+                ps.setString(6, ArrName);
+
                 ps.addBatch();
             }
 
@@ -95,10 +99,10 @@ public class EnrollmentRangeBuilder {
         System.out.println("Ranges inserted successfully into `" + rangeTable + "`.");
     }
 
-    public static void main(String[] args) throws Exception {
-        ArrangementsDB db = new ArrangementsDB();
-        Connection con = db.connection();
-        buildRanges(con,"SISTEC0537_GRP_209_arrang422gh_203437_V","test");
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        ArrangementsDB db = new ArrangementsDB();
+//        Connection con = db.connection();
+//        buildRanges(con,"SISTEC0537_GRP_209_arrang422gh_203437_V","test");
+//
+//    }
 }
