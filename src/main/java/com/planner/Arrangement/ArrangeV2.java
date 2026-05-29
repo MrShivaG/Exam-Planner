@@ -13,6 +13,7 @@ public class ArrangeV2 {
     public String arrange(
             int[] classroomsArray ,
             ArrayList<String> SubCode,
+            ArrayList<ArrayList<String>> OSubcode,
             String Date,
             String ArrName,
             String Sem,
